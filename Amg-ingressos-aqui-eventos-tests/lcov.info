@@ -1,0 +1,528 @@
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Program.cs
+FN:6,System.Void Program::<Main>$(System.String[])
+FNDA:0,System.Void Program::<Main>$(System.String[])
+DA:7,0
+DA:11,0
+DA:13,0
+DA:14,0
+DA:16,0
+DA:17,0
+DA:21,0
+DA:23,0
+DA:25,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:32,0
+DA:33,0
+DA:36,0
+DA:38,0
+DA:40,0
+DA:42,0
+DA:44,0
+BRDA:32,144,0,0
+BRDA:32,144,1,0
+LF:19
+LH:0
+BRF:2
+BRH:0
+FNF:1
+FNH:0
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/WeatherForecast.cs
+FN:4,System.DateOnly Amg_ingressos_aqui_eventos_api.WeatherForecast::get_Date()
+FNDA:0,System.DateOnly Amg_ingressos_aqui_eventos_api.WeatherForecast::get_Date()
+DA:5,0
+FN:6,System.Int32 Amg_ingressos_aqui_eventos_api.WeatherForecast::get_TemperatureC()
+FNDA:0,System.Int32 Amg_ingressos_aqui_eventos_api.WeatherForecast::get_TemperatureC()
+DA:7,0
+FN:8,System.Int32 Amg_ingressos_aqui_eventos_api.WeatherForecast::get_TemperatureF()
+FNDA:0,System.Int32 Amg_ingressos_aqui_eventos_api.WeatherForecast::get_TemperatureF()
+DA:9,0
+FN:10,System.String Amg_ingressos_aqui_eventos_api.WeatherForecast::get_Summary()
+FNDA:0,System.String Amg_ingressos_aqui_eventos_api.WeatherForecast::get_Summary()
+DA:11,0
+LF:4
+LH:0
+BRF:0
+BRH:0
+FNF:4
+FNH:0
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Services/EventService.cs
+FN:106,System.String Amg_ingressos_aqui_eventos_api.Services.EventService::ValidateModelSave(Amg_ingressos_aqui_eventos_api.Model.Event)
+FNDA:21,System.String Amg_ingressos_aqui_eventos_api.Services.EventService::ValidateModelSave(Amg_ingressos_aqui_eventos_api.Model.Event)
+DA:107,21
+DA:108,21
+DA:110,21
+DA:111,1
+DA:112,20
+DA:113,1
+DA:114,19
+DA:115,1
+DA:116,18
+DA:117,1
+DA:118,17
+DA:119,1
+DA:120,16
+DA:121,1
+DA:122,15
+DA:123,1
+DA:124,14
+DA:125,1
+DA:126,13
+DA:127,1
+DA:128,12
+DA:129,1
+DA:130,11
+DA:131,1
+DA:132,10
+DA:133,1
+DA:134,9
+DA:135,1
+DA:136,8
+DA:137,1
+DA:138,7
+DA:139,1
+DA:140,6
+DA:141,1
+DA:143,21
+DA:144,21
+BRDA:110,25,0,1
+BRDA:110,25,1,20
+BRDA:112,62,0,1
+BRDA:112,62,1,19
+BRDA:114,99,0,1
+BRDA:114,99,1,18
+BRDA:116,138,0,1
+BRDA:116,138,1,17
+BRDA:118,177,0,1
+BRDA:118,177,1,16
+BRDA:120,216,0,1
+BRDA:120,216,1,15
+BRDA:122,255,0,1
+BRDA:122,255,1,14
+BRDA:124,287,0,1
+BRDA:124,287,1,13
+BRDA:126,326,0,1
+BRDA:126,326,1,12
+BRDA:128,365,0,1
+BRDA:128,365,1,11
+BRDA:130,404,0,1
+BRDA:130,404,1,10
+BRDA:132,443,0,1
+BRDA:132,443,1,9
+BRDA:134,482,0,1
+BRDA:134,482,1,8
+BRDA:136,518,0,1
+BRDA:136,518,1,7
+BRDA:138,554,0,1
+BRDA:138,554,1,6
+BRDA:140,590,0,1
+BRDA:140,590,1,21
+FN:146,System.String Amg_ingressos_aqui_eventos_api.Services.EventService::ValidateIdMongo(System.String)
+FNDA:12,System.String Amg_ingressos_aqui_eventos_api.Services.EventService::ValidateIdMongo(System.String)
+DA:147,12
+DA:148,12
+DA:149,2
+DA:150,10
+DA:151,1
+DA:153,9
+DA:154,12
+BRDA:148,9,0,2
+BRDA:148,9,1,10
+BRDA:150,31,0,1
+BRDA:150,31,1,9
+FN:13,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService::.ctor(Amg_ingressos_aqui_eventos_api.Repository.Interfaces.IEventRepository)
+FNDA:36,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService::.ctor(Amg_ingressos_aqui_eventos_api.Repository.Interfaces.IEventRepository)
+DA:14,36
+DA:15,36
+DA:16,36
+DA:17,36
+DA:18,36
+FN:67,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<DeleteAsync>d__5::MoveNext()
+FNDA:6,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<DeleteAsync>d__5::MoveNext()
+DA:68,6
+DA:70,6
+DA:71,6
+DA:73,6
+DA:74,1
+DA:76,5
+DA:77,2
+DA:78,3
+DA:79,3
+DA:80,3
+DA:81,3
+DA:82,1
+DA:83,1
+DA:84,1
+DA:86,5
+DA:87,5
+BRDA:73,83,0,1
+BRDA:73,83,1,5
+FN:20,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<FindByIdAsync>d__3::MoveNext()
+FNDA:6,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<FindByIdAsync>d__3::MoveNext()
+DA:21,6
+DA:23,6
+DA:24,6
+DA:26,6
+DA:27,2
+DA:29,4
+DA:31,2
+DA:33,3
+DA:34,3
+DA:35,3
+DA:36,3
+DA:37,1
+DA:38,1
+DA:39,1
+DA:41,3
+DA:42,5
+BRDA:26,83,0,2
+BRDA:26,83,1,4
+FN:89,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<GetAllEventsAsync>d__6::MoveNext()
+FNDA:4,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<GetAllEventsAsync>d__6::MoveNext()
+DA:90,4
+DA:92,4
+DA:93,4
+DA:94,2
+DA:95,1
+DA:96,1
+DA:97,1
+DA:98,1
+DA:99,1
+DA:100,1
+DA:101,1
+DA:103,3
+DA:104,3
+FN:44,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<SaveAsync>d__4::MoveNext()
+FNDA:21,System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<SaveAsync>d__4::MoveNext()
+DA:45,21
+DA:47,21
+DA:48,21
+DA:50,21
+DA:51,16
+DA:53,5
+DA:54,3
+DA:55,16
+DA:56,16
+DA:57,16
+DA:58,16
+DA:59,2
+DA:60,2
+DA:61,2
+DA:64,19
+DA:65,19
+BRDA:50,83,0,16
+BRDA:50,83,1,5
+LF:109
+LH:109
+BRF:42
+BRH:42
+FNF:7
+FNH:7
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Model/Event.cs
+FN:13,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Id()
+FNDA:0,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Id()
+DA:14,0
+FN:18,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Name()
+FNDA:53,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Name()
+DA:19,53
+FN:23,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Local()
+FNDA:52,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Local()
+DA:24,52
+FN:28,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Type()
+FNDA:51,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Type()
+DA:29,51
+FN:33,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Image()
+FNDA:50,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Image()
+DA:34,50
+FN:38,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Description()
+FNDA:49,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Description()
+DA:39,49
+FN:43,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Cep()
+FNDA:48,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Cep()
+DA:44,48
+FN:48,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Address()
+FNDA:47,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Address()
+DA:49,47
+FN:53,System.Int32 Amg_ingressos_aqui_eventos_api.Model.Event::get_Number()
+FNDA:46,System.Int32 Amg_ingressos_aqui_eventos_api.Model.Event::get_Number()
+DA:54,46
+FN:58,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Neighborhood()
+FNDA:45,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Neighborhood()
+DA:59,45
+FN:63,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Complement()
+FNDA:44,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Complement()
+DA:64,44
+FN:68,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_ReferencePoint()
+FNDA:43,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_ReferencePoint()
+DA:69,43
+FN:73,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_City()
+FNDA:42,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_City()
+DA:74,42
+FN:78,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_State()
+FNDA:41,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_State()
+DA:79,41
+FN:83,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Day()
+FNDA:40,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Day()
+DA:84,40
+FN:88,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Lot()
+FNDA:39,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Lot()
+DA:89,39
+FN:93,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_VipArea()
+FNDA:38,System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_VipArea()
+DA:94,38
+LF:17
+LH:16
+BRF:0
+BRH:0
+FNF:17
+FNH:16
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Infra/DbConnection.cs
+FN:14,MongoDB.Driver.IMongoCollection`1<Amg_ingressos_aqui_eventos_api.Model.Event> Amg_ingressos_aqui_eventos_api.Infra.DbConnection::GetConnection()
+FNDA:0,MongoDB.Driver.IMongoCollection`1<Amg_ingressos_aqui_eventos_api.Model.Event> Amg_ingressos_aqui_eventos_api.Infra.DbConnection::GetConnection()
+DA:15,0
+DA:17,0
+DA:18,0
+DA:19,0
+DA:21,0
+DA:22,0
+FN:9,System.Void Amg_ingressos_aqui_eventos_api.Infra.DbConnection::.ctor(Microsoft.Extensions.Options.IOptions`1<Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings>)
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Infra.DbConnection::.ctor(Microsoft.Extensions.Options.IOptions`1<Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings>)
+DA:10,0
+DA:11,0
+DA:12,0
+DA:13,0
+LF:10
+LH:0
+BRF:0
+BRH:0
+FNF:2
+FNH:0
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Infra/EventDatabaseSettings.cs
+FN:7,System.String Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings::get_ConnectionString()
+FNDA:0,System.String Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings::get_ConnectionString()
+DA:8,0
+FN:11,System.String Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings::get_DatabaseName()
+FNDA:0,System.String Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings::get_DatabaseName()
+DA:12,0
+FN:15,System.String Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings::get_EventCollectionName()
+FNDA:0,System.String Amg_ingressos_aqui_eventos_api.Infra.EventDatabaseSettings::get_EventCollectionName()
+DA:16,0
+LF:3
+LH:0
+BRF:0
+BRH:0
+FNF:3
+FNH:0
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/DeleteEventException copy.cs
+FN:4,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor()
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor()
+DA:5,0
+DA:6,0
+DA:7,0
+FN:9,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor(System.String)
+FNDA:3,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor(System.String)
+DA:10,3
+DA:11,3
+DA:12,3
+FN:14,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor(System.String,System.Exception)
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor(System.String,System.Exception)
+DA:15,0
+DA:16,0
+DA:17,0
+LF:9
+LH:3
+BRF:0
+BRH:0
+FNF:3
+FNH:1
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/FindByIdEventException.cs
+FN:10,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor()
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor()
+DA:11,0
+DA:12,0
+DA:13,0
+FN:15,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor(System.String)
+FNDA:3,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor(System.String)
+DA:16,3
+DA:17,3
+DA:18,3
+FN:20,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor(System.String,System.Exception)
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor(System.String,System.Exception)
+DA:21,0
+DA:22,0
+DA:23,0
+LF:9
+LH:3
+BRF:0
+BRH:0
+FNF:3
+FNH:1
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/GetAllEventException.cs
+FN:10,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor()
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor()
+DA:11,0
+DA:12,0
+DA:13,0
+FN:15,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor(System.String)
+FNDA:1,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor(System.String)
+DA:16,1
+DA:17,1
+DA:18,1
+FN:20,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor(System.String,System.Exception)
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor(System.String,System.Exception)
+DA:21,0
+DA:22,0
+DA:23,0
+LF:9
+LH:3
+BRF:0
+BRH:0
+FNF:3
+FNH:1
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/SaveEventException.cs
+FN:5,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor()
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor()
+DA:6,0
+DA:7,0
+DA:8,0
+FN:10,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor(System.String)
+FNDA:16,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor(System.String)
+DA:11,16
+DA:12,16
+DA:13,16
+FN:15,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor(System.String,System.Exception)
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor(System.String,System.Exception)
+DA:16,0
+DA:17,0
+DA:18,0
+LF:9
+LH:3
+BRF:0
+BRH:0
+FNF:3
+FNH:1
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Controllers/EventController.cs
+FN:13,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController::.ctor(Microsoft.Extensions.Logging.ILogger`1<Amg_ingressos_aqui_eventos_api.Controllers.EventController>,Amg_ingressos_aqui_eventos_api.Services.Interfaces.IEventService)
+FNDA:12,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController::.ctor(Microsoft.Extensions.Logging.ILogger`1<Amg_ingressos_aqui_eventos_api.Controllers.EventController>,Amg_ingressos_aqui_eventos_api.Services.Interfaces.IEventService)
+DA:14,12
+DA:15,12
+DA:16,12
+DA:17,12
+DA:18,12
+FN:108,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<DeleteEventAsync>d__6::MoveNext()
+FNDA:4,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<DeleteEventAsync>d__6::MoveNext()
+DA:109,4
+DA:111,4
+DA:112,4
+DA:113,3
+DA:114,2
+DA:115,2
+DA:116,2
+DA:119,1
+DA:121,1
+DA:122,1
+DA:123,1
+DA:124,1
+DA:126,4
+BRDA:113,171,0,3
+BRDA:113,171,1,0
+BRDA:113,196,0,2
+BRDA:113,196,1,1
+FN:59,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<FindByIdEventAsync>d__4::MoveNext()
+FNDA:3,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<FindByIdEventAsync>d__4::MoveNext()
+DA:60,3
+DA:62,3
+DA:63,3
+DA:64,2
+DA:65,1
+DA:66,1
+DA:67,1
+DA:70,1
+DA:72,1
+DA:73,1
+DA:74,1
+DA:75,1
+DA:77,3
+BRDA:64,171,0,2
+BRDA:64,171,1,0
+BRDA:64,196,0,1
+BRDA:64,196,1,1
+FN:29,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<GetAllEventsAsync>d__3::MoveNext()
+FNDA:3,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<GetAllEventsAsync>d__3::MoveNext()
+DA:30,3
+DA:32,3
+DA:33,3
+DA:34,2
+DA:35,1
+DA:36,1
+DA:37,1
+DA:40,1
+DA:42,1
+DA:43,1
+DA:44,1
+DA:45,1
+DA:47,3
+BRDA:34,165,0,1
+BRDA:34,165,1,1
+BRDA:34,190,0,1
+BRDA:34,190,1,1
+FN:87,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<SaveEventAsync>d__5::MoveNext()
+FNDA:3,System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<SaveEventAsync>d__5::MoveNext()
+DA:88,3
+DA:90,3
+DA:91,3
+DA:92,1
+DA:94,2
+DA:95,2
+DA:96,2
+DA:97,2
+DA:99,3
+LF:53
+LH:53
+BRF:12
+BRH:10
+FNF:5
+FNH:5
+end_of_record
+SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Controllers/HealthCheckController.cs
+FN:22,System.Collections.Generic.IEnumerable`1<Amg_ingressos_aqui_eventos_api.WeatherForecast> Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController::Get()
+FNDA:0,System.Collections.Generic.IEnumerable`1<Amg_ingressos_aqui_eventos_api.WeatherForecast> Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController::Get()
+DA:23,0
+DA:24,0
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:31,0
+FN:15,System.Void Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController::.ctor(Microsoft.Extensions.Logging.ILogger`1<Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController>)
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController::.ctor(Microsoft.Extensions.Logging.ILogger`1<Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController>)
+DA:16,0
+DA:17,0
+DA:18,0
+DA:19,0
+FN:8,System.Void Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController::.cctor()
+FNDA:0,System.Void Amg_ingressos_aqui_eventos_api.Controllers.HealthCheckController::.cctor()
+DA:9,0
+DA:10,0
+DA:11,0
+DA:12,0
+LF:17
+LH:0
+BRF:0
+BRH:0
+FNF:3
+FNH:0
+end_of_record
