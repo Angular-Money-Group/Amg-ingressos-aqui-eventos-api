@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Moq;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
+using System.Text.Json;
 
 namespace Prime.UnitTests.Services
 {
@@ -114,7 +115,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Cep = string.Empty;
+            eventComplet.Address.Cep = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "CEP é Obrigatório." };
 
             //Act
@@ -129,7 +130,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Address = string.Empty;
+            eventComplet.Address = null;
             var expectedMessage = new MessageReturn() { Message = "Endereço é Obrigatório." };
 
             //Act
@@ -144,7 +145,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Number = 0;
+            eventComplet.Address.Number = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Número Endereço é Obrigatório." };
 
             //Act
@@ -159,7 +160,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Neighborhood = string.Empty;
+            eventComplet.Address.Neighborhood = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Vizinhança é Obrigatório." };
 
             //Act
@@ -174,7 +175,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Complement = string.Empty;
+            eventComplet.Address.Complement = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Complemento é Obrigatório." };
 
             //Act
@@ -189,7 +190,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.ReferencePoint = string.Empty;
+            eventComplet.Address.ReferencePoint = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Ponto de referência é Obrigatório." };
 
             //Act
@@ -204,7 +205,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.City = string.Empty;
+            eventComplet.Address.City = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Cidade é Obrigatório." };
 
             //Act
@@ -219,7 +220,10 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.State = string.Empty;
+            //string strJson = JsonSerializer.Serialize<Event>(eventComplet);
+            string strJsonPosition = JsonSerializer.Serialize<Event>(FactoryEvent.SimpleEventWithPosition());
+
+            eventComplet.Address.State = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Estado é Obrigatório." };
 
             //Act
@@ -230,12 +234,12 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
-        public void Given_event_without_days_When_save_Then_return_message_miss_days()
+        public void Given_event_without_startDate_When_save_Then_return_message_miss_startDate()
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Day = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Dia é Obrigatório." };
+            eventComplet.StartDate = DateTime.MinValue;
+            var expectedMessage = new MessageReturn() { Message = "Data Inicio é Obrigatório." };
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);
@@ -245,6 +249,21 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
+        public void Given_event_without_endDate_When_save_Then_return_message_miss_endDate()
+        {
+            //Arrange
+            var eventComplet = FactoryEvent.SimpleEvent();
+            eventComplet.EndDate = DateTime.MinValue;
+            var expectedMessage = new MessageReturn() { Message = "Data Fim é Obrigatório." };
+
+            //Act
+            var resultMethod = _eventService.SaveAsync(eventComplet);
+
+            //Assert
+            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
+        }
+
+        /*[Test]
         public void Given_event_without_lote_When_save_Then_return_message_miss_lote()
         {
             //Arrange
@@ -257,15 +276,15 @@ namespace Prime.UnitTests.Services
 
             //Assert
             Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
-        }
+        }*/
 
         [Test]
-        public void Given_event_without_VipArea_When_save_Then_return_message_miss_VipArea()
+        public void Given_event_without_variant_When_save_Then_return_message_miss_VipArea()
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.VipArea = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Área Vip é Obrigatório." };
+            eventComplet.Variant = new List<Variant>();
+            var expectedMessage = new MessageReturn() { Message = "Variante é Obrigatório." };
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);

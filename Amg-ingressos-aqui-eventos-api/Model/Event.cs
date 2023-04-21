@@ -11,86 +11,63 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
         /// <summary>
         /// name
         /// </summary>
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         /// <summary>
         /// Local
         /// </summary>
         [Required]
-        public string Local { get; set; }
+        public string? Local { get; set; }
         /// <summary>
         /// Type
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string? Type { get; set; }
         /// <summary>
         /// Image
         /// </summary>
         [Required]
-        public string Image { get; set; }
+        public string? Image { get; set; }
         /// <summary>
         /// Descrição
         /// </summary>
         [Required]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         /// <summary>
-        /// CEP
+        /// Data Inicio
         /// </summary>
         [Required]
-        public string Cep { get; set; }
+        public DateTime StartDate { get; set; }
+        /// <summary>
+        /// Data Fim
+        /// </summary>
+        [Required]
+        public DateTime EndDate { get; set; }
         /// <summary>
         /// Endereço
         /// </summary>
         [Required]
-        public string Address { get; set; }
+        public Address? Address { get; set; }
         /// <summary>
-        /// Número
+        /// Lista de Variants
         /// </summary>
         [Required]
-        public int Number { get; set; }
+        public List<Variant>? Variant { get; set; }
         /// <summary>
-        /// Vizinho
+        /// Id mongo Meio de Recebimento
         /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
         [Required]
-        public string Neighborhood { get; set; }
+        public string? IdMeansReceipt { get; set; }
         /// <summary>
-        /// Complemento
+        /// Id mongo Meio de Recebimento
         /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
         [Required]
-        public string Complement { get; set; }
-        /// <summary>
-        /// Ponto de referencia
-        /// </summary>
-        [Required]
-        public string ReferencePoint { get; set; }
-        /// <summary>
-        /// Cidade
-        /// </summary>
-        [Required]
-        public string City { get; set; }
-        /// <summary>
-        /// Estado
-        /// </summary>
-        [Required]
-        public string State { get; set; }
-        /// <summary>
-        /// Dia
-        /// </summary>
-        [Required]
-        public string Day { get; set; }
-        /// <summary>
-        /// Lote
-        /// </summary>
-        [Required]
-        public string Lot { get; set; }
-        /// <summary>
-        /// Área VIP
-        /// </summary>
-        [Required]
-        public string VipArea { get; set; }
+        public string? IdOrganizer { get; set; }
     }
 }

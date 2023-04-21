@@ -117,28 +117,28 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 mensage.Append("Imagem é Obrigatório.");
             else if (eventSave.Description == "")
                 mensage.Append("Descrição é Obrigatório.");
-            else if (eventSave.Cep == "")
-                mensage.Append("CEP é Obrigatório.");
-            else if (eventSave.Address == "")
+            else if (eventSave.Address == null)
                 mensage.Append("Endereço é Obrigatório.");
-            else if (eventSave.Number == 0)
+            else if (eventSave.Address.Cep == "")
+                mensage.Append("CEP é Obrigatório.");
+            else if (eventSave.Address.Number == string.Empty)
                 mensage.Append("Número Endereço é Obrigatório.");
-            else if (eventSave.Neighborhood == "")
+            else if (eventSave.Address.Neighborhood == "")
                 mensage.Append("Vizinhança é Obrigatório.");
-            else if (eventSave.Complement == "")
+            else if (eventSave.Address.Complement == "")
                 mensage.Append("Complemento é Obrigatório.");
-            else if (eventSave.ReferencePoint == "")
+            else if (eventSave.Address.ReferencePoint == "")
                 mensage.Append("Ponto de referência é Obrigatório.");
-            else if (eventSave.City == "")
+            else if (eventSave.Address.City == "")
                 mensage.Append("Cidade é Obrigatório.");
-            else if (eventSave.State == "")
+            else if (eventSave.Address.State == "")
                 mensage.Append("Estado é Obrigatório.");
-            else if (eventSave.Day == "")
-                mensage.Append("Dia é Obrigatório.");
-            else if (eventSave.Lot == "")
-                mensage.Append("Lote é Obrigatório.");
-            else if (eventSave.VipArea == "")
-                mensage.Append("Área Vip é Obrigatório.");
+            else if (eventSave.StartDate == DateTime.MinValue)
+                mensage.Append("Data Inicio é Obrigatório.");
+            else if (eventSave.EndDate == DateTime.MinValue)
+                mensage.Append("Data Fim é Obrigatório.");
+            else if (!eventSave.Variant.Any())
+                mensage.Append("Variante é Obrigatório.");
 
             return mensage.ToString();
         }
