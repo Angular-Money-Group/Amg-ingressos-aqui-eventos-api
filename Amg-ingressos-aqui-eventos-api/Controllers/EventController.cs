@@ -118,7 +118,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 var result = await _eventService.DeleteAsync(id);
                 if (result.Message != null && result.Message.Any())
                 {
-                    _logger.LogInformation(string.Concat("DeleteEventAsync:",result.Message));
+                    _logger.LogInformation(MessageLogErrors.deleteEventMessage);
                     return NoContent();
                 }
 
