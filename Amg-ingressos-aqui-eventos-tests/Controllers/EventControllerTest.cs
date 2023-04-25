@@ -18,16 +18,13 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private EventController _eventController;
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
-        private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
         private Mock<ILogger<EventController>> _loggerMock = new Mock<ILogger<EventController>>();
 
         [SetUp]
         public void Setup()
         {
             _eventController = new EventController(_loggerMock.Object, 
-            new EventService(_eventRepositoryMock.Object,
-            _variantServiceMock.Object,
-            _ticketServiceMock.Object));
+            new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object));
         }
 
         [Test]
@@ -172,7 +169,10 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var messageReturn = "Evento criado";
             var eventSave = FactoryEvent.SimpleEvent();
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventSave)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Save<object>(eventSave))
+                .Returns(Task.FromResult(messageReturn as object));
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
 
             // Act
             var result = (await _eventController.SaveEventAsync(eventSave) as OkObjectResult);
@@ -191,7 +191,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             // Act
             var result = (await _eventController.SaveEventAsync(eventSave) as ObjectResult);
-            var teste = (await _eventController.SaveEventAsync(eventSave));
 
             // Assert
             Assert.AreEqual(500, result.StatusCode);

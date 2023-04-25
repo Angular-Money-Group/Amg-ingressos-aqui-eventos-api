@@ -3,7 +3,7 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
-using Amg_ingressos_aqui_eventos_api.utils;
+using Amg_ingressos_aqui_eventos_api.Utils;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -13,7 +13,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private IVariantService _variantService;
         private MessageReturn _messageReturn;
 
-        public EventService(IEventRepository eventRepository, IVariantService variantService,ITicketService ticketService)
+        public EventService(IEventRepository eventRepository, IVariantService variantService)
         {
             _eventRepository = eventRepository;
             _variantService = variantService;
@@ -47,11 +47,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 ValidateModelSave(eventSave);
 
-                eventSave.Variant.ForEach(async i =>
+                eventSave.Variant.ForEach(i =>
                 {
                     i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
                 });
-
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
             }

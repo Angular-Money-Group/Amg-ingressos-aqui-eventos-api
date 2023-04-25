@@ -27,12 +27,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 ValidateModelSave(lot);
+                lot.Status = Enum.StatusLot.Open;
                 _messageReturn.Data = await _lotRepository.Save<object>(lot);
-                for (int i = 0; i < lot.TotalTickets; i++) 
+                for (int i = 0; i < lot.TotalTickets; i++)
                 {
-                    _ticketService.SaveAsync( new Ticket(){
+                    Task<MessageReturn> task = _ticketService.SaveAsync(new Ticket()
+                    {
                         IdLote = _messageReturn.Data.ToString()
-                        });
+                    });
                 }
             }
             catch (SaveLotException ex)
@@ -52,11 +54,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             if (lot.Description == "")
                 throw new SaveLotException("Descrição é Obrigatório.");
             else if (lot.StartDateSales == DateTime.MinValue || lot.StartDateSales == DateTime.MaxValue)
-                throw new SaveLotException("Data Inicio é Obrigatório.");
+                throw new SaveLotException("Data Inicio de venda é Obrigatório.");
             else if (lot.EndDateSales == DateTime.MinValue || lot.EndDateSales == DateTime.MaxValue)
-                throw new SaveLotException("Data final é Obrigatório.");
-            else if (lot.TotalTickets == 0)
-                throw new SaveLotException("Numero total de ingressos é Obrigatório");           
+                throw new SaveLotException("Data final de venda é Obrigatório.");
         }
     }
 }

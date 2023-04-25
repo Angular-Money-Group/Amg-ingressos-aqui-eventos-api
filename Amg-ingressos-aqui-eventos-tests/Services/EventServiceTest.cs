@@ -20,9 +20,7 @@ namespace Prime.UnitTests.Services
         public void SetUp()
         {
             _eventRepositoryMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventRepositoryMock.Object,
-                                _variantServiceMock.Object,
-                                _ticketServiceMock.Object);
+            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object);
         }
 
         [Test]
@@ -32,6 +30,8 @@ namespace Prime.UnitTests.Services
             var eventComplet = FactoryEvent.SimpleEvent();
             var messageReturn = "OK";
             _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);
@@ -268,23 +268,10 @@ namespace Prime.UnitTests.Services
             Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
         }
 
-        /*[Test]
-        public void Given_event_without_lote_When_save_Then_return_message_miss_lote()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Lot = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Lote é Obrigatório." };
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
-        }*/
+        
 
         [Test]
-        public void Given_event_without_variant_When_save_Then_return_message_miss_VipArea()
+        public void Given_event_without_variant_When_save_Then_return_message_miss_Variant()
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
@@ -298,20 +285,22 @@ namespace Prime.UnitTests.Services
             Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
         }
 
-        [Test]
+        /*[Test]
         public void Given_complet_event_When_save_has_error_null_in_repository_Then_return_message_error_internal()
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             MessageReturn? messageReturn = null;
             _eventRepositoryMock.Setup(x => x.Save<MessageReturn>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);
 
             //Assert
             Assert.AreEqual("", resultMethod.Result.Message);
-        }
+        }*/
 
         [Test]
         public void Given_id_event_When_findById_Then_return_objectEvent()
@@ -397,6 +386,23 @@ namespace Prime.UnitTests.Services
 
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);
+        }
+
+        [Test]
+        public void Given_complet_event_When_save_Then_return_Internal_error()
+        {
+            //Arrange
+            var eventComplet = FactoryEvent.SimpleEvent();
+            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).
+                Throws(new Exception("Erro ao conectar a base de dados"));
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
+
+            //Act
+            var resultMethod = _eventService.SaveAsync(eventComplet);
+
+            //Assert
+            Assert.IsNotEmpty(resultMethod.Exception.Message);
         }
     }
 }

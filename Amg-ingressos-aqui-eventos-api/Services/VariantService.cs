@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
-using System.Text;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
@@ -28,11 +23,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 if (variant.Name == "")
                     throw new SaveVariantException("Nome é Obrigatório.");
+                if(!variant.Lot.Any()){
+                    throw new SaveVariantException("Lote é Obrigatório.");
+                }
 
                 variant.Lot.ForEach(async i => {
                     i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
                 });
-                
+                variant.Status = Enum.StatusVariant.Active;
                 _messageReturn.Data = await _variantRepository.Save<object>(variant);
             }
             catch (SaveVariantException ex)

@@ -44,7 +44,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Posicoes/cadeiras
         /// </summary>
-        public Positions positions { get; set; }
+        public Positions Positions { get; set; }
+        /// <summary>
+        /// status Lot
+        /// </summary>
+        [Required]
+        public Enum.StatusLot Status { get; set; }
 
     }
 }

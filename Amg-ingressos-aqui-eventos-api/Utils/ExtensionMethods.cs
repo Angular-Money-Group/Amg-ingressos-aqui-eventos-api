@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 
-namespace Amg_ingressos_aqui_eventos_api.utils
+namespace Amg_ingressos_aqui_eventos_api.Utils
 {
     public static class ExtensionMethods
     {

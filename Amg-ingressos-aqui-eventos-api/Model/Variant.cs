@@ -30,6 +30,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Flag Posicoes
         /// </summary>
         [Required]
-        public bool positions { get; set; }
+        public bool Positions { get; set; }
+        /// <summary>
+        /// status variante
+        /// </summary>
+        [Required]
+        public Enum.StatusVariant Status { get; set; }
     }
 }

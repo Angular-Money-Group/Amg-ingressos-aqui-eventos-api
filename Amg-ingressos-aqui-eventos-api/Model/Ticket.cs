@@ -15,16 +15,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-        /// <summary>
-        /// Id mongo Evento
-        /// </summary>
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? IdEvent { get; set; }
-        /// <summary>
-        /// Id mongo Variante
-        /// </summary>
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? IdVariant { get; set; }
+        
         /// <summary>
         /// Id mongo Lote
         /// </summary>

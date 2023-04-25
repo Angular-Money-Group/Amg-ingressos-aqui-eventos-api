@@ -1,4 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(MessageLogErrors.GetAllEventMessage, ex);
-                return StatusCode(500,MessageLogErrors.GetAllEventMessage);
+                return StatusCode(500, MessageLogErrors.GetAllEventMessage);
             }
         }
 
@@ -69,10 +70,15 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Data as Event);
             }
+            catch (FindByIdEventException ex)
+            {
+                _logger.LogInformation(MessageLogErrors.FindByIdEventMessage, ex);
+                return NoContent();
+            }
             catch (Exception ex)
             {
                 _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
-                return StatusCode(500,MessageLogErrors.FindByIdEventMessage);
+                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
             }
         }
 
@@ -84,7 +90,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
         [Route("createEvent")]
-        public async Task<IActionResult> SaveEventAsync([FromBody]Event eventObject)
+        public async Task<IActionResult> SaveEventAsync([FromBody] Event eventObject)
         {
             try
             {
@@ -100,7 +106,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(MessageLogErrors.saveEventMessage, ex);
-                return StatusCode(500,MessageLogErrors.saveEventMessage);
+                return StatusCode(500, MessageLogErrors.saveEventMessage);
             }
         }
 
@@ -123,6 +129,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 }
 
                 return Ok(result.Data);
+            }
+            catch (DeleteEventException ex)
+            {
+                _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
+                return NoContent();
             }
             catch (Exception ex)
             {

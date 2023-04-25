@@ -7,7 +7,7 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using System.Text;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
-using Amg_ingressos_aqui_eventos_api.utils;
+using Amg_ingressos_aqui_eventos_api.Utils;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
