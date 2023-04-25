@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -24,7 +20,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Lista de lotes
         /// </summary>
-        [Required]
+        [BsonIgnore]
         public List<Lot> Lot { get; set; }
         /// <summary>
         /// Flag Posicoes
@@ -36,5 +32,10 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public Enum.StatusVariant Status { get; set; }
+        /// <summary>
+        /// Id Evento
+        /// </summary>
+        [Required]
+        public string IdEvent { get; set; }
     }
 }

@@ -27,11 +27,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new SaveVariantException("Lote é Obrigatório.");
                 }
 
-                variant.Lot.ForEach(async i => {
-                    i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
-                });
                 variant.Status = Enum.StatusVariant.Active;
                 _messageReturn.Data = await _variantRepository.Save<object>(variant);
+
+                variant.Lot.ForEach(async i => {
+                    i.IdVariant = _messageReturn.Data.ToString();
+                    i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
+                });
+                
             }
             catch (SaveVariantException ex)
             {

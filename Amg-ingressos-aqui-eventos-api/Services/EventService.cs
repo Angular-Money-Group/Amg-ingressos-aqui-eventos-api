@@ -47,12 +47,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 ValidateModelSave(eventSave);
 
+                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+                
                 eventSave.Variant.ForEach(i =>
                 {
+                    i.IdEvent = _messageReturn.Data.ToString()??string.Empty;
                     i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
                 });
-
-                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
             }
             catch (SaveEventException ex)
             {

@@ -6,23 +6,23 @@ using System.Data;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 
-namespace Amg_ingressos_aqui_Lotos_api.Repository
+namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
     public class LotRepository<T> : ILotRepository
     {
         private readonly IMongoCollection<Lot> _variantCollection;
-        public LotRepository(IDbConnection<Lot> dbconnection)
+        public LotRepository(IDbConnection<Lot> dbConnection)
         {
-            _variantCollection = dbconnection.GetConnection();
+            _variantCollection = dbConnection.GetConnection("lots");
         }
         
-        public async Task<object> Save<T>(object LotComplet)
+        public async Task<object> Save<T>(object Lot)
         {
             try
             {
-                await _variantCollection.InsertOneAsync(LotComplet as Lot);
-                return "Lote criado";
+                await _variantCollection.InsertOneAsync(Lot as Lot);
+                return ((Lot)Lot).Id;
             }
             catch (SaveLotException ex)
             {

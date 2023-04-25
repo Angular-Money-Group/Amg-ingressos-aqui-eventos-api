@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -50,6 +46,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public Enum.StatusLot Status { get; set; }
+        /// <summary>
+        /// Id Variant
+        /// </summary>
+        [Required]
+        public string IdVariant { get; set; }
 
     }
 }

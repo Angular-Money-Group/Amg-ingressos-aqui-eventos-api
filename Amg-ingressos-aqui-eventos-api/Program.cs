@@ -1,4 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Infra;
+using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services;
@@ -19,10 +20,19 @@ builder.Services.Configure<EventDatabaseSettings>(
 // injecao de dependencia
 //services
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IVariantService, VariantService>();
+builder.Services.AddScoped<ILotService, LotService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
+builder.Services.AddScoped<IVariantRepository, VariantRepository<object>>();
+builder.Services.AddScoped<ILotRepository, LotRepository<object>>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository<object>>();
 //infra
-builder.Services.AddScoped<IDbConnection<object>, DbConnection<object>>();
+builder.Services.AddScoped<IDbConnection<Event>, DbConnection<Event>>();
+builder.Services.AddScoped<IDbConnection<Variant>, DbConnection<Variant>>();
+builder.Services.AddScoped<IDbConnection<Lot>, DbConnection<Lot>>();
+builder.Services.AddScoped<IDbConnection<Ticket>, DbConnection<Ticket>>();
 
 var app = builder.Build();
 app.UseSwagger();

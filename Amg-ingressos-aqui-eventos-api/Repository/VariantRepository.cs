@@ -2,11 +2,10 @@ using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
-using System.Data;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 
-namespace Amg_ingressos_aqui_Variantos_api.Repository
+namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
     public class VariantRepository<T> : IVariantRepository
@@ -14,15 +13,15 @@ namespace Amg_ingressos_aqui_Variantos_api.Repository
         private readonly IMongoCollection<Variant> _variantCollection;
         public VariantRepository(IDbConnection<Variant> dbconnection)
         {
-            _variantCollection = dbconnection.GetConnection();
+            _variantCollection = dbconnection.GetConnection("variants");
         }
-        
-        public async Task<object> Save<T>(object VariantComplet)
+
+        public async Task<object> Save<T>(object variant)
         {
             try
             {
-                await _variantCollection.InsertOneAsync(VariantComplet as Variant);
-                return "Variante criada";
+                await _variantCollection.InsertOneAsync(variant as Variant);
+                return ((Variant)variant).Id;
             }
             catch (SaveVariantException ex)
             {

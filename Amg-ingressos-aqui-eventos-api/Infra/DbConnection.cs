@@ -12,13 +12,13 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
             _config = eventDatabaseSettings;
         }
 
-        public IMongoCollection<T> GetConnection(){
+        public IMongoCollection<T> GetConnection(string colletionName){
 
             var mongoUrl = new MongoUrl(_config.Value.ConnectionString);
             var _mongoClient = new MongoClient(mongoUrl);
             var mongoDatabase = _mongoClient.GetDatabase(_config.Value.DatabaseName);
 
-            return mongoDatabase.GetCollection<T>(_config.Value.EventCollectionName);
+            return mongoDatabase.GetCollection<T>(colletionName);
         }
     }
 }

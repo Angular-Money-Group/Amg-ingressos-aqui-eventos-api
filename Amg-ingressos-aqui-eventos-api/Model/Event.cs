@@ -55,19 +55,16 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Lista de Variants
         /// </summary>
+        [BsonIgnore]
         [Required]
         public List<Variant>? Variant { get; set; }
         /// <summary>
         /// Id mongo Meio de Recebimento
         /// </summary>
-        [BsonRepresentation(BsonType.ObjectId)]
-        [Required]
         public string? IdMeansReceipt { get; set; }
         /// <summary>
         /// Id mongo Meio de Recebimento
         /// </summary>
-        [BsonRepresentation(BsonType.ObjectId)]
-        [Required]
         public string? IdOrganizer { get; set; }
     }
 }

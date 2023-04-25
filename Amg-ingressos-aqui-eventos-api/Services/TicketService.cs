@@ -13,10 +13,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class TicketService : ITicketService
     {
-        private IVariantRepository _ticketRepository;
+        private ITicketRepository _ticketRepository;
         private MessageReturn _messageReturn;
 
-        public TicketService(IVariantRepository ticketRepository)
+        public TicketService(ITicketRepository ticketRepository)
         {
             _ticketRepository = ticketRepository;
             _messageReturn = new MessageReturn();
@@ -25,11 +25,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                ticket.IdLote.ValidateIdMongo();
+                ticket?.IdLote?.ValidateIdMongo();
+                if (ticket?.Value == 0)
+                    throw new SaveTicketException("Valor do Ingresso é Obrigatório.");
 
                 _messageReturn.Data = await _ticketRepository.Save<object>(ticket);
             }
-            catch (SaveVariantException ex)
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (IdMongoException ex)
             {
                 _messageReturn.Message = ex.Message;
             }

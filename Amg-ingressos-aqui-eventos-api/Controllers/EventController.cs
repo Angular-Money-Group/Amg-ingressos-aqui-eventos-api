@@ -62,11 +62,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.FindByIdAsync(id);
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
 
                 return Ok(result.Data as Event);
             }
@@ -95,11 +90,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.SaveAsync(eventObject);
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
 
                 return Ok(result.Data);
             }
@@ -122,11 +112,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.DeleteAsync(id);
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(MessageLogErrors.deleteEventMessage);
-                    return NoContent();
-                }
 
                 return Ok(result.Data);
             }

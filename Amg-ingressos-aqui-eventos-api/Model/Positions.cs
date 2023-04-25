@@ -11,7 +11,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Total Posições
         /// </summary>
-        [Required]
         public int TotalPositions { get; set; }
         /// <summary>
         /// Posições Vendidas
