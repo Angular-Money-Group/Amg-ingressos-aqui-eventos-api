@@ -22,7 +22,7 @@ builder.Services.AddScoped<IEventService, EventService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
 //infra
-builder.Services.AddScoped<IDbConnection, DbConnection>();
+builder.Services.AddScoped<IDbConnection<object>, DbConnection<object>>();
 
 var app = builder.Build();
 app.UseSwagger();

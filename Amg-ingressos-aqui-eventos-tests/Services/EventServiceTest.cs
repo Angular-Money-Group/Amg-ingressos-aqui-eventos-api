@@ -3,6 +3,7 @@ using Amg_ingressos_aqui_eventos_api.Services;
 using NUnit.Framework;
 using Moq;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
+using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
 using System.Text.Json;
 
@@ -11,13 +12,17 @@ namespace Prime.UnitTests.Services
     public class EventServiceTest
     {
         private EventService _eventService;
-        private Mock<IEventRepository> _eventServiceMock = new Mock<IEventRepository>();
+        private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
+        private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
 
         [SetUp]
         public void SetUp()
         {
-            _eventServiceMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventServiceMock.Object);
+            _eventRepositoryMock = new Mock<IEventRepository>();
+            _eventService = new EventService(_eventRepositoryMock.Object,
+                                _variantServiceMock.Object,
+                                _ticketServiceMock.Object);
         }
 
         [Test]
@@ -26,7 +31,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             var messageReturn = "OK";
-            _eventServiceMock.Setup(x => x.Save<object>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);
@@ -299,7 +304,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             MessageReturn? messageReturn = null;
-            _eventServiceMock.Setup(x => x.Save<MessageReturn>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Save<MessageReturn>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);
@@ -314,7 +319,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventServiceMock.Setup(x => x.FindById<Event>(id)).Returns(Task.FromResult(eventComplet as object));
+            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).Returns(Task.FromResult(eventComplet as object));
 
             //Act
             var result = _eventService.FindByIdAsync(id);
@@ -357,7 +362,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var messageReturn = "Evento deletado";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventServiceMock.Setup(x => x.Delete<object>(id)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Returns(Task.FromResult(messageReturn as object));
 
             //Act
             var result = _eventService.DeleteAsync(id);
@@ -385,7 +390,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventServiceMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as IEnumerable<object>));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as IEnumerable<object>));
 
             //Act
             var resultTask = _eventService.GetAllEventsAsync();

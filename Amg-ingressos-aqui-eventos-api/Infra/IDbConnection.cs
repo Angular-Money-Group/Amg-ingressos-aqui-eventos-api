@@ -3,8 +3,8 @@ using MongoDB.Driver;
 
 namespace Amg_ingressos_aqui_eventos_api.Infra
 {
-    public interface IDbConnection
+    public interface IDbConnection<T>
     {
-        IMongoCollection<Event> GetConnection();
+        IMongoCollection<T> GetConnection();
     }
 }

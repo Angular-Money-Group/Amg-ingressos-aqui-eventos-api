@@ -11,7 +11,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     public class EventRepository<T> : IEventRepository
     {
         private readonly IMongoCollection<Event> _eventCollection;
-        public EventRepository(IDbConnection dbconnection)
+        public EventRepository(IDbConnection<Event> dbconnection)
         {
             _eventCollection = dbconnection.GetConnection();
         }

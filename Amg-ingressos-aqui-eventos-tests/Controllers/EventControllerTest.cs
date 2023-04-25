@@ -9,6 +9,7 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
@@ -16,12 +17,17 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
     {
         private EventController _eventController;
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
+        private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
         private Mock<ILogger<EventController>> _loggerMock = new Mock<ILogger<EventController>>();
 
         [SetUp]
         public void Setup()
         {
-            _eventController = new EventController(_loggerMock.Object, new EventService(_eventRepositoryMock.Object));
+            _eventController = new EventController(_loggerMock.Object, 
+            new EventService(_eventRepositoryMock.Object,
+            _variantServiceMock.Object,
+            _ticketServiceMock.Object));
         }
 
         [Test]

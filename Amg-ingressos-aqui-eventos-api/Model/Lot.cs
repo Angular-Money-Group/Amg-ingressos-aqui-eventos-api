@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Lot
     {
+        /// <summary>
+        /// Id mongo
+        /// </summary>
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
         /// <summary>
         /// Total de ingressos
         /// </summary>
@@ -34,7 +42,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         public DateTime EndDateSales { get; set; }
         /// <summary>
-        /// Data Fim das vendas
+        /// Posicoes/cadeiras
         /// </summary>
         public Positions positions { get; set; }
 

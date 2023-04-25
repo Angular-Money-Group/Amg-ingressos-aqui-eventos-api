@@ -3,17 +3,20 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Amg_ingressos_aqui_eventos_api.utils;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class EventService : IEventService
     {
         private IEventRepository _eventRepository;
+        private IVariantService _variantService;
         private MessageReturn _messageReturn;
 
-        public EventService(IEventRepository eventRepository)
+        public EventService(IEventRepository eventRepository, IVariantService variantService,ITicketService ticketService)
         {
             _eventRepository = eventRepository;
+            _variantService = variantService;
             _messageReturn = new MessageReturn();
         }
 
@@ -21,16 +24,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Message = ValidateIdMongo(id);
+                id.ValidateIdMongo();
 
-                if (_messageReturn.Message.Any())
-                    throw new FindByIdEventException(_messageReturn.Message);
-                
                 _messageReturn.Data = await _eventRepository.FindById<Event>(id);
 
                 return _messageReturn;
             }
-            catch (FindByIdEventException ex)
+            catch (IdMongoException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -45,10 +45,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Message = ValidateModelSave(eventSave);
+                ValidateModelSave(eventSave);
 
-                if (_messageReturn.Message.Any())
-                    throw new SaveEventException(_messageReturn.Message);
+                eventSave.Variant.ForEach(async i =>
+                {
+                    i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
+                });
+
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
             }
@@ -68,14 +71,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Message = ValidateIdMongo(id);
-
-                if (_messageReturn.Message.Any())
-                    throw new DeleteEventException(_messageReturn.Message);
+                id.ValidateIdMongo();
 
                 _messageReturn.Data = (string)await _eventRepository.Delete<object>(id);
             }
-            catch (DeleteEventException ex)
+            catch (IdMongoException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -103,54 +103,40 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        private string ValidateModelSave(Event eventSave)
+        private void ValidateModelSave(Event eventSave)
         {
-            StringBuilder mensage = new StringBuilder();
-
             if (eventSave.Name == "")
-                mensage.Append("Nome é Obrigatório.");
-            else if (eventSave.Local == "")
-                mensage.Append("Local é Obrigatório.");
-            else if (eventSave.Type == "")
-                mensage.Append("Tipo é Obrigatório.");
-            else if (eventSave.Image == "")
-                mensage.Append("Imagem é Obrigatório.");
-            else if (eventSave.Description == "")
-                mensage.Append("Descrição é Obrigatório.");
-            else if (eventSave.Address == null)
-                mensage.Append("Endereço é Obrigatório.");
-            else if (eventSave.Address.Cep == "")
-                mensage.Append("CEP é Obrigatório.");
-            else if (eventSave.Address.Number == string.Empty)
-                mensage.Append("Número Endereço é Obrigatório.");
-            else if (eventSave.Address.Neighborhood == "")
-                mensage.Append("Vizinhança é Obrigatório.");
-            else if (eventSave.Address.Complement == "")
-                mensage.Append("Complemento é Obrigatório.");
-            else if (eventSave.Address.ReferencePoint == "")
-                mensage.Append("Ponto de referência é Obrigatório.");
-            else if (eventSave.Address.City == "")
-                mensage.Append("Cidade é Obrigatório.");
-            else if (eventSave.Address.State == "")
-                mensage.Append("Estado é Obrigatório.");
-            else if (eventSave.StartDate == DateTime.MinValue)
-                mensage.Append("Data Inicio é Obrigatório.");
-            else if (eventSave.EndDate == DateTime.MinValue)
-                mensage.Append("Data Fim é Obrigatório.");
-            else if (!eventSave.Variant.Any())
-                mensage.Append("Variante é Obrigatório.");
-
-            return mensage.ToString();
-        }
-
-        private string ValidateIdMongo(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                return "Id é obrigatório";
-            else if (id.Length < 24)
-                return "Id é obrigatório e está menor que 24 digitos";
-            else
-                return string.Empty;
+                throw new SaveEventException("Nome é Obrigatório.");
+            if (eventSave.Local == "")
+                throw new SaveEventException("Local é Obrigatório.");
+            if (eventSave.Type == "")
+                throw new SaveEventException("Tipo é Obrigatório.");
+            if (eventSave.Image == "")
+                throw new SaveEventException("Imagem é Obrigatório.");
+            if (eventSave.Description == "")
+                throw new SaveEventException("Descrição é Obrigatório.");
+            if (eventSave.Address == null)
+                throw new SaveEventException("Endereço é Obrigatório.");
+            if (eventSave.Address.Cep == "")
+                throw new SaveEventException("CEP é Obrigatório.");
+            if (eventSave.Address.Number == string.Empty)
+                throw new SaveEventException("Número Endereço é Obrigatório.");
+            if (eventSave.Address.Neighborhood == "")
+                throw new SaveEventException("Vizinhança é Obrigatório.");
+            if (eventSave.Address.Complement == "")
+                throw new SaveEventException("Complemento é Obrigatório.");
+            if (eventSave.Address.ReferencePoint == "")
+                throw new SaveEventException("Ponto de referência é Obrigatório.");
+            if (eventSave.Address.City == "")
+                throw new SaveEventException("Cidade é Obrigatório.");
+            if (eventSave.Address.State == "")
+                throw new SaveEventException("Estado é Obrigatório.");
+            if (eventSave.StartDate == DateTime.MinValue)
+                throw new SaveEventException("Data Inicio é Obrigatório.");
+            if (eventSave.EndDate == DateTime.MinValue)
+                throw new SaveEventException("Data Fim é Obrigatório.");
+            if (!eventSave.Variant.Any())
+                throw new SaveEventException("Variante é Obrigatório.");
         }
     }
 }
