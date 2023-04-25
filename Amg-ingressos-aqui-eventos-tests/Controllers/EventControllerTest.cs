@@ -77,7 +77,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var messageReturn = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).
+                Returns(Task.FromResult(messageReturn as object));
 
             // Act
             var result = (await _eventController.FindByIdEventAsync(id) as OkObjectResult);
@@ -92,7 +93,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
             var espectedReturn = MessageLogErrors.FindByIdEventMessage;
-            _eventRepositoryMock.Setup(x => x.FindById<object>(id)).Throws(new Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.FindById<object>(id)).
+                Throws(new Exception("error conection database"));
 
             // Act
             var result = (await _eventController.FindByIdEventAsync(id) as ObjectResult);
@@ -108,7 +110,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var expectedMessage = "Sem registros";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).Throws(new FindByIdEventException(expectedMessage));
+            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).
+                Throws(new FindByIdEventException(expectedMessage));
 
             // Act
             var result = (await _eventController.FindByIdEventAsync(id) as NoContentResult);

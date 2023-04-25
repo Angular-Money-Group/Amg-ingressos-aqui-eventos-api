@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amg_ingressos_aqui_eventos_api.Enum;
 using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
@@ -24,17 +25,20 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 new Variant(){
                     Name = "Pista",
                     Positions = false,
-                    Lot = FactoryLot.ListSimpleLot().ToList()
+                    Lot = FactoryLot.ListSimpleLot().ToList(),
+                    Status = StatusVariant.Active
                 },
                 new Variant(){
                     Name = "Camarote",
                     Positions = false,
-                    Lot = FactoryLot.ListSimpleLot().ToList()
+                    Lot = FactoryLot.ListSimpleLot().ToList(),
+                    Status = StatusVariant.Active
                 },
                 new Variant(){
                     Name = "Area VIP",
                     Positions = false,
-                    Lot = FactoryLot.ListSimpleLot().ToList()
+                    Lot = FactoryLot.ListSimpleLot().ToList(),
+                    Status = StatusVariant.Active
                 },
             };
         }

@@ -31,7 +31,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 EndDate = new DateTime(2023, 10, 31, 05, 00, 00),
                 IdMeansReceipt = "3b241101-e2bb-4255-8caf-4136c566a962",
                 IdOrganizer = "3b241101-e2bb-4255-8caf-4136c566a962",
-                Variant = FactoryVariant.ListSimpleVariant().ToList(),
+                Variant = FactoryVariant.ListSimpleVariant().ToList()
             };
         }
         internal static Event SimpleEventWithPosition()
