@@ -19,7 +19,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Id mongo Lote
         /// </summary>
-        public string? IdLote { get; set; }
+        public string? IdLot { get; set; }
         /// <summary>
         /// Posicao
         /// </summary>

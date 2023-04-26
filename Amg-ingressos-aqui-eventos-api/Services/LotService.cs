@@ -33,7 +33,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     Task<MessageReturn> task = _ticketService.SaveAsync(new Ticket()
                     {
-                        IdLote = _messageReturn.Data.ToString(),
+                        IdLot = _messageReturn.Data.ToString(),
                         Value = lot.ValueTotal/lot.TotalTickets
                     });
                 }

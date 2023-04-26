@@ -12,7 +12,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Ticket()
             {
-                IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                 Position = "0",
                 Value = new decimal(150),
             };
@@ -21,17 +21,17 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new List<Ticket>(){
                 new Ticket(){
-                    IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                     Position = string.Empty,
                     Value = new decimal(150)
                 },
                 new Ticket(){
-                    IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                     Position = string.Empty,
                     Value = new decimal(200)
                 },
                 new Ticket(){
-                    IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                     Position = string.Empty,
                     Value = new decimal(300)
                 }
@@ -41,17 +41,17 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new List<Ticket>(){
                 new Ticket(){
-                    IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                     Position = "1",
                     Value = new decimal(150)
                 },
                 new Ticket(){
-                    IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                     Position = "2",
                     Value = new decimal(200)
                 },
                 new Ticket(){
-                    IdLote = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
                     Position = "3",
                     Value = new decimal(300)
                 }

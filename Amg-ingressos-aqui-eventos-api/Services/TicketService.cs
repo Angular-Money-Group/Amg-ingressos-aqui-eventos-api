@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                ticket?.IdLote?.ValidateIdMongo();
+                ticket?.IdLot?.ValidateIdMongo();
                 if (ticket?.Value == 0)
                     throw new SaveTicketException("Valor do Ingresso é Obrigatório.");
 

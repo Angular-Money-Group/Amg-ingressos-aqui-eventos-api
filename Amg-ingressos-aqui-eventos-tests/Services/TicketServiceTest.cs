@@ -57,7 +57,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var ticketComplet = FactoryTicket.SimpleTicket();
-            ticketComplet.IdLote = string.Empty;
+            ticketComplet.IdLot = string.Empty;
             var expectedMessage = new MessageReturn() { 
                 Message = "Id é obrigatório" };
 
