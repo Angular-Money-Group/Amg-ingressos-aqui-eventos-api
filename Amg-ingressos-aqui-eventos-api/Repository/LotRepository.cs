@@ -11,26 +11,63 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     [ExcludeFromCodeCoverage]
     public class LotRepository<T> : ILotRepository
     {
-        private readonly IMongoCollection<Lot> _variantCollection;
+        private readonly IMongoCollection<Lot> _lotCollection;
+        private readonly MongoClient _mongoClient;
         public LotRepository(IDbConnection<Lot> dbConnection)
         {
-            _variantCollection = dbConnection.GetConnection("lots");
+            _lotCollection = dbConnection.GetConnection("lots");
+            _mongoClient = dbConnection.GetClient();
         }
-        
+
         public async Task<object> Save<T>(object Lot)
         {
-            try
+            using (var session = await _mongoClient.StartSessionAsync())
             {
-                await _variantCollection.InsertOneAsync(Lot as Lot);
-                return ((Lot)Lot).Id;
+                try
+                {
+                    await _lotCollection.InsertOneAsync(Lot as Lot);
+                    return ((Lot)Lot).Id;
+                    await session.CommitTransactionAsync();
+                }
+                catch (SaveLotException ex)
+                {
+                    await session.AbortTransactionAsync();
+                    throw ex;
+                }
+                catch (System.Exception ex)
+                {
+                    await session.AbortTransactionAsync();
+                    throw;
+
+                }
             }
-            catch (SaveLotException ex)
+        }
+        public async Task<object> Delete<T>(object id)
+        {
+            using (var session = await _mongoClient.StartSessionAsync())
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                try
+                {
+                    var filter = Builders<Lot>.Filter.Eq(l => l.Id, id.ToString());
+                    var deleteResult = await _lotCollection.DeleteOneAsync(filter);
+                    if (deleteResult.DeletedCount == 1)
+                        return "Lote deletado";
+                    else
+                        throw new SaveLotException("algo deu errado ao deletar");
+
+                    await session.CommitTransactionAsync();
+                }
+                catch (SaveLotException ex)
+                {
+                    await session.AbortTransactionAsync();
+                    throw ex;
+                }
+                catch (System.Exception ex)
+                {
+                    await session.AbortTransactionAsync();
+                    throw;
+
+                }
             }
         }
     }

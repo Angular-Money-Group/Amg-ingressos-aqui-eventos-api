@@ -7,6 +7,7 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using System.Text;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
+using Amg_ingressos_aqui_eventos_api.Utils;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -31,23 +32,48 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = await _lotRepository.Save<object>(lot);
                 for (int i = 0; i < lot.TotalTickets; i++)
                 {
-                    Task<MessageReturn> task = _ticketService.SaveAsync(new Ticket()
+                    await _ticketService.SaveAsync(new Ticket()
                     {
-                        IdLot = _messageReturn.Data.ToString(),
-                        Value = lot.ValueTotal/lot.TotalTickets
+                        //IdLot = _messageReturn.Data.ToString(),
+                        Value = lot.ValueTotal / lot.TotalTickets
                     });
                 }
             }
+            //catch (SaveTicketException ex)
+            //{
+            //    DeleteAsync(lot.Id);
+            //    _messageReturn.Message = ex.Message;
+           // }
             catch (SaveLotException ex)
             {
+                DeleteAsync(lot.Id);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
+                DeleteAsync(lot.Id);
                 throw ex;
             }
 
             return _messageReturn;
+        }
+        private async Task DeleteAsync(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+                _messageReturn.Data = await _lotRepository.Delete<object>(id);
+            }
+            catch (SaveLotException ex)
+            {
+                DeleteAsync(id);
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                DeleteAsync(id);
+                throw ex;
+            }
         }
 
         private void ValidateModelSave(Lot lot)

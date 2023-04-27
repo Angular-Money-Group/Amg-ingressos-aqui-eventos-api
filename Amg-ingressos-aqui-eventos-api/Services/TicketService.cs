@@ -25,19 +25,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                ticket?.IdLot?.ValidateIdMongo();
+                if(ticket.IdLot== null)
+                    throw new SaveTicketException("Id Lote é Obrigatório.");
                 if (ticket?.Value == 0)
                     throw new SaveTicketException("Valor do Ingresso é Obrigatório.");
+
+                ticket?.IdLot?.ValidateIdMongo();
 
                 _messageReturn.Data = await _ticketRepository.Save<object>(ticket);
             }
             catch (SaveTicketException ex)
             {
                 _messageReturn.Message = ex.Message;
+                throw ex;
             }
             catch (IdMongoException ex)
             {
                 _messageReturn.Message = ex.Message;
+                throw ex;
             }
             catch (Exception ex)
             {
