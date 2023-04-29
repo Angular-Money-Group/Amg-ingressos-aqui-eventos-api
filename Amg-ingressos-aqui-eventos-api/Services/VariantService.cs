@@ -30,7 +30,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 variant.Status = Enum.StatusVariant.Active;
                 _messageReturn.Data = await _variantRepository.Save<object>(variant);
 
-                variant.Lot.ForEach(async i => {
+                variant.Lot.ToList().ForEach(async i => {
                     i.IdVariant = _messageReturn.Data.ToString();
                     i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
                 });

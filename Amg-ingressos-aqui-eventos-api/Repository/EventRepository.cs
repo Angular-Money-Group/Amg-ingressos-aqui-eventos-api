@@ -4,6 +4,10 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Infra;
+using MongoDB.Bson;
+using MongoDB.Driver.Core.Operations;
+using MongoDB.Bson.Serialization;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -19,7 +23,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.DeleteOneAsync(x => x.Id == id as string);
+                var result = await _eventCollection.DeleteOneAsync(x => x._Id == id as string);
                 if (result.DeletedCount >= 1)
                     return "Evento Deletado";
                 else
@@ -39,8 +43,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.Find(x => x.Id == id as string).
-                    FirstOrDefaultAsync();
+                var result = await _eventCollection.FindAsync<Event>(x => x._Id == id as string)
+                    .Result.FirstOrDefaultAsync();
+                
+
                 if (result == null)
                     throw new FindByIdEventException("Evento não encontrado");
 
@@ -60,11 +66,55 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.Find(_ => true).ToListAsync();
-                if (!result.Any())
+                var json = @"{
+                                $lookup: {
+                                    from: 'variants',
+                                    'let': { eventId : { '$toString': '$_id' }},
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $eq: [
+                                                        '$IdEvent',
+                                                        '$$eventId'
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            $lookup: {
+                                                from: 'lots',
+                                                'let': { variantId : { '$toString': '$_id' }},
+                                                pipeline: [
+                                                    {
+                                                        $match: {
+                                                            $expr: {
+                                                                $eq: [
+                                                                    '$IdVariant',
+                                                                    '$$variantId'
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ],
+                                                as: 'Lot'
+                                            }
+                                        },
+                                    ],
+                                    as: 'Variant'
+                                }
+                            }";
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] { 
+                    document
+                };
+                List<GetEvents> pResults = _eventCollection
+                                                .Aggregate<GetEvents>(pipeline).ToList();
+                //var result = await _eventCollection.Find(_ => true).ToListAsync();
+                if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 
-                return result;
+                return pResults;
             }
             catch (GetAllEventException ex)
             {
@@ -81,7 +131,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 await _eventCollection.InsertOneAsync(eventComplet as Event);
-                return (eventComplet as Event).Id;
+                return (eventComplet as Event)._Id;
             }
             catch (SaveEventException ex)
             {

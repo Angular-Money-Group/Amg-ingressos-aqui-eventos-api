@@ -38,7 +38,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                     return NoContent();
                 }
 
-                return Ok(result.Data as List<Event>);
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {

@@ -8,7 +8,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Event()
             {
-                Id = "1b111101-e2bb-4255-8caf-4136c566a962",
+                _Id = "1b111101-e2bb-4255-8caf-4136c566a962",
                 Name = "Gustavo Lima",
                 Local = "Arena Race",
                 Type = "Show",
@@ -38,7 +38,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Event()
             {
-                Id = "2b222202-e2bb-4255-8caf-4136c566a962",
+                _Id = "2b222202-e2bb-4255-8caf-4136c566a962",
                 Name = "CB LOL",
                 Local = "Parque Sabiázinho",
                 Type = "Gamer",
