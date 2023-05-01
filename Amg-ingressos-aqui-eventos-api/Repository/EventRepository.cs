@@ -8,6 +8,7 @@ using MongoDB.Bson;
 using MongoDB.Driver.Core.Operations;
 using MongoDB.Bson.Serialization;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -43,14 +44,27 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.FindAsync<Event>(x => x._Id == id as string)
-                    .Result.FirstOrDefaultAsync();
+                var json = QuerysMongo.GetEventQuery;
+
+                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '"+ id.ToString() +"' }] }}");
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] { 
+                    documentFilter,
+                    documentFilter1,
+                    document
+                };
+                List<GetEvents> pResults = _eventCollection
+                                                .Aggregate<GetEvents>(pipeline).ToList();
+
+                //var result = await _eventCollection.FindAsync<Event>(x => x._Id == id as string)
+                //    .Result.FirstOrDefaultAsync();
                 
 
-                if (result == null)
+                if (pResults == null)
                     throw new FindByIdEventException("Evento não encontrado");
 
-                return result;
+                return pResults;
             }
             catch (FindByIdEventException ex)
             {
@@ -66,44 +80,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var json = @"{
-                                $lookup: {
-                                    from: 'variants',
-                                    'let': { eventId : { '$toString': '$_id' }},
-                                    pipeline: [
-                                        {
-                                            $match: {
-                                                $expr: {
-                                                    $eq: [
-                                                        '$IdEvent',
-                                                        '$$eventId'
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            $lookup: {
-                                                from: 'lots',
-                                                'let': { variantId : { '$toString': '$_id' }},
-                                                pipeline: [
-                                                    {
-                                                        $match: {
-                                                            $expr: {
-                                                                $eq: [
-                                                                    '$IdVariant',
-                                                                    '$$variantId'
-                                                                ]
-                                                            }
-                                                        }
-                                                    }
-                                                ],
-                                                as: 'Lot'
-                                            }
-                                        },
-                                    ],
-                                    as: 'Variant'
-                                }
-                            }";
+                var json = QuerysMongo.GetEventQuery;
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] { 
                     document

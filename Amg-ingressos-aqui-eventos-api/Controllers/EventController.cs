@@ -63,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             {
                 var result = await _eventService.FindByIdAsync(id);
 
-                return Ok(result.Data as Event);
+                return Ok(result.Data);
             }
             catch (FindByIdEventException ex)
             {
