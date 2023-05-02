@@ -21,6 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
+                ValidateModelSave(variant);
                 variant.Status = Enum.StatusVariant.Active;
                 _messageReturn.Data = await _variantRepository.Save<object>(variant);
                 var IdentificadorLote = 0;

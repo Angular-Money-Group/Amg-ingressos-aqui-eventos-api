@@ -74,8 +74,6 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
-            _variantRepositoryMock.Setup(x => x.Save<object>(variantComplet))
-                .Returns(Task.FromResult((new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }) as object));
             variantComplet.LocaleImage = string.Empty;
             
             var expectedMessage = new MessageReturn() { Message = "Imagem Variante é Obrigatório." };
