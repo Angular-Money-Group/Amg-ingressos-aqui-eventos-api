@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         [JsonProperty("Positions")]
-        public bool Positions { get; set; }
+        public bool HasPositions { get; set; }
         /// <summary>
         /// status variante
         /// </summary>
@@ -44,5 +44,30 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonIgnore]
         [JsonProperty("Lot")]
         public List<Lot> Lot { get; set; }
+        /// <summary>
+        /// Permitir venda de restante no proximo lote
+        /// </summary>
+        [BsonIgnore]
+        [JsonProperty("SellTicketsInAnotherBatch")]
+        public bool SellTicketsInAnotherBatch { get; set; }
+        /// <summary>
+        /// Vender lote antes de iniciar outro 
+        /// </summary>
+        [BsonIgnore]
+        [JsonProperty("SellTicketsBeforeStartAnother")]
+        public bool SellTicketsBeforeStartAnother { get; set; }
+        /// <summary>
+        /// Vender lote antes de iniciar outro 
+        /// </summary>
+        [BsonIgnore]
+        [JsonProperty("localeImage")]
+        public string LocaleImage { get; set; }
+
+        /// <summary>
+        /// Posicoes/cadeiras
+        /// </summary>
+         [JsonProperty("Positions")]
+        public Positions Positions { get; set; }
+        
     }
 }

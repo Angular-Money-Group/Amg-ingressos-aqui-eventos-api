@@ -55,12 +55,30 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
-        public void Given_variant_without_lot_When_save_Then_return_message_miss_Variant()
+        public void Given_variant_without_lot_When_save_Then_return_message_miss_Lot()
         {
             //Arrange
             var variantComplet = FactoryVariant.SimpleVariant();
             variantComplet.Lot = new List<Lot>();
             var expectedMessage = new MessageReturn() { Message = "Lote é Obrigatório." };
+
+            //Act
+            var resultMethod = _variantService.SaveAsync(variantComplet);
+
+            //Assert
+            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
+        }
+
+        [Test]
+        public void Given_variant_with_position_without_Image_When_save_Then_return_message_miss_Image()
+        {
+            //Arrange
+            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
+            _variantRepositoryMock.Setup(x => x.Save<object>(variantComplet))
+                .Returns(Task.FromResult((new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }) as object));
+            variantComplet.LocaleImage = string.Empty;
+            
+            var expectedMessage = new MessageReturn() { Message = "Imagem Variante é Obrigatório." };
 
             //Act
             var resultMethod = _variantService.SaveAsync(variantComplet);

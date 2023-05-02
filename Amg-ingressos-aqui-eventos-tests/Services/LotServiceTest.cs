@@ -44,8 +44,8 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var lotComplet = FactoryLot.SimpleLot();
-            lotComplet.Description = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Descrição é Obrigatório." };
+            lotComplet.Identificador = 0;
+            var expectedMessage = new MessageReturn() { Message = "Identificador é Obrigatório." };
 
             //Act
             var resultMethod = _lotService.SaveAsync(lotComplet);
