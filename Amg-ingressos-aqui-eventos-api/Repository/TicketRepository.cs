@@ -37,7 +37,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<Ticket>> GetUserTickets<T>(string id)
+        public async Task<List<Ticket>> GetTicketByUser<T>(string id)
         {
             try
             {

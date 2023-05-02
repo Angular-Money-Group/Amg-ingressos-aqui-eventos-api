@@ -10,30 +10,28 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ILogger<TicketController> _logger;
-        private readonly IEventService _eventService;
         private readonly ITicketService _ticketService;
 
         public TicketController(ILogger<TicketController> logger, IEventService eventService, ITicketService ticketService)
         {
             _logger = logger;
-            _eventService = eventService;
             _ticketService = ticketService;
         }
 
         /// <summary>
         /// Busca todos os ingressos do usuário
         /// </summary>
-        /// <returns>200 Lista de todos eventos</returns>
-        /// <returns>204 Nenhum evento encontrado</returns>
+        /// <returns>200 Lista de todos os tickets</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("getTickets")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetUserTicketsAsync(string id)
+        public async Task<IActionResult> GetTicketByUser(string id)
         {
             try
             {
-                var result = await _ticketService.GetUserTicketsAsync(id); 
+                var result = await _ticketService.GetTicketByUser(id); 
                 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -44,8 +42,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.FindByUserIdTicketMessage, ex.Message);
-                return StatusCode(500, MessageLogErrors.FindByUserIdTicketMessage + ex.Message);
+                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
+                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
             }
         }
 }

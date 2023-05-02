@@ -39,7 +39,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         _ticketRepositoryMock.Setup(x => x.GetUserTickets<object>(userID)).Returns(Task.FromResult(messageReturn as List<Ticket>));
 
         // Act
-        var result = await _ticketController.GetUserTicketsAsync(userID);
+        var result = await _ticketController.GetTicketByUser(userID);
 
         // Assert
         Assert.IsInstanceOf<OkObjectResult>(result);
@@ -56,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         _ticketRepositoryMock.Setup(x => x.GetUserTickets<List<Ticket>>(userID)).ReturnsAsync(new List<Ticket>());
 
         // Act
-        var result = await _ticketController.GetUserTicketsAsync(userID);
+        var result = await _ticketController.GetTicketByUser(userID);
 
         // Assert
         Assert.IsInstanceOf<NoContentResult>(result);
@@ -73,7 +73,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         _ticketRepositoryMock.Setup(x => x.GetUserTickets<List<Ticket>>(userID)).ThrowsAsync(new ArgumentException(expectedMessage));
 
         // Act
-        var result = await _ticketController.GetUserTicketsAsync(userID);
+        var result = await _ticketController.GetTicketByUser(userID);
 
         // Assert
         Assert.IsInstanceOf<BadRequestObjectResult>(result);
@@ -90,7 +90,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         _ticketRepositoryMock.Setup(x => x.GetUserTickets<List<Ticket>>(userID)).ThrowsAsync(new Exception(expectedMessage));
 
         // Act
-        var result = await _ticketController.GetUserTicketsAsync(userID);
+        var result = await _ticketController.GetTicketByUser(userID);
 
         // Assert
         Assert.IsInstanceOf<StatusCodeResult>(result);
