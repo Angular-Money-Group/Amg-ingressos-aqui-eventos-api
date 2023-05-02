@@ -1,0 +1,1074 @@
+{
+  "Amg-ingressos-aqui-eventos-api.dll": {
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Program.cs": {
+      "Program": {
+        "System.Void Program::<Main>$(System.String[])": {
+          "Lines": {
+            "7": 0,
+            "11": 0,
+            "13": 0,
+            "14": 0,
+            "16": 0,
+            "17": 0,
+            "21": 0,
+            "23": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "30": 0,
+            "31": 0,
+            "34": 0,
+            "36": 0,
+            "38": 0,
+            "40": 0,
+            "42": 0
+          },
+          "Branches": [
+            {
+              "Line": 30,
+              "Offset": 132,
+              "EndOffset": 134,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 30,
+              "Offset": 132,
+              "EndOffset": 136,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/WeatherForecast.cs": {
+      "Amg_ingressos_aqui_eventos_api.WeatherForecast": {
+        "System.DateOnly Amg_ingressos_aqui_eventos_api.WeatherForecast::get_Date()": {
+          "Lines": {
+            "5": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 Amg_ingressos_aqui_eventos_api.WeatherForecast::get_TemperatureC()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 Amg_ingressos_aqui_eventos_api.WeatherForecast::get_TemperatureF()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.WeatherForecast::get_Summary()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Services/EventService.cs": {
+      "Amg_ingressos_aqui_eventos_api.Services.EventService": {
+        "System.String Amg_ingressos_aqui_eventos_api.Services.EventService::ValidateModel(Amg_ingressos_aqui_eventos_api.Model.Event)": {
+          "Lines": {
+            "109": 21,
+            "110": 21,
+            "112": 21,
+            "113": 1,
+            "114": 20,
+            "115": 1,
+            "116": 19,
+            "117": 1,
+            "118": 18,
+            "119": 1,
+            "120": 17,
+            "121": 1,
+            "122": 16,
+            "123": 1,
+            "124": 15,
+            "125": 1,
+            "126": 14,
+            "127": 1,
+            "128": 13,
+            "129": 1,
+            "130": 12,
+            "131": 1,
+            "132": 11,
+            "133": 1,
+            "134": 10,
+            "135": 1,
+            "136": 9,
+            "137": 1,
+            "138": 8,
+            "139": 1,
+            "140": 7,
+            "141": 1,
+            "142": 6,
+            "143": 1,
+            "145": 21,
+            "146": 21
+          },
+          "Branches": [
+            {
+              "Line": 112,
+              "Offset": 25,
+              "EndOffset": 27,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 112,
+              "Offset": 25,
+              "EndOffset": 44,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 20
+            },
+            {
+              "Line": 114,
+              "Offset": 62,
+              "EndOffset": 64,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 114,
+              "Offset": 62,
+              "EndOffset": 81,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 19
+            },
+            {
+              "Line": 116,
+              "Offset": 99,
+              "EndOffset": 101,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 116,
+              "Offset": 99,
+              "EndOffset": 118,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 18
+            },
+            {
+              "Line": 118,
+              "Offset": 138,
+              "EndOffset": 140,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 1
+            },
+            {
+              "Line": 118,
+              "Offset": 138,
+              "EndOffset": 157,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 17
+            },
+            {
+              "Line": 120,
+              "Offset": 177,
+              "EndOffset": 179,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 1
+            },
+            {
+              "Line": 120,
+              "Offset": 177,
+              "EndOffset": 196,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 16
+            },
+            {
+              "Line": 122,
+              "Offset": 216,
+              "EndOffset": 218,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 1
+            },
+            {
+              "Line": 122,
+              "Offset": 216,
+              "EndOffset": 235,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 15
+            },
+            {
+              "Line": 124,
+              "Offset": 255,
+              "EndOffset": 257,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 1
+            },
+            {
+              "Line": 124,
+              "Offset": 255,
+              "EndOffset": 274,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 14
+            },
+            {
+              "Line": 126,
+              "Offset": 294,
+              "EndOffset": 296,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 1
+            },
+            {
+              "Line": 126,
+              "Offset": 294,
+              "EndOffset": 313,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 13
+            },
+            {
+              "Line": 128,
+              "Offset": 333,
+              "EndOffset": 335,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 1
+            },
+            {
+              "Line": 128,
+              "Offset": 333,
+              "EndOffset": 352,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 12
+            },
+            {
+              "Line": 130,
+              "Offset": 372,
+              "EndOffset": 374,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 1
+            },
+            {
+              "Line": 130,
+              "Offset": 372,
+              "EndOffset": 391,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 11
+            },
+            {
+              "Line": 132,
+              "Offset": 411,
+              "EndOffset": 413,
+              "Path": 0,
+              "Ordinal": 20,
+              "Hits": 1
+            },
+            {
+              "Line": 132,
+              "Offset": 411,
+              "EndOffset": 430,
+              "Path": 1,
+              "Ordinal": 21,
+              "Hits": 10
+            },
+            {
+              "Line": 134,
+              "Offset": 450,
+              "EndOffset": 452,
+              "Path": 0,
+              "Ordinal": 22,
+              "Hits": 1
+            },
+            {
+              "Line": 134,
+              "Offset": 450,
+              "EndOffset": 469,
+              "Path": 1,
+              "Ordinal": 23,
+              "Hits": 9
+            },
+            {
+              "Line": 136,
+              "Offset": 489,
+              "EndOffset": 491,
+              "Path": 0,
+              "Ordinal": 24,
+              "Hits": 1
+            },
+            {
+              "Line": 136,
+              "Offset": 489,
+              "EndOffset": 505,
+              "Path": 1,
+              "Ordinal": 25,
+              "Hits": 8
+            },
+            {
+              "Line": 138,
+              "Offset": 525,
+              "EndOffset": 527,
+              "Path": 0,
+              "Ordinal": 26,
+              "Hits": 1
+            },
+            {
+              "Line": 138,
+              "Offset": 525,
+              "EndOffset": 541,
+              "Path": 1,
+              "Ordinal": 27,
+              "Hits": 7
+            },
+            {
+              "Line": 140,
+              "Offset": 561,
+              "EndOffset": 563,
+              "Path": 0,
+              "Ordinal": 28,
+              "Hits": 1
+            },
+            {
+              "Line": 140,
+              "Offset": 561,
+              "EndOffset": 577,
+              "Path": 1,
+              "Ordinal": 29,
+              "Hits": 6
+            },
+            {
+              "Line": 142,
+              "Offset": 597,
+              "EndOffset": 599,
+              "Path": 0,
+              "Ordinal": 30,
+              "Hits": 1
+            },
+            {
+              "Line": 142,
+              "Offset": 597,
+              "EndOffset": 611,
+              "Path": 1,
+              "Ordinal": 31,
+              "Hits": 21
+            }
+          ]
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Services.EventService::.ctor(Amg_ingressos_aqui_eventos_api.Repository.Interfaces.IEventRepository)": {
+          "Lines": {
+            "14": 35,
+            "15": 35,
+            "16": 35,
+            "17": 35,
+            "18": 35
+          },
+          "Branches": []
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Services.EventService/<DeleteAsync>d__5": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<DeleteAsync>d__5::MoveNext()": {
+          "Lines": {
+            "69": 6,
+            "71": 6,
+            "72": 6,
+            "73": 1,
+            "74": 1,
+            "75": 1,
+            "78": 5,
+            "79": 2,
+            "80": 2,
+            "81": 2,
+            "82": 2,
+            "83": 2,
+            "84": 1,
+            "85": 1,
+            "86": 1,
+            "88": 4,
+            "89": 5
+          },
+          "Branches": [
+            {
+              "Line": 72,
+              "Offset": 40,
+              "EndOffset": 42,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 72,
+              "Offset": 40,
+              "EndOffset": 81,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 5
+            }
+          ]
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Services.EventService/<FindByIdAsync>d__3": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<FindByIdAsync>d__3::MoveNext()": {
+          "Lines": {
+            "21": 5,
+            "23": 5,
+            "24": 5,
+            "25": 1,
+            "26": 1,
+            "27": 1,
+            "30": 4,
+            "32": 2,
+            "34": 1,
+            "35": 1,
+            "36": 1,
+            "37": 1,
+            "38": 1,
+            "39": 1,
+            "40": 1,
+            "42": 1,
+            "43": 4
+          },
+          "Branches": [
+            {
+              "Line": 24,
+              "Offset": 40,
+              "EndOffset": 42,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 24,
+              "Offset": 40,
+              "EndOffset": 81,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 4
+            }
+          ]
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Services.EventService/<GetAllEventsAsync>d__6": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<GetAllEventsAsync>d__6::MoveNext()": {
+          "Lines": {
+            "92": 4,
+            "94": 4,
+            "95": 4,
+            "96": 2,
+            "97": 1,
+            "98": 1,
+            "99": 1,
+            "100": 1,
+            "101": 1,
+            "102": 1,
+            "103": 1,
+            "105": 3,
+            "106": 3
+          },
+          "Branches": []
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Services.EventService/<SaveAsync>d__4": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Services.EventService/<SaveAsync>d__4::MoveNext()": {
+          "Lines": {
+            "46": 21,
+            "48": 21,
+            "49": 21,
+            "51": 21,
+            "52": 16,
+            "54": 5,
+            "55": 3,
+            "56": 16,
+            "57": 16,
+            "58": 16,
+            "59": 16,
+            "60": 2,
+            "61": 2,
+            "62": 2,
+            "65": 19,
+            "66": 19
+          },
+          "Branches": [
+            {
+              "Line": 51,
+              "Offset": 83,
+              "EndOffset": 85,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 16
+            },
+            {
+              "Line": 51,
+              "Offset": 83,
+              "EndOffset": 107,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 5
+            }
+          ]
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Repository/EventRepository.cs": {
+      "Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1::.ctor(Microsoft.Extensions.Options.IOptions`1<Amg_ingressos_aqui_eventos_api.Model.EventDatabaseSettings>)": {
+          "Lines": {
+            "12": 0,
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "17": 0,
+            "18": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0
+          },
+          "Branches": []
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<Delete>d__2`1": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<Delete>d__2`1::MoveNext()": {
+          "Lines": {
+            "24": 0,
+            "25": 0,
+            "27": 0,
+            "28": 0,
+            "30": 0,
+            "31": 0
+          },
+          "Branches": [
+            {
+              "Line": 27,
+              "Offset": 327,
+              "EndOffset": 329,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 27,
+              "Offset": 327,
+              "EndOffset": 342,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<FindById>d__3`1": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<FindById>d__3`1::MoveNext()": {
+          "Lines": {
+            "34": 0,
+            "35": 0,
+            "37": 0
+          },
+          "Branches": []
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<GetAllEvents>d__4`1": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<GetAllEvents>d__4`1::MoveNext()": {
+          "Lines": {
+            "40": 0,
+            "41": 0,
+            "43": 0
+          },
+          "Branches": []
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<Save>d__5`1": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Repository.EventRepository`1/<Save>d__5`1::MoveNext()": {
+          "Lines": {
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "50": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Model/Event.cs": {
+      "Amg_ingressos_aqui_eventos_api.Model.Event": {
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Id()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Name()": {
+          "Lines": {
+            "16": 52
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Local()": {
+          "Lines": {
+            "21": 51
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Type()": {
+          "Lines": {
+            "26": 50
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Image()": {
+          "Lines": {
+            "31": 49
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Description()": {
+          "Lines": {
+            "36": 48
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Cep()": {
+          "Lines": {
+            "41": 47
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Address()": {
+          "Lines": {
+            "46": 46
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Number()": {
+          "Lines": {
+            "51": 45
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Neighborhood()": {
+          "Lines": {
+            "56": 44
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Complement()": {
+          "Lines": {
+            "61": 43
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_ReferencePoint()": {
+          "Lines": {
+            "66": 42
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_City()": {
+          "Lines": {
+            "71": 41
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_State()": {
+          "Lines": {
+            "76": 40
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Day()": {
+          "Lines": {
+            "81": 39
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_Lot()": {
+          "Lines": {
+            "86": 38
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.Event::get_VipArea()": {
+          "Lines": {
+            "91": 37
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Model/EventDatabaseSettings.cs": {
+      "Amg_ingressos_aqui_eventos_api.Model.EventDatabaseSettings": {
+        "System.String Amg_ingressos_aqui_eventos_api.Model.EventDatabaseSettings::get_ConnectionString()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.EventDatabaseSettings::get_DatabaseName()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String Amg_ingressos_aqui_eventos_api.Model.EventDatabaseSettings::get_EventCollectionName()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/DeleteEventException copy.cs": {
+      "Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor()": {
+          "Lines": {
+            "5": 0,
+            "6": 0,
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor(System.String)": {
+          "Lines": {
+            "10": 2,
+            "11": 2,
+            "12": 2
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.DeleteEventException::.ctor(System.String,System.Exception)": {
+          "Lines": {
+            "15": 0,
+            "16": 0,
+            "17": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/FindByIdEventException.cs": {
+      "Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor()": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor(System.String)": {
+          "Lines": {
+            "16": 1,
+            "17": 1,
+            "18": 1
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.FindByIdEventException::.ctor(System.String,System.Exception)": {
+          "Lines": {
+            "21": 0,
+            "22": 0,
+            "23": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/GetAllEventException.cs": {
+      "Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor()": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor(System.String)": {
+          "Lines": {
+            "16": 1,
+            "17": 1,
+            "18": 1
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.GetAllEventException::.ctor(System.String,System.Exception)": {
+          "Lines": {
+            "21": 0,
+            "22": 0,
+            "23": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Exceptions/SaveEventException.cs": {
+      "Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor()": {
+          "Lines": {
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor(System.String)": {
+          "Lines": {
+            "11": 16,
+            "12": 16,
+            "13": 16
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Exceptions.SaveEventException::.ctor(System.String,System.Exception)": {
+          "Lines": {
+            "16": 0,
+            "17": 0,
+            "18": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Controllers/EventController.cs": {
+      "Amg_ingressos_aqui_eventos_api.Controllers.EventController": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController::.ctor(Microsoft.Extensions.Logging.ILogger`1<Amg_ingressos_aqui_eventos_api.Controllers.EventController>,Amg_ingressos_aqui_eventos_api.Services.Interfaces.IEventService)": {
+          "Lines": {
+            "13": 12,
+            "14": 12,
+            "15": 12,
+            "16": 12,
+            "17": 12
+          },
+          "Branches": []
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Controllers.EventController/<DeleteEventAsync>d__6": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<DeleteEventAsync>d__6::MoveNext()": {
+          "Lines": {
+            "108": 4,
+            "110": 4,
+            "111": 4,
+            "112": 3,
+            "113": 2,
+            "114": 2,
+            "115": 2,
+            "118": 1,
+            "120": 1,
+            "121": 1,
+            "122": 1,
+            "123": 1,
+            "125": 4
+          },
+          "Branches": [
+            {
+              "Line": 112,
+              "Offset": 171,
+              "EndOffset": 173,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 2
+            },
+            {
+              "Line": 112,
+              "Offset": 171,
+              "EndOffset": 191,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 112,
+              "Offset": 196,
+              "EndOffset": 198,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 2
+            },
+            {
+              "Line": 112,
+              "Offset": 196,
+              "EndOffset": 246,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Controllers.EventController/<FindByIdEventAsync>d__4": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<FindByIdEventAsync>d__4::MoveNext()": {
+          "Lines": {
+            "59": 3,
+            "61": 3,
+            "62": 3,
+            "63": 2,
+            "64": 1,
+            "65": 1,
+            "66": 1,
+            "69": 1,
+            "71": 1,
+            "72": 1,
+            "73": 1,
+            "74": 1,
+            "76": 3
+          },
+          "Branches": [
+            {
+              "Line": 63,
+              "Offset": 171,
+              "EndOffset": 173,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 63,
+              "Offset": 171,
+              "EndOffset": 191,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 63,
+              "Offset": 196,
+              "EndOffset": 198,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 63,
+              "Offset": 196,
+              "EndOffset": 249,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Controllers.EventController/<GetAllEventsAsync>d__3": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<GetAllEventsAsync>d__3::MoveNext()": {
+          "Lines": {
+            "29": 3,
+            "31": 3,
+            "32": 3,
+            "33": 2,
+            "34": 1,
+            "35": 1,
+            "36": 1,
+            "39": 1,
+            "41": 1,
+            "42": 1,
+            "43": 1,
+            "44": 1,
+            "46": 3
+          },
+          "Branches": [
+            {
+              "Line": 33,
+              "Offset": 165,
+              "EndOffset": 167,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 33,
+              "Offset": 165,
+              "EndOffset": 185,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 33,
+              "Offset": 190,
+              "EndOffset": 192,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 33,
+              "Offset": 190,
+              "EndOffset": 243,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        }
+      },
+      "Amg_ingressos_aqui_eventos_api.Controllers.EventController/<SaveEventAsync>d__5": {
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.EventController/<SaveEventAsync>d__5::MoveNext()": {
+          "Lines": {
+            "87": 3,
+            "89": 3,
+            "90": 3,
+            "91": 1,
+            "93": 2,
+            "94": 2,
+            "95": 2,
+            "96": 2,
+            "98": 3
+          },
+          "Branches": []
+        }
+      }
+    },
+    "/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos/Amg-ingressos-aqui-eventos-api/Controllers/WeatherForecastController.cs": {
+      "Amg_ingressos_aqui_eventos_api.Controllers.WeatherForecastController": {
+        "System.Collections.Generic.IEnumerable`1<Amg_ingressos_aqui_eventos_api.WeatherForecast> Amg_ingressos_aqui_eventos_api.Controllers.WeatherForecastController::Get()": {
+          "Lines": {
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.WeatherForecastController::.ctor(Microsoft.Extensions.Logging.ILogger`1<Amg_ingressos_aqui_eventos_api.Controllers.WeatherForecastController>)": {
+          "Lines": {
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Void Amg_ingressos_aqui_eventos_api.Controllers.WeatherForecastController::.cctor()": {
+          "Lines": {
+            "9": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  }
+}
