@@ -7,8 +7,6 @@ using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Mvc;
-using Amg_ingressos_aqui_eventos_api.Exceptions;
-using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
@@ -36,7 +34,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         // Arrange
         var userID = "644178cb940d123bafb3a4ae";
         var messageReturn = FactoryTicket.ListSimpleTicket();
-        _ticketRepositoryMock.Setup(x => x.GetUserTickets<object>(userID)).Returns(Task.FromResult(messageReturn as List<Ticket>));
+        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<object>(userID)).Returns(Task.FromResult(messageReturn as List<Ticket>));
 
         // Act
         var result = await _ticketController.GetTicketByUser(userID);
@@ -53,7 +51,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         // Arrange
         var userID = "34334";
         var expectedMessage = "Sem registros";
-        _ticketRepositoryMock.Setup(x => x.GetUserTickets<List<Ticket>>(userID)).ReturnsAsync(new List<Ticket>());
+        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ReturnsAsync(new List<Ticket>());
 
         // Act
         var result = await _ticketController.GetTicketByUser(userID);
@@ -70,7 +68,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         // Arrange
         var userID = "";
         var expectedMessage = "ID de usuário inválido";
-        _ticketRepositoryMock.Setup(x => x.GetUserTickets<List<Ticket>>(userID)).ThrowsAsync(new ArgumentException(expectedMessage));
+        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ThrowsAsync(new ArgumentException(expectedMessage));
 
         // Act
         var result = await _ticketController.GetTicketByUser(userID);
@@ -87,7 +85,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         // Arrange
         var userID = "644178cb940d123bafb3a4ae";
         var expectedMessage = "Erro interno do servidor";
-        _ticketRepositoryMock.Setup(x => x.GetUserTickets<List<Ticket>>(userID)).ThrowsAsync(new Exception(expectedMessage));
+        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ThrowsAsync(new Exception(expectedMessage));
 
         // Act
         var result = await _ticketController.GetTicketByUser(userID);
