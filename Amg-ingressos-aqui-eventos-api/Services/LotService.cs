@@ -34,7 +34,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     await _ticketService.SaveAsync(new Ticket()
                     {
-                        //IdLot = _messageReturn.Data.ToString(),
+                        IdLot = _messageReturn.Data.ToString(),
                         Value = lot.ValueTotal / lot.TotalTickets
                     });
                 }
@@ -78,8 +78,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         private void ValidateModelSave(Lot lot)
         {
-            if (lot.Description == "")
-                throw new SaveLotException("Descrição é Obrigatório.");
+            if (lot.Identificate == 0)
+                throw new SaveLotException("Identificaror é Obrigatório.");
             else if (lot.StartDateSales == DateTime.MinValue || lot.StartDateSales == DateTime.MaxValue)
                 throw new SaveLotException("Data Inicio de venda é Obrigatório.");
             else if (lot.EndDateSales == DateTime.MinValue || lot.EndDateSales == DateTime.MaxValue)

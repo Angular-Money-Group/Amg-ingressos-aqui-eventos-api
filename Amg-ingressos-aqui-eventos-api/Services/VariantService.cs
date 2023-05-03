@@ -21,20 +21,18 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                if (variant.Name == "")
-                    throw new SaveVariantException("Nome é Obrigatório.");
-                if(!variant.Lot.Any()){
-                    throw new SaveVariantException("Lote é Obrigatório.");
-                }
-
+                ValidateModelSave(variant);
                 variant.Status = Enum.StatusVariant.Active;
                 _messageReturn.Data = await _variantRepository.Save<object>(variant);
-
-                variant.Lot.ToList().ForEach(async i => {
+                var IdentificateLot = 1;
+                variant.Lot.ToList().ForEach(async i =>
+                {
+                    i.Identificate = IdentificateLot;
                     i.IdVariant = _messageReturn.Data.ToString();
                     i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
+                    IdentificateLot++;
                 });
-                
+
             }
             catch (SaveVariantException ex)
             {
@@ -46,6 +44,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
 
             return _messageReturn;
+        }
+        private void ValidateModelSave(Variant variant)
+        {
+            if (variant.Name == "")
+                throw new SaveVariantException("Nome é Obrigatório.");
+            if (!variant.Lot.Any())
+                throw new SaveVariantException("Lote é Obrigatório.");
+            if (variant.HasPositions)
+            {
+                if(variant.LocaleImage== string.Empty)
+                    throw new SaveVariantException("Imagem Variante é Obrigatório.");
+                if (variant.Positions.PeoplePerPositions == 0)
+                    throw new SaveVariantException("Pessoas por posição é Obrigatório.");
+                if (variant.Positions.TotalPositions == 0)
+                    throw new SaveVariantException("Total de posições é Obrigatório.");
+            }
         }
     }
 }
