@@ -89,13 +89,20 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public string Name { get; set; }
 
         [JsonProperty("Positions")]
-        public bool Positions { get; set; }
+        public Positions Positions { get; set; }
+        [JsonProperty("HasPositions")]
+        public bool HasPositions { get; set; }
+        [JsonProperty("QuantityCourtesy")]
+        public bool QuantityCourtesy { get; set; }
 
         [JsonProperty("Status")]
         public long Status { get; set; }
 
         [JsonProperty("IdEvent")]
         public string IdEvent { get; set; }
+
+        [JsonProperty("Description")]
+        public string Description { get; set; }
 
         [JsonProperty("Lot")]
         public Lot[] Lot { get; set; }
@@ -136,12 +143,15 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
     public class Positions
     {
         [JsonProperty("TotalPositions")]
-        public long TotalPositions { get; set; }
-
+        public int TotalPositions { get; set; }
+        
         [JsonProperty("SoldPositions")]
-        public long[] SoldPositions { get; set; }
+        public List<int> SoldPositions { get; set; }
 
         [JsonProperty("ReservedPositions")]
-        public long[] ReservedPositions { get; set; }
+        public List<int> ReservedPositions { get; set; }
+
+        [JsonProperty("PeoplePerPositions")]
+        public int PeoplePerPositions { get; set; }
     }
 }

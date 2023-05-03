@@ -15,6 +15,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 ReservedPositions = new List<int>(),
                 SoldPositions = new List<int>(),
                 TotalPositions = 100,
+                PeoplePerPositions=10
             };
         }
         internal static Positions SimplePositionWithSoldPositions()
@@ -24,6 +25,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 ReservedPositions = new List<int>(),
                 SoldPositions = new List<int>() { 1, 2, 3 },
                 TotalPositions = 100,
+                PeoplePerPositions=10
             };
         }
         internal static Positions SimplePositionWithReservedPositions()
@@ -33,6 +35,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 ReservedPositions = new List<int>() { 4, 5, 6 },
                 SoldPositions = new List<int>(),
                 TotalPositions = 100,
+                PeoplePerPositions=10
             };
         }
         internal static Positions SimplePositionWithReservedPositionsAndSoldPositions()
@@ -42,6 +45,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 ReservedPositions = new List<int>() { 4, 5, 6 },
                 SoldPositions = new List<int>() { 1, 2, 3 },
                 TotalPositions = 100,
+                PeoplePerPositions=10
             };
         }
 

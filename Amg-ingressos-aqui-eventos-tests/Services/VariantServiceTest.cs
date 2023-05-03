@@ -86,6 +86,38 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
+        public void Given_variant_with_position_without_PeoplePerPositions_When_save_Then_return_message_miss_PeoplePerPositions()
+        {
+            //Arrange
+            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
+            variantComplet.Positions.PeoplePerPositions = 0;
+            
+            var expectedMessage = new MessageReturn() { Message = "Pessoas por posição é Obrigatório." };
+
+            //Act
+            var resultMethod = _variantService.SaveAsync(variantComplet);
+
+            //Assert
+            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
+        }
+
+        [Test]
+        public void Given_variant_with_position_without_TotalPositions_When_save_Then_return_message_miss_TotalPositions()
+        {
+            //Arrange
+            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
+            variantComplet.Positions.TotalPositions = 0;
+            
+            var expectedMessage = new MessageReturn() { Message = "Total de posições é Obrigatório." };
+
+            //Act
+            var resultMethod = _variantService.SaveAsync(variantComplet);
+
+            //Assert
+            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
+        }
+
+        [Test]
         public void Given_complet_variant_When_save_Then_return_Internal_error()
         {
             //Arrange

@@ -27,7 +27,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var IdentificadorLote = 0;
                 variant.Lot.ToList().ForEach(async i =>
                 {
-                    i.Identificador = (IdentificadorLote++);
+                    i.Identificador = IdentificadorLote+1;
                     i.IdVariant = _messageReturn.Data.ToString();
                     i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
                 });

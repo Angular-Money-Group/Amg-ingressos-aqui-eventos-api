@@ -21,6 +21,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [JsonProperty("Name")]
         public string Name { get; set; }
         /// <summary>
+        /// Description Variante
+        /// </summary>
+        [Required]
+        [JsonProperty("Description")]
+        public string Description { get; set; }
+        /// <summary>
         /// Flag Posicoes
         /// </summary>
         [Required]
