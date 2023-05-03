@@ -24,12 +24,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(variant);
                 variant.Status = Enum.StatusVariant.Active;
                 _messageReturn.Data = await _variantRepository.Save<object>(variant);
-                var IdentificadorLote = 0;
+                var IdentificateLot = 1;
                 variant.Lot.ToList().ForEach(async i =>
                 {
-                    i.Identificador = IdentificadorLote+1;
+                    i.Identificate = IdentificateLot;
                     i.IdVariant = _messageReturn.Data.ToString();
                     i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
+                    IdentificateLot++;
                 });
 
             }

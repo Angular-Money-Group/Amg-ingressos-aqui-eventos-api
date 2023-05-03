@@ -78,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         private void ValidateModelSave(Lot lot)
         {
-            if (lot.Identificador == 0)
+            if (lot.Identificate == 0)
                 throw new SaveLotException("Identificaror é Obrigatório.");
             else if (lot.StartDateSales == DateTime.MinValue || lot.StartDateSales == DateTime.MaxValue)
                 throw new SaveLotException("Data Inicio de venda é Obrigatório.");

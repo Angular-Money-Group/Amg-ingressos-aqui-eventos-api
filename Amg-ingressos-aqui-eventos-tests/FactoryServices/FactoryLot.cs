@@ -13,7 +13,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Lot()
             {
-                Identificador = 1,
+                Identificate = 1,
                 StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
                 EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
                 TotalTickets = 100,
@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new List<Lot>(){
                 new Lot(){
-                    Identificador = 1,
+                    Identificate = 1,
                     StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
                     TotalTickets = 100,
@@ -33,7 +33,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Status = StatusLot.Open
                 },
                 new Lot(){
-                    Identificador = 2,
+                    Identificate = 2,
                     StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00),
                     TotalTickets = 100,
@@ -41,7 +41,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Status = StatusLot.Open
                 },
                 new Lot(){
-                    Identificador = 3,
+                    Identificate = 3,
                     StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
                     TotalTickets = 100,
@@ -54,7 +54,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new List<Lot>(){
                 new Lot(){
-                    Identificador = 1,
+                    Identificate = 1,
                     StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
                     TotalTickets = 100,
@@ -62,7 +62,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     Status = StatusLot.Open
         },
                 new Lot(){
-                    Identificador = 2,
+                    Identificate = 2,
                     StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00),
                     TotalTickets = 100,
@@ -70,7 +70,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     Status = StatusLot.Open
                 },
                 new Lot(){
-                    Identificador = 3,
+                    Identificate = 3,
                     StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
                     TotalTickets = 100,
@@ -78,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     Status = StatusLot.Open
                 },
                 new Lot(){
-                    Identificador = 4,
+                    Identificate = 4,
                     StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
                     TotalTickets = 100,

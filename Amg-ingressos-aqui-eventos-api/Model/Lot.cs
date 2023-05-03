@@ -18,8 +18,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Identificador de Lote
         /// </summary>
         [Required]
-        [JsonProperty("Identificador")]
-        public int Identificador { get; set; }
+        [JsonProperty("Identificate")]
+        public int Identificate { get; set; }
         /// <summary>
         /// Total de ingressos
         /// </summary>

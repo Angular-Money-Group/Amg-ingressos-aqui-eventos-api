@@ -44,7 +44,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var lotComplet = FactoryLot.SimpleLot();
-            lotComplet.Identificador = 0;
+            lotComplet.Identificate = 0;
             var expectedMessage = new MessageReturn() { Message = "Identificador é Obrigatório." };
 
             //Act
