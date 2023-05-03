@@ -53,7 +53,7 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
-        public void Given_ticket_without_IdLote_When_save_Then_return_message_miss_IdLote()
+        public void Given_ticket_without_IdLot_When_save_Then_return_message_miss_IdLot()
         {
             //Arrange
             var ticketComplet = FactoryTicket.SimpleTicket();
