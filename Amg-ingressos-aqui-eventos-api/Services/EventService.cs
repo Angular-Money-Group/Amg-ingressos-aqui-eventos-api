@@ -49,7 +49,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
                 
-                eventSave.Variant.ForEach(i =>
+                eventSave.Variant.ToList().ForEach(i =>
                 {
                     i.IdEvent = _messageReturn.Data.ToString()??string.Empty;
                     i.Id = _variantService.SaveAsync(i).Result.Data.ToString();

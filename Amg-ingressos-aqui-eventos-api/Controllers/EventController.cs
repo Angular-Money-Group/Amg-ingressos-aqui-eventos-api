@@ -38,7 +38,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                     return NoContent();
                 }
 
-                return Ok(result.Data as List<Event>);
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
@@ -62,8 +62,10 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.FindByIdAsync(id);
-
-                return Ok(result.Data as Event);
+                if(result.Message!= null && result.Message.Any()){
+                    return NotFound(result.Message);
+                }
+                return Ok(result.Data);
             }
             catch (FindByIdEventException ex)
             {

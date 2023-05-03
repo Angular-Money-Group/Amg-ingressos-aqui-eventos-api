@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
@@ -11,7 +12,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public string? _Id { get; set; }
         /// <summary>
         /// name
         /// </summary>
@@ -57,7 +58,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonIgnore]
         [Required]
-        public List<Variant>? Variant { get; set; }
+        [JsonProperty("Variant")]
+        public List<Variant> Variant { get; set; }
         /// <summary>
         /// Id mongo Meio de Recebimento
         /// </summary>

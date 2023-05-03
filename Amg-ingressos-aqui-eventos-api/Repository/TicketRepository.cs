@@ -15,13 +15,16 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     public class TicketRepository<T> : ITicketRepository
     {
         private readonly IMongoCollection<Ticket> _variantCollection;
-        public TicketRepository(IDbConnection<Ticket> dbconnection)
+        private readonly MongoClient _mongoClient;
+        public TicketRepository(IDbConnection<Ticket> dbConnection)
         {
-            _variantCollection = dbconnection.GetConnection("tickets");
+            _variantCollection = dbConnection.GetConnection("tickets");
+            _mongoClient = dbConnection.GetClient();
         }
 
         public async Task<object> Save<T>(object ticket)
         {
+
             try
             {
                 await _variantCollection.InsertOneAsync(ticket as Ticket);

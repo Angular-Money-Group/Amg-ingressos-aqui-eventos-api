@@ -8,7 +8,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Event()
             {
-                Id = "1b111101-e2bb-4255-8caf-4136c566a962",
+                _Id = "1b111101-e2bb-4255-8caf-4136c566a962",
                 Name = "Gustavo Lima",
                 Local = "Arena Race",
                 Type = "Show",
@@ -38,7 +38,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Event()
             {
-                Id = "2b222202-e2bb-4255-8caf-4136c566a962",
+                _Id = "2b222202-e2bb-4255-8caf-4136c566a962",
                 Name = "CB LOL",
                 Local = "Parque Sabiázinho",
                 Type = "Gamer",
@@ -71,42 +71,6 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
             listEvent.Add(SimpleEventWithPosition());
 
             return listEvent;
-        }
-        internal static Positions SimplePosition()
-        {
-            return new Positions()
-            {
-                ReservedPositions = new List<int>(),
-                SoldPositions = new List<int>(),
-                TotalPositions = 100,
-            };
-        }
-        internal static Positions SimplePositionWithSoldPositions()
-        {
-            return new Positions()
-            {
-                ReservedPositions = new List<int>(),
-                SoldPositions = new List<int>() { 1, 2, 3 },
-                TotalPositions = 100,
-            };
-        }
-        internal static Positions SimplePositionWithReservedPositions()
-        {
-            return new Positions()
-            {
-                ReservedPositions = new List<int>() { 4, 5, 6 },
-                SoldPositions = new List<int>(),
-                TotalPositions = 100,
-            };
-        }
-        internal static Positions SimplePositionWithReservedPositionsAndSoldPositions()
-        {
-            return new Positions()
-            {
-                ReservedPositions = new List<int>() { 4, 5, 6 },
-                SoldPositions = new List<int>() { 1, 2, 3 },
-                TotalPositions = 100,
-            };
         }
     }
 }
