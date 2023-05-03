@@ -18,28 +18,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _variantCollection = dbConnection.GetConnection("tickets");
             _mongoClient = dbConnection.GetClient();
         }
-        
+
         public async Task<object> Save<T>(object ticket)
         {
-            using (var session = await _mongoClient.StartSessionAsync())
-            {
-                try
-                {
-                    await _variantCollection.InsertOneAsync(ticket as Ticket);
-                    return ((Ticket)ticket).Id;
 
-                    await session.CommitTransactionAsync();
-                }
-                catch (SaveTicketException ex)
-                {
-                    await session.AbortTransactionAsync();
-                    throw ex;
-                }
-                catch (System.Exception ex)
-                {
-                    await session.AbortTransactionAsync();
-                    throw ex;
-                }
+            try
+            {
+                await _variantCollection.InsertOneAsync(ticket as Ticket);
+                return ((Ticket)ticket).Id;
+            }
+            catch (SaveTicketException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
             }
         }
     }

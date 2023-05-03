@@ -13,7 +13,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new Lot()
             {
-                Description = "Lote1",
+                Identificate = 1,
                 StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
                 EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
                 TotalTickets = 100,
@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new List<Lot>(){
                 new Lot(){
-                    Description = "Lote1",
+                    Identificate = 1,
                     StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
                     TotalTickets = 100,
@@ -33,7 +33,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Status = StatusLot.Open
                 },
                 new Lot(){
-                    Description = "Lote2",
+                    Identificate = 2,
                     StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00),
                     TotalTickets = 100,
@@ -41,7 +41,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Status = StatusLot.Open
                 },
                 new Lot(){
-                    Description = "Lote3",
+                    Identificate = 3,
                     StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
                     TotalTickets = 100,
@@ -54,45 +54,38 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
         {
             return new List<Lot>(){
                 new Lot(){
-                    Description = "Lote1",
+                    Identificate = 1,
                     StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePosition(),
                     Status = StatusLot.Open
         },
                 new Lot(){
-                    Description = "Lote2",
+                    Identificate = 2,
                     StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePositionWithSoldPositions(),
                     Status = StatusLot.Open
                 },
                 new Lot(){
-                    Description = "Lote3",
+                    Identificate = 3,
                     StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePositionWithReservedPositions(),
                     Status = StatusLot.Open
                 },
                 new Lot(){
-                    Description = "Lote3",
+                    Identificate = 4,
                     StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePositionWithReservedPositionsAndSoldPositions(),
                     Status = StatusLot.Open
                 }
-
             };
-
         }
-
     }
 }

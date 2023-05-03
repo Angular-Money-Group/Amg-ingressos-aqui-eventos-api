@@ -45,45 +45,25 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                     as: 'Variant'
                                 }
                             }";
-        public const string GetEventByIdQuery = @"{{$addFields:{{'IdVariantString': {{ '$toString': '$_id' }}}}}},
-                            {{ $match: {{ '$and': [{{ 'IdVariantString': '{0}' }}] }}}},
-                            {{
-                            $lookup: {{
-                                from: 'variants',
-                                'let': {{ eventId : {{ '$toString': '$_id' }}}},
-                                pipeline: [
-                                    {{
-                                        $match: {{
-                                            $expr: {{
-                                                $eq: [
-                                                    '$IdEvent',
-                                                    '$$eventId'
-                                                ]
-                                            }}
-                                        }}
-                                    }},
-                                    {{
-                                        $lookup: {{
-                                            from: 'lots',
-                                            'let': {{ variantId : {{ '$toString': '$_id' }}}},
-                                            pipeline: [
-                                                {{
-                                                    $match: {{
-                                                        $expr: {{
-                                                            $eq: [
-                                                                '$IdVariant',
-                                                                '$$variantId'
-                                                            ]
-                                                        }}
-                                                    }}
-                                                }}
-                                            ],
-                                            as: 'lots'
-                                        }}
-                                    }},
-                                ],
-                                as: 'Variants'
-                            }}
-                        }}";
+        public const string GetTicketsByLot = @"{
+                                $lookup: {
+                                    from: 'tickets',
+                                    'let': { lotId : { '$toString': '$_id' }},
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $eq: [
+                                                        '$IdLot',
+                                                        '$$lotId'
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        
+                                    ],
+                                    as: 'tickets'
+                                }
+                            }";
     }
 }

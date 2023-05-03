@@ -15,11 +15,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [JsonProperty("_id")]
         public string? Id { get; set; }
         /// <summary>
-        /// Total de ingressos
+        /// Identificador de Lote
         /// </summary>
         [Required]
-        [JsonProperty("Description")]
-        public string? Description { get; set; }
+        [JsonProperty("Identificate")]
+        public int Identificate { get; set; }
         /// <summary>
         /// Total de ingressos
         /// </summary>
@@ -44,11 +44,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
          [JsonProperty("EndDateSales")]
         public DateTime EndDateSales { get; set; }
-        /// <summary>
-        /// Posicoes/cadeiras
-        /// </summary>
-         [JsonProperty("Positions")]
-        public Positions Positions { get; set; }
         /// <summary>
         /// status Lot
         /// </summary>

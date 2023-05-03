@@ -24,5 +24,10 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [JsonProperty("ReservedPositions")]
         public List<int> ReservedPositions { get; set; }
+         /// <summary>
+        /// Pessoas por Posições
+        /// </summary>
+        [JsonProperty("PeoplePerPositions")]
+        public int PeoplePerPositions { get; set; }
     }
 }

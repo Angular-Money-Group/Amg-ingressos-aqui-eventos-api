@@ -87,7 +87,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 };
                 List<GetEvents> pResults = _eventCollection
                                                 .Aggregate<GetEvents>(pipeline).ToList();
-                //var result = await _eventCollection.Find(_ => true).ToListAsync();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 

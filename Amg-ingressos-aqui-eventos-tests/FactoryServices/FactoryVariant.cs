@@ -14,7 +14,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
             return new Variant()
             {
                 Name = "Pista",
-                Positions = false,
+                HasPositions = false,
                 Lot = FactoryLot.ListSimpleLot().ToList()
             };
         }
@@ -24,19 +24,19 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
             {
                 new Variant(){
                     Name = "Pista",
-                    Positions = false,
+                    HasPositions = false,
                     Lot = FactoryLot.ListSimpleLot().ToList(),
                     Status = StatusVariant.Active
                 },
                 new Variant(){
                     Name = "Camarote",
-                    Positions = false,
+                    HasPositions = false,
                     Lot = FactoryLot.ListSimpleLot().ToList(),
                     Status = StatusVariant.Active
                 },
                 new Variant(){
                     Name = "Area VIP",
-                    Positions = false,
+                    HasPositions = false,
                     Lot = FactoryLot.ListSimpleLot().ToList(),
                     Status = StatusVariant.Active
                 },
@@ -47,18 +47,21 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
             {
                 new Variant(){
                     Name = "Assento Normal",
-                    Positions = true,
-                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList()
+                    HasPositions = true,
+                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList(),
+                    Positions = FactoryPosition.SimplePosition()
                 },
                 new Variant(){
                     Name = "Camarote",
-                    Positions = true,
-                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList()
+                    HasPositions = true,
+                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList(),
+                    Positions = FactoryPosition.SimplePosition()
                 },
                 new Variant(){
                     Name = "Area VIP",
-                    Positions = true,
-                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList()
+                    HasPositions = true,
+                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList(),
+                    Positions = FactoryPosition.SimplePosition()
                 },
             };
         }
