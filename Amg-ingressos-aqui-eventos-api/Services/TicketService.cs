@@ -51,5 +51,29 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
+
+        public async Task<MessageReturn> GetTicketByUser(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.GetTicketByUser<List<Ticket>>(id);
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
     }
 }

@@ -6,6 +6,9 @@ using System.Data;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 
+using MongoDB.Bson;
+using MongoDB.Driver;
+
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
@@ -28,6 +31,30 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 return ((Ticket)ticket).Id;
             }
             catch (SaveTicketException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<Ticket>> GetTicketByUser<T>(string id)
+        {
+            try
+            {
+                // Cria um filtro para buscar tickets com o ID do usuário especificado
+                var filter = Builders<Ticket>.Filter.Eq("IdUser", id);
+
+                // Busca os tickets que correspondem ao filtro
+                var result = await _variantCollection.Find(filter).ToListAsync();
+                if (!result.Any() || result.Count == 0 )
+                    throw new FindTicketByUserException("Tickets não encontrados");
+
+                return result;
+            }
+            catch (FindTicketByUserException ex)
             {
                 throw ex;
             }

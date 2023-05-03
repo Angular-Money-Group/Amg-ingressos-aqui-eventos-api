@@ -517,8 +517,8 @@ SF:/home/robert/Projetos/AMG/Amg-ingressos-aqui-eventos-api/Amg-ingressos-aqui-e
 FN:16,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_Id()
 FNDA:0,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_Id()
 DA:17,0
-FN:22,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_IdLote()
-FNDA:109,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_IdLote()
+FN:22,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_IdLot()
+FNDA:109,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_IdLot()
 DA:23,109
 FN:27,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_Position()
 FNDA:4,System.String Amg_ingressos_aqui_eventos_api.Model.Ticket::get_Position()
