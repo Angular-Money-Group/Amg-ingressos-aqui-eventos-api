@@ -50,18 +50,18 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Busca todos os ingressos do usuário
         /// </summary>
-        /// <param name="id">Id do ticket</param>
+        /// <param name="id">Id do lote</param>
         /// <returns>200 Retorna a quantidade de tickets disponiveis</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("getTicketsRemaining")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetTicketsRemaining(string id)
+        public async Task<IActionResult> GetTicketsRemaining(string idLote)
         {
             try
             {
-                var result = await _ticketService.GetTicketsRemaining(id);
+                var result = await _ticketService.GetTicketsRemaining(idLote);
 
                 if (result.Message != null && result.Message.Any())
                 {
