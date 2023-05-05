@@ -27,7 +27,7 @@ jobs:
         username: root
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
-          docker stop <container-name> || true
-          docker rm <container-name> || true
-          docker pull <docker-image-name>:latest
-          docker run -d --name <container-name> -p 3002:80 <docker-image-name>:latest
+          docker stop eventos-tickets || true
+          docker rm eventos-tickets || true
+          docker pull eventos-tickets:latest
+          docker run -d --name eventos-tickets -p 3002:80 eventos-tickets:latest
