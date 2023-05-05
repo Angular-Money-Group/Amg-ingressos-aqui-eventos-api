@@ -39,11 +39,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
                 }
             }
-            //catch (SaveTicketException ex)
-            //{
-            //    DeleteAsync(lot.Id);
-            //    _messageReturn.Message = ex.Message;
-           // }
+            catch (SaveTicketException ex)
+            {
+               DeleteAsync(lot.Id);
+               _messageReturn.Message = ex.Message;
+           }
             catch (SaveLotException ex)
             {
                 DeleteAsync(lot.Id);

@@ -32,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 ticket?.IdLot?.ValidateIdMongo();
 
-                _messageReturn.Data = await _ticketRepository.Save<object>(ticket);
+                _messageReturn.Data = await _ticketRepository.Save<object>(ticket!);
             }
             catch (SaveTicketException ex)
             {
@@ -63,10 +63,63 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             catch (SaveTicketException ex)
             {
                 _messageReturn.Message = ex.Message;
+                throw ex;
             }
             catch (IdMongoException ex)
             {
                 _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> GetTicketsRemaining(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.GetTicketsRemaining<List<Ticket>>(id);
+            }
+            catch (GetRemeaningTicketsExepition ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticket){
+            try
+            {
+                id.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.UpdateTicketsAsync<object>(id,ticket);
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
             }
             catch (Exception ex)
             {

@@ -31,8 +31,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _ticketService.GetTicketByUser(id); 
-                
+                var result = await _ticketService.GetTicketByUser(id);
+
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -46,5 +46,73 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
             }
         }
-}
+
+        /// <summary>
+        /// Busca todos os ingressos do usuário
+        /// </summary>
+        /// <param name="id">Id do ticket</param>
+        /// <returns>200 Retorna a quantidade de tickets disponiveis</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("getTicketsRemaining")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetTicketsRemaining(string id)
+        {
+            try
+            {
+                var result = await _ticketService.GetTicketsRemaining(id);
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
+                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edita os dados do Ticket
+        /// </summary>
+        /// <param name="id">Id do ticket</param>
+        /// <param name="ticketObject">Objeto do ticket a ser alterado</param>
+        /// <returns>200 Edita os dados do Ticket</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpPut]
+        [Route("updateTicket")]
+        [Produces("application/json")]
+        public async Task<IActionResult> UpdateTicketsAsync(string id, [FromBody] Ticket ticketObject)
+        {
+            try
+            {
+                var result = await _ticketService.UpdateTicketsAsync(id, ticketObject);
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+
+                return Ok(result.Message);
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
+                return StatusCode(444, MessageLogErrors.NotModificateTickets);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
+                return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
+            }
+        }
+    }
 }
