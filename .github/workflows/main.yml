@@ -16,7 +16,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: eventos-tickets:latest
+        tags: ghabryel/eventos-tickets:latest
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
@@ -27,7 +27,7 @@ jobs:
         username: root
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
-          docker stop eventos-tickets || true
-          docker rm eventos-tickets || true
-          docker pull eventos-tickets:latest
-          docker run -d --name eventos-tickets -p 3002:80 eventos-tickets:latest
+          docker stop ghabryel/eventos-tickets || true
+          docker rm ghabryel/eventos-tickets || true
+          docker pull ghabryel/eventos-tickets:latest
+          docker run -d --name ghabryel/eventos-tickets -p 3002:80 ghabryel/eventos-tickets:latest
