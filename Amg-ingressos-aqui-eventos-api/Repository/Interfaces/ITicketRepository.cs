@@ -6,5 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     {
         Task<object> Save<T>(object ticket);
         Task<List<Ticket>> GetTicketByUser<T>(string id);
+        Task<List<Ticket>> GetTicketsRemaining<T>(string id);
+        Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket);
     }
 }

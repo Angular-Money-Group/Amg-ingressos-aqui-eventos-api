@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  app:
+    image: eventos-tickets
+    container_name: eventos-tickets
+    restart: always
+    ports:
+      - '3002:80'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    command: /bin/bash -c "dotnet /app/Amg-ingressos-aqui-eventos-api.dll"

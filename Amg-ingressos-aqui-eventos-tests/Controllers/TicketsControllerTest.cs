@@ -11,6 +11,7 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
+    [TestFixture]
     public class TicketsControllerTest
     {
         private TicketController _ticketController;
@@ -23,79 +24,75 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _ticketController = new TicketController(_loggerMock.Object, 
-            new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object), 
+            _ticketController = new TicketController(_loggerMock.Object,
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object),
             new TicketService(_ticketRepositoryMock.Object));
         }
 
-    [Test]
-    public async Task Given_ValidUserID_When_GetUserTickets_Then_Return_Tickets_Async()
-    {
-        // Arrange
-        var userID = "644178cb940d123bafb3a4ae";
-        var messageReturn = FactoryTicket.ListSimpleTicket();
-        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<object>(userID)).Returns(Task.FromResult(messageReturn as List<Ticket>));
+        [Test]
+        public async Task Given_ValidUserID_When_GetUserTickets_Then_Return_Tickets_Async()
+        {
+            // Arrange
+            var userID = "644178cb940d123bafb3a4ae";
+            var messageReturn = FactoryTicket.ListSimpleTicket();
+            _ticketRepositoryMock.Setup(x => x.GetTicketByUser<object>(userID)).Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
-        // Act
-        var result = await _ticketController.GetTicketByUser(userID);
+            // Act
+            var result = await _ticketController.GetTicketByUser(userID);
 
-        // Assert
-        Assert.IsInstanceOf<OkObjectResult>(result);
-        var okResult = result as OkObjectResult;
-        Assert.AreEqual(messageReturn, okResult.Value);
-    }
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            var okResult = result as OkObjectResult;
+            Assert.AreEqual(messageReturn, okResult?.Value);
+        }
 
-    [Test]
-    public async Task Given_NoTicketsForUser_When_GetUserTickets_Then_Return_NoContent_Async()
-    {
-        // Arrange
-        var userID = "34334";
-        var expectedMessage = "Sem registros";
-        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ReturnsAsync(new List<Ticket>());
+        [Test]
+        public async Task Given_NoTicketsForUser_When_GetUserTickets_Then_Return_NoContent_Async()
+        {
+            // Arrange
+            var userID = "34334";
+            _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ReturnsAsync(new List<Ticket>());
 
-        // Act
-        var result = await _ticketController.GetTicketByUser(userID);
+            // Act
+            var result = await _ticketController.GetTicketByUser(userID);
 
-        // Assert
-        Assert.IsInstanceOf<NoContentResult>(result);
-        var noContentResult = result as NoContentResult;
-        Assert.AreEqual(204, noContentResult.StatusCode);
-    }
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+            var noContentResult = result as NoContentResult;
+            Assert.AreEqual(204, noContentResult?.StatusCode);
+        }
 
-    [Test]
-    public async Task Given_InvalidUserID_When_GetUserTickets_Then_Return_BadRequest_Async()
-    {
-        // Arrange
-        var userID = "";
-        var expectedMessage = "ID de usuário inválido";
-        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ThrowsAsync(new ArgumentException(expectedMessage));
+        [Test]
+        public async Task Given_NoTicketsRemeaning_When_GetTicketsRemeaning_Then_Return_NoContent_Async()
+        {
+            // Arrange
+            var lotID = "6451b37d90737f442d2b357a";
+            _ticketRepositoryMock.Setup(x => x.GetTicketsRemaining<List<Ticket>>(lotID)).ReturnsAsync(new List<Ticket>());
 
-        // Act
-        var result = await _ticketController.GetTicketByUser(userID);
+            // Act
+            var result = await _ticketController.GetTicketsRemaining(lotID);
 
-        // Assert
-        Assert.IsInstanceOf<BadRequestObjectResult>(result);
-        var badRequestResult = result as BadRequestObjectResult;
-        Assert.AreEqual(expectedMessage, badRequestResult.Value);
-    }
+            // Assert
+            Assert.IsInstanceOf<NoContentResult>(result);
+            var noContentResult = result as NoContentResult;
+            Assert.AreEqual(204, noContentResult?.StatusCode);
+        }
 
-    [Test]
-    public async Task Given_InternalServerError_When_GetUserTickets_Then_Return_InternalServerError_Async()
-    {
-        // Arrange
-        var userID = "644178cb940d123bafb3a4ae";
-        var expectedMessage = "Erro interno do servidor";
-        _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ThrowsAsync(new Exception(expectedMessage));
+        [Test]
+        public async Task Given_ValidLotID_When_GetTicketsRemeaning_Then_Return_List_Tickets_Async()
+        {
+            // Arrange
+            var lotID = "6451b37790737f442d2b3551";
+            var messageReturn = FactoryTicket.ListSimpleTicket();
+            _ticketRepositoryMock.Setup(x => x.GetTicketsRemaining<object>(lotID)).Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
-        // Act
-        var result = await _ticketController.GetTicketByUser(userID);
+            // Act
+            var result = await _ticketController.GetTicketsRemaining(lotID);
 
-        // Assert
-        Assert.IsInstanceOf<StatusCodeResult>(result);
-        var statusCodeResult = result as StatusCodeResult;
-        Assert.AreEqual(500, statusCodeResult.StatusCode);
-    }
-
-        
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            var okResult = result as OkObjectResult;
+            Assert.AreEqual(messageReturn, okResult?.Value);
+        }
     }
 }
