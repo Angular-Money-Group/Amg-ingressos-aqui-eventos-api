@@ -32,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             // Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as IEnumerable<object>));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as List<Event>));
 
             // Act
             var result = (await _eventController.GetAllEventsAsync() as OkObjectResult);

@@ -379,7 +379,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as IEnumerable<object>));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>));
 
             //Act
             var resultTask = _eventService.GetAllEventsAsync();
