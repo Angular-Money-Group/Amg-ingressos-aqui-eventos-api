@@ -123,10 +123,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Número Endereço é Obrigatório.");
             if (eventSave.Address.Neighborhood == "")
                 throw new SaveEventException("Vizinhança é Obrigatório.");
-            if (eventSave.Address.Complement == "")
-                throw new SaveEventException("Complemento é Obrigatório.");
-            if (eventSave.Address.ReferencePoint == "")
-                throw new SaveEventException("Ponto de referência é Obrigatório.");
             if (eventSave.Address.City == "")
                 throw new SaveEventException("Cidade é Obrigatório.");
             if (eventSave.Address.State == "")
