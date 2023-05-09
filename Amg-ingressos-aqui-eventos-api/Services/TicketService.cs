@@ -25,19 +25,101 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                ticket?.IdLot?.ValidateIdMongo();
+                if(ticket.IdLot== null)
+                    throw new SaveTicketException("Id Lote é Obrigatório.");
                 if (ticket?.Value == 0)
                     throw new SaveTicketException("Valor do Ingresso é Obrigatório.");
 
-                _messageReturn.Data = await _ticketRepository.Save<object>(ticket);
+                ticket?.IdLot?.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.Save<object>(ticket!);
             }
             catch (SaveTicketException ex)
             {
                 _messageReturn.Message = ex.Message;
+                throw ex;
             }
             catch (IdMongoException ex)
             {
                 _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> GetTicketByUser(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.GetTicketByUser<List<Ticket>>(id);
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> GetTicketsRemaining(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.GetTicketsRemaining<List<Ticket>>(id);
+            }
+            catch (GetRemeaningTicketsExepition ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticket){
+            try
+            {
+                id.ValidateIdMongo();
+
+                _messageReturn.Data = await _ticketRepository.UpdateTicketsAsync<object>(id,ticket);
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
             }
             catch (Exception ex)
             {

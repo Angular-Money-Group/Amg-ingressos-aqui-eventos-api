@@ -34,6 +34,16 @@ builder.Services.AddScoped<IDbConnection<Variant>, DbConnection<Variant>>();
 builder.Services.AddScoped<IDbConnection<Lot>, DbConnection<Lot>>();
 builder.Services.AddScoped<IDbConnection<Ticket>, DbConnection<Ticket>>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -41,11 +51,17 @@ app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials());
 
 app.UseAuthorization();
 

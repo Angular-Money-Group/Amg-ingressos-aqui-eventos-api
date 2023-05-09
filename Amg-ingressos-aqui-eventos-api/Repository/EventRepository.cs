@@ -4,6 +4,11 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Infra;
+using MongoDB.Bson;
+using MongoDB.Driver.Core.Operations;
+using MongoDB.Bson.Serialization;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -19,7 +24,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.DeleteOneAsync(x => x.Id == id as string);
+                var result = await _eventCollection.DeleteOneAsync(x => x._Id == id as string);
                 if (result.DeletedCount >= 1)
                     return "Evento Deletado";
                 else
@@ -39,12 +44,27 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.Find(x => x.Id == id as string).
-                    FirstOrDefaultAsync();
-                if (result == null)
+                var json = QuerysMongo.GetEventQuery;
+
+                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '"+ id.ToString() +"' }] }}");
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] { 
+                    documentFilter,
+                    documentFilter1,
+                    document
+                };
+                List<GetEvents> pResults = _eventCollection
+                                                .Aggregate<GetEvents>(pipeline).ToList();
+
+                //var result = await _eventCollection.FindAsync<Event>(x => x._Id == id as string)
+                //    .Result.FirstOrDefaultAsync();
+                
+
+                if (pResults == null)
                     throw new FindByIdEventException("Evento não encontrado");
 
-                return result;
+                return pResults;
             }
             catch (FindByIdEventException ex)
             {
@@ -56,15 +76,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<IEnumerable<object>> GetAllEvents<T>()
+        public async Task<List<Event>> GetAllEvents<T>()
         {
             try
             {
-                var result = await _eventCollection.Find(_ => true).ToListAsync();
-                if (!result.Any())
+                List<Event> pResults = _eventCollection.Find(Builders<Event>.Filter.Empty).ToList();
+                if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 
-                return result;
+                return pResults;
             }
             catch (GetAllEventException ex)
             {
@@ -81,7 +101,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 await _eventCollection.InsertOneAsync(eventComplet as Event);
-                return (eventComplet as Event).Id;
+                return (eventComplet as Event)._Id;
             }
             catch (SaveEventException ex)
             {

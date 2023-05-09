@@ -49,7 +49,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
                 
-                eventSave.Variant.ForEach(i =>
+                eventSave.Variant.ToList().ForEach(i =>
                 {
                     i.IdEvent = _messageReturn.Data.ToString()??string.Empty;
                     i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
@@ -90,7 +90,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.GetAllEvents<object>();
+                _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>();
             }
             catch (GetAllEventException ex)
             {
@@ -123,10 +123,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Número Endereço é Obrigatório.");
             if (eventSave.Address.Neighborhood == "")
                 throw new SaveEventException("Vizinhança é Obrigatório.");
-            if (eventSave.Address.Complement == "")
-                throw new SaveEventException("Complemento é Obrigatório.");
-            if (eventSave.Address.ReferencePoint == "")
-                throw new SaveEventException("Ponto de referência é Obrigatório.");
             if (eventSave.Address.City == "")
                 throw new SaveEventException("Cidade é Obrigatório.");
             if (eventSave.Address.State == "")
