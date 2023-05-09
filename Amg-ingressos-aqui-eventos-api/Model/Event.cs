@@ -13,11 +13,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? _Id { get; set; }
+
         /// <summary>
         /// name
         /// </summary>
         [Required]
         public string? Name { get; set; }
+
         /// <summary>
         /// Local
         /// </summary>
