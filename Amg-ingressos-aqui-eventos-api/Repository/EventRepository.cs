@@ -47,9 +47,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 var json = QuerysMongo.GetEventQuery;
 
                 BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
-                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '"+ id.ToString() +"' }] }}");
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
                 BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[] { 
+                BsonDocument[] pipeline = new BsonDocument[] {
                     documentFilter,
                     documentFilter1,
                     document
@@ -59,7 +59,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 //var result = await _eventCollection.FindAsync<Event>(x => x._Id == id as string)
                 //    .Result.FirstOrDefaultAsync();
-                
+
 
                 if (pResults == null)
                     throw new FindByIdEventException("Evento não encontrado");
@@ -95,13 +95,45 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+        public Task<List<Event>> GetWeeklyEvents<T>(IPagination paginationOptions)
+        {
+            try
+            {
+                DateTime now = DateTime.Now;
+                DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
+                DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
+                DateTime endOfRange = startOfWeek.AddDays(6); // sábado
+
+                var filter = Builders<Event>.Filter.And(
+                    Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
+                    Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1))
+                );
+
+                List<Event> pResults = _eventCollection.Find(filter).ToList()
+                .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                .Take(paginationOptions.pageSize)
+                .ToList();
+                if (!pResults.Any())
+                    throw new GetAllEventException("Eventos não encontrados");
+
+                return Task.FromResult(pResults);
+            }
+            catch (GetAllEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<object> Save<T>(object eventComplet)
         {
             try
             {
                 await _eventCollection.InsertOneAsync(eventComplet as Event);
-                return (eventComplet as Event)._Id;
+                return (eventComplet as Event)!._Id!;
             }
             catch (SaveEventException ex)
             {
