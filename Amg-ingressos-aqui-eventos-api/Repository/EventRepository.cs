@@ -76,17 +76,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<IEnumerable<object>> GetAllEvents<T>()
+        public async Task<List<Event>> GetAllEvents<T>()
         {
             try
             {
-                var json = QuerysMongo.GetEventQuery;
-                BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[] { 
-                    document
-                };
-                List<GetEvents> pResults = _eventCollection
-                                                .Aggregate<GetEvents>(pipeline).ToList();
+                List<Event> pResults = _eventCollection.Find(Builders<Event>.Filter.Empty).ToList();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 

@@ -7,6 +7,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> Save<T>(object eventComplet);
         Task<object> FindById<T>(object id);
         Task<object> Delete<T>(object id);
-        Task<IEnumerable<object>> GetAllEvents<T>();
+        Task<List<Event>> GetAllEvents<T>();
     }
 }

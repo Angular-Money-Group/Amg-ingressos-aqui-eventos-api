@@ -90,7 +90,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.GetAllEvents<object>();
+                _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>();
             }
             catch (GetAllEventException ex)
             {
