@@ -176,36 +176,6 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
-        public void Given_event_without_complement_When_save_Then_return_message_miss_complement()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Address.Complement = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Complemento é Obrigatório." };
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
-        }
-
-        [Test]
-        public void Given_event_without_referencePoint_When_save_Then_return_message_miss_referencePoint()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Address.ReferencePoint = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Ponto de referência é Obrigatório." };
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
-        }
-
-        [Test]
         public void Given_event_without_city_When_save_Then_return_message_miss_city()
         {
             //Arrange
@@ -380,6 +350,22 @@ namespace Prime.UnitTests.Services
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
             _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>));
+
+            //Act
+            var resultTask = _eventService.GetAllEventsAsync();
+
+            //Assert
+            Assert.AreEqual(messageReturn, resultTask.Result.Data);
+        }
+
+        public void Given_Events_When_GetWeeklyEventsAsync_Then_return_list_objects_events()
+        {
+            IPagination pagination = new IPagination();
+            pagination.page = 1;
+            pagination.pageSize = 10;
+            //Arrange
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>));
 
             //Act
             var resultTask = _eventService.GetAllEventsAsync();

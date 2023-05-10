@@ -112,7 +112,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             // Arrange
             IPagination pagination = new IPagination();
-            pagination.page = 100;
+            pagination.page = 1000;
             pagination.pageSize = 10;
 
             var expectedMessage = "Lista vazia";
