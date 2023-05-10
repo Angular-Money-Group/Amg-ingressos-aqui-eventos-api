@@ -1,6 +1,6 @@
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
-    public class IPagination
+    public class Pagination
     {
         /// <summary>
         /// Pagina atual

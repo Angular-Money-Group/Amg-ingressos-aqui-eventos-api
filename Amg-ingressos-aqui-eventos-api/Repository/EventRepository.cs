@@ -95,7 +95,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-        public Task<List<Event>> GetWeeklyEvents<T>(IPagination paginationOptions)
+        public Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions)
         {
             try
             {

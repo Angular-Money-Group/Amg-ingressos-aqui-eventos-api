@@ -360,7 +360,7 @@ namespace Prime.UnitTests.Services
 
         public void Given_Events_When_GetWeeklyEventsAsync_Then_return_list_objects_events()
         {
-            IPagination pagination = new IPagination();
+            Pagination pagination = new Pagination();
             pagination.page = 1;
             pagination.pageSize = 10;
             //Arrange

@@ -102,7 +102,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             return _messageReturn;
         }
-        public async Task<MessageReturn> GetWeeklyEventsAsync(IPagination paginationOptions)
+        public async Task<MessageReturn> GetWeeklyEventsAsync(Pagination paginationOptions)
         {
             try
             {

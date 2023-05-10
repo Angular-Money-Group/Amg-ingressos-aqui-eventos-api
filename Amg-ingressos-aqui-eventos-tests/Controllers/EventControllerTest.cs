@@ -75,7 +75,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public async Task Given_Events_When_GetWeeklyEvents_Then_return_list_objects_events_Async()
         {
             // Arrange
-            IPagination pagination = new IPagination();
+            Pagination pagination = new Pagination();
             pagination.page = 1;
             pagination.pageSize = 10;
 
@@ -92,7 +92,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
                 [Test]
         public async Task Given_Events_When_GetWeeklyEvents_and_internal_error_Then_return_status_code_500_Async()
         {
-            IPagination pagination = new IPagination();
+            Pagination pagination = new Pagination();
             pagination.page = 1;
             // Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
@@ -111,7 +111,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public async Task Given_events_When_GetWeeklyEvents_not_foud_register_Then_return_message_empty_list_Async()
         {
             // Arrange
-            IPagination pagination = new IPagination();
+            Pagination pagination = new Pagination();
             pagination.page = 1000;
             pagination.pageSize = 10;
 

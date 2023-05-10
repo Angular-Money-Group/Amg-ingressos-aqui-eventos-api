@@ -56,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("getWeeklyEvents")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetWeeklyEventsAsync(IPagination paginationOptions)
+        public async Task<IActionResult> GetWeeklyEventsAsync(Pagination paginationOptions)
         {
             try
             {
