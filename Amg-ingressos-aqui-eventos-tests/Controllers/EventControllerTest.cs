@@ -32,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             // Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as List<Event>));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
             var result = (await _eventController.GetAllEventsAsync() as OkObjectResult);
@@ -53,7 +53,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.GetAllEventsAsync() as ObjectResult);
 
             // Assert
-            Assert.AreEqual(500, result.StatusCode);
+            Assert.AreEqual(500, result!.StatusCode);
             Assert.AreEqual(expectedMessage, result.Value);
         }
 
@@ -68,7 +68,61 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.GetAllEventsAsync() as NoContentResult);
 
             // Assert
-            Assert.AreEqual(204, result.StatusCode);
+            Assert.AreEqual(204, result!.StatusCode);
+        }
+
+        [Test]
+        public async Task Given_Events_When_GetWeeklyEvents_Then_return_list_objects_events_Async()
+        {
+            // Arrange
+            Pagination pagination = new Pagination();
+            pagination.page = 1;
+            pagination.pageSize = 10;
+
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<object>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+
+            // Act
+            var result = (await _eventController.GetWeeklyEventsAsync(pagination) as OkObjectResult);
+
+            // Assert
+            Assert.AreEqual(messageReturn, result?.Value);
+        }
+
+                [Test]
+        public async Task Given_Events_When_GetWeeklyEvents_and_internal_error_Then_return_status_code_500_Async()
+        {
+            Pagination pagination = new Pagination();
+            pagination.page = 1;
+            // Arrange
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            var expectedMessage = MessageLogErrors.GetAllEventMessage;
+            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<object>(pagination)).Throws(new Exception("error coxcnection database"));
+
+            // Act
+            var result = (await _eventController.GetWeeklyEventsAsync(pagination) as ObjectResult);
+
+            // Assert
+            Assert.AreEqual(500, result!.StatusCode);
+            Assert.AreEqual(expectedMessage, result.Value);
+        }
+
+        [Test]
+        public async Task Given_events_When_GetWeeklyEvents_not_foud_register_Then_return_message_empty_list_Async()
+        {
+            // Arrange
+            Pagination pagination = new Pagination();
+            pagination.page = 1000;
+            pagination.pageSize = 10;
+
+            var expectedMessage = "Lista vazia";
+            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<object>(pagination)).Throws(new GetAllEventException(expectedMessage));
+
+            // Act
+            var result = (await _eventController.GetWeeklyEventsAsync(pagination) as NoContentResult);
+
+            // Assert
+            Assert.AreEqual(204, result!.StatusCode);
         }
 
         [Test]
@@ -100,7 +154,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.FindByIdEventAsync(id) as ObjectResult);
 
             // Assert
-            Assert.AreEqual(500, result.StatusCode);
+            Assert.AreEqual(500, result!.StatusCode);
             Assert.AreEqual(espectedReturn, result.Value);
         }
 
@@ -117,7 +171,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.FindByIdEventAsync(id) as NoContentResult);
 
             // Assert
-            Assert.AreEqual(204, result.StatusCode);
+            Assert.AreEqual(204, result!.StatusCode);
         }
 
         [Test]
@@ -147,7 +201,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.DeleteEventAsync(id) as ObjectResult);
 
             // Assert
-            Assert.AreEqual(500, result.StatusCode);
+            Assert.AreEqual(500, result!.StatusCode);
             Assert.AreEqual(espectedReturn, result.Value);
         }
 
@@ -163,7 +217,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.DeleteEventAsync(id) as NoContentResult);
 
             // Assert
-            Assert.AreEqual(204, result.StatusCode);
+            Assert.AreEqual(204, result!.StatusCode);
         }
 
         [Test]
@@ -196,7 +250,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.SaveEventAsync(eventSave) as ObjectResult);
 
             // Assert
-            Assert.AreEqual(500, result.StatusCode);
+            Assert.AreEqual(500, result!.StatusCode);
             Assert.AreEqual(espectedReturn, result.Value);
         }
 
@@ -212,7 +266,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var result = (await _eventController.DeleteEventAsync(id) as NoContentResult);
 
             // Assert
-            Assert.AreEqual(204, result.StatusCode);
+            Assert.AreEqual(204, result!.StatusCode);
         }
     }
 }

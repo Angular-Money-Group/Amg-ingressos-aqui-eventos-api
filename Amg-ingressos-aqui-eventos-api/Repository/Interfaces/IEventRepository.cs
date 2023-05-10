@@ -8,5 +8,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> FindById<T>(object id);
         Task<object> Delete<T>(object id);
         Task<List<Event>> GetAllEvents<T>();
+        Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
     }
 }
