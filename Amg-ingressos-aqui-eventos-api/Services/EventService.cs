@@ -40,6 +40,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             return _messageReturn;
         }
+        public async Task<MessageReturn> FindEventByDescriptionAsync(string description)
+        {
+            try
+            {
+                _messageReturn.Data = await _eventRepository.FindByDescription<Event>(description);
+
+                return _messageReturn;
+            }
+            catch (FindByDescriptionException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
+        }
 
         public async Task<MessageReturn> SaveAsync(Event eventSave)
         {

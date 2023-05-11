@@ -125,10 +125,33 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 }
                 return Ok(result.Data);
             }
-            catch (FindByIdEventException ex)
+            catch (Exception ex)
             {
-                _logger.LogInformation(MessageLogErrors.FindByIdEventMessage, ex);
-                return NoContent();
+                _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
+            }
+        }
+
+        /// <summary>
+        /// Busca evento pela descrição
+        /// </summary>
+        /// <param name="description">Descrição desejada do Evento</param>
+        /// <returns>200 Evento da busca</returns>
+        /// <returns>204 Nenhum evento encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("searchEvents")]
+        [Produces("application/json")]
+        public async Task<IActionResult> FindEventByDescriptionAsync(string description)
+        {
+            try
+            {
+                var result = await _eventService.FindEventByDescriptionAsync(description);
+                if(result.Message!= null && result.Message.Any()){
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
