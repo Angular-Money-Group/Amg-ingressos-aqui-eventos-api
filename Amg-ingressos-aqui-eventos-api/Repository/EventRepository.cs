@@ -76,6 +76,29 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<List<Event>> FindByDescription<T>(string description)
+        {
+            try
+            {
+                var regex = new BsonRegularExpression(description, "i"); // "i" para ignorar maiúsculas e minúsculas
+                var filter = Builders<Event>.Filter.Regex("Description", regex);
+
+                List<Event> pResults = _eventCollection.Find(filter).ToList().Take(4).ToList();
+                if (!pResults.Any())
+                    throw new FindByDescriptionException("Eventos não encontrados");
+
+                return pResults;
+            }
+            catch (FindByDescriptionException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<List<Event>> GetAllEvents<T>()
         {
             try

@@ -23,8 +23,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _eventController = new EventController(_loggerMock.Object, 
-            new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object));
+            _eventController = new EventController(_loggerMock.Object,
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             Assert.AreEqual(messageReturn, result?.Value);
         }
 
-                [Test]
+        [Test]
         public async Task Given_Events_When_GetWeeklyEvents_and_internal_error_Then_return_status_code_500_Async()
         {
             Pagination pagination = new Pagination();
@@ -143,7 +143,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             Assert.AreEqual(messageReturn, result?.Value);
         }
 
-                [Test]
+        [Test]
         public async Task Given_Events_When_GetHighlightedEvents_and_internal_error_Then_return_status_code_500_Async()
         {
             Pagination pagination = new Pagination();
@@ -174,6 +174,55 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             // Act
             var result = (await _eventController.GetHighlightedEventsAsync(pagination) as NoContentResult);
+
+            // Assert
+            Assert.AreEqual(204, result!.StatusCode);
+        }
+
+        [Test]
+        public async Task Given_Events_When_FindEventsByDescription_Then_return_list_objects_events_Async()
+        {
+            // Arrange
+            var description = "descricao";
+
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            _eventRepositoryMock.Setup(x => x.FindByDescription<string>(description)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+
+            // Act
+            var result = (await _eventController.FindEventByDescriptionAsync(description) as OkObjectResult);
+
+            // Assert
+            Assert.AreEqual(messageReturn, result?.Value);
+        }
+
+        [Test]
+        public async Task Given_Events_When_FindEventsByDescription_and_internal_error_Then_return_status_code_500_Async()
+        {
+            var description = "descricao";
+            // Arrange
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            var expectedMessage = MessageLogErrors.GetAllEventMessage;
+            _eventRepositoryMock.Setup(x => x.FindByDescription<string>(description)).Throws(new Exception("error coxcnection database"));
+
+            // Act
+            var result = (await _eventController.FindEventByDescriptionAsync(description) as ObjectResult);
+
+            // Assert
+            Assert.AreEqual(500, result!.StatusCode);
+            Assert.AreEqual(expectedMessage, result.Value);
+        }
+
+        [Test]
+        public async Task Given_events_When_FindEventsByDescription_not_foud_register_Then_return_message_empty_list_Async()
+        {
+            // Arrange
+            var description = "3b241101-e2bb-4255-8caf-4136c566a962";
+
+            var expectedMessage = "Lista vazia";
+            _eventRepositoryMock.Setup(x => x.FindByDescription<string>(description)).Throws(new GetAllEventException(expectedMessage));
+
+            // Act
+            var result = (await _eventController.FindEventByDescriptionAsync(description) as NoContentResult);
 
             // Assert
             Assert.AreEqual(204, result!.StatusCode);
@@ -283,7 +332,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.Save<object>(eventSave))
                 .Returns(Task.FromResult(messageReturn as object));
             _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
+                .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             // Act
             var result = (await _eventController.SaveEventAsync(eventSave) as OkObjectResult);
