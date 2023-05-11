@@ -349,7 +349,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             //Act
             var resultTask = _eventService.GetAllEventsAsync();
@@ -357,7 +357,8 @@ namespace Prime.UnitTests.Services
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);
         }
-
+        
+        [Test]
         public void Given_Events_When_GetWeeklyEventsAsync_Then_return_list_objects_events()
         {
             Pagination pagination = new Pagination();
@@ -365,7 +366,23 @@ namespace Prime.UnitTests.Services
             pagination.pageSize = 10;
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>));
+            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+
+            //Act
+            var resultTask = _eventService.GetAllEventsAsync();
+
+            //Assert
+            Assert.AreEqual(messageReturn, resultTask.Result.Data);
+        }
+        [Test]
+        public void Given_Events_When_GetHighlightedEvents_Then_return_list_objects_events()
+        {
+            Pagination pagination = new Pagination();
+            pagination.page = 1;
+            pagination.pageSize = 10;
+            //Arrange
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             //Act
             var resultTask = _eventService.GetAllEventsAsync();
@@ -388,7 +405,7 @@ namespace Prime.UnitTests.Services
             var resultMethod = _eventService.SaveAsync(eventComplet);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception.Message);
+            Assert.IsNotEmpty(resultMethod.Exception!.Message);
         }
     }
 }

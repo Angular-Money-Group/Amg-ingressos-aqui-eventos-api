@@ -127,6 +127,31 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+        
+        public Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions)
+        {
+            try
+            {
+                var filter = Builders<Event>.Filter.Eq("Highlighted", true);
+
+                List<Event> pResults = _eventCollection.Find(filter).ToList()
+                .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                .Take(paginationOptions.pageSize)
+                .ToList();
+                if (!pResults.Any())
+                    throw new GetAllEventException("Eventos não encontrados");
+
+                return Task.FromResult(pResults);
+            }
+            catch (GetAllEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<object> Save<T>(object eventComplet)
         {

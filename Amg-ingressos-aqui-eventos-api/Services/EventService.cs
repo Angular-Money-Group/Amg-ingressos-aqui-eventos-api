@@ -118,6 +118,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             return _messageReturn;
         }
+        public async Task<MessageReturn> GetHighlightedEventsAsync(Pagination paginationOptions)
+        {
+            try
+            {
+                _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(paginationOptions);
+            }
+            catch (GetAllEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
+        }
 
         private void ValidateModelSave(Event eventSave)
         {
