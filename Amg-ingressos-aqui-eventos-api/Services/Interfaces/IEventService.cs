@@ -8,9 +8,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> FindByIdAsync(string id);
         Task<MessageReturn> FindEventByDescriptionAsync(string id);
         Task<MessageReturn> DeleteAsync(string id);
-        Task<MessageReturn> GetAllEventsAsync();
-        Task<MessageReturn> GetWeeklyEventsAsync(Pagination paginationOptions);
-        
-        Task<MessageReturn> GetHighlightedEventsAsync(Pagination paginationOptions);
+        Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions);
     }
 }

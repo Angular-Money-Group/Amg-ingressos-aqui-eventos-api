@@ -66,10 +66,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(eventSave);
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-                
+
                 eventSave.Variant.ToList().ForEach(i =>
                 {
-                    i.IdEvent = _messageReturn.Data.ToString()??string.Empty;
+                    i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
                     i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
                 });
             }
@@ -104,43 +104,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetAllEventsAsync()
+        public async Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>();
-            }
-            catch (GetAllEventException ex)
-            {
-                _messageReturn.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return _messageReturn;
-        }
-        public async Task<MessageReturn> GetWeeklyEventsAsync(Pagination paginationOptions)
-        {
-            try
-            {
-                _messageReturn.Data = await _eventRepository.GetWeeklyEvents<List<Event>>(paginationOptions);
-            }
-            catch (GetAllEventException ex)
-            {
-                _messageReturn.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return _messageReturn;
-        }
-        public async Task<MessageReturn> GetHighlightedEventsAsync(Pagination paginationOptions)
-        {
-            try
-            {
-                _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(paginationOptions);
+                if (highlights)
+                {
+                    _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(paginationOptions);
+                }
+                else if (weekly)
+                {
+                    _messageReturn.Data = await _eventRepository.GetWeeklyEvents<List<Event>>(paginationOptions);
+                }
+                else
+                {
+                    _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>();
+                }
             }
             catch (GetAllEventException ex)
             {
