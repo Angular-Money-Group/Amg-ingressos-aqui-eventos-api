@@ -16,6 +16,11 @@ namespace Prime.UnitTests.Services
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
 
+        private Pagination pagination = new Pagination();
+
+        private bool weekly;
+        private bool highlights;
+
         [SetUp]
         public void SetUp()
         {
@@ -352,40 +357,7 @@ namespace Prime.UnitTests.Services
             _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             //Act
-            var resultTask = _eventService.GetAllEventsAsync();
-
-            //Assert
-            Assert.AreEqual(messageReturn, resultTask.Result.Data);
-        }
-        
-        [Test]
-        public void Given_Events_When_GetWeeklyEventsAsync_Then_return_list_objects_events()
-        {
-            Pagination pagination = new Pagination();
-            pagination.page = 1;
-            pagination.pageSize = 10;
-            //Arrange
-            var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetWeeklyEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
-
-            //Act
-            var resultTask = _eventService.GetAllEventsAsync();
-
-            //Assert
-            Assert.AreEqual(messageReturn, resultTask.Result.Data);
-        }
-        [Test]
-        public void Given_Events_When_GetHighlightedEvents_Then_return_list_objects_events()
-        {
-            Pagination pagination = new Pagination();
-            pagination.page = 1;
-            pagination.pageSize = 10;
-            //Arrange
-            var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
-
-            //Act
-            var resultTask = _eventService.GetAllEventsAsync();
+            var resultTask = _eventService.GetEventsAsync(highlights, weekly, pagination);
 
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);
