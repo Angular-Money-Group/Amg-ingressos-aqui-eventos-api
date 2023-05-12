@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
@@ -19,6 +20,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ILogger<EventController>> _loggerMock = new Mock<ILogger<EventController>>();
+        private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+
 
         private Pagination pagination = new Pagination();
 
@@ -29,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public void Setup()
         {
             _eventController = new EventController(_loggerMock.Object,
-            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object));
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object));
         }
 
         [Test]
