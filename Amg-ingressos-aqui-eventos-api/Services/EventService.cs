@@ -1,9 +1,9 @@
-using System.Text;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
+using System.Text.RegularExpressions;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -12,11 +12,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private IEventRepository _eventRepository;
         private IVariantService _variantService;
         private MessageReturn _messageReturn;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EventService(IEventRepository eventRepository, IVariantService variantService)
+        public EventService(IEventRepository eventRepository, IVariantService variantService, IWebHostEnvironment webHostEnvironment)
         {
             _eventRepository = eventRepository;
             _variantService = variantService;
+            _webHostEnvironment = webHostEnvironment;
             _messageReturn = new MessageReturn();
         }
 
@@ -64,7 +66,21 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 ValidateModelSave(eventSave);
+                IsBase64Image(eventSave.Image!);
 
+                byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
+
+                var nomeArquivo = $"{Guid.NewGuid()}.jpg";
+                var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images", nomeArquivo);
+                string linkImagem = "http://api.ingressosaqui.com:3002/imagens/" + nomeArquivo;
+
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    stream.Write(imageBytes, 0, imageBytes.Length);
+                }
+
+                eventSave.Image = linkImagem;
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
                 
                 eventSave.Variant.ToList().ForEach(i =>
@@ -183,6 +199,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Data Fim é Obrigatório.");
             if (!eventSave.Variant.Any())
                 throw new SaveEventException("Variante é Obrigatório.");
+        }
+
+        public void IsBase64Image(string base64String)
+        {
+            if (string.IsNullOrEmpty(base64String))
+                throw new SaveEventException("Imagem é obrigatório");
+
+            var base64Data = Regex.Match(base64String, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+
+            try
+            {
+                byte[] imageData = Convert.FromBase64String(base64Data);
+            }
+            catch (FormatException)
+            {
+                throw new SaveEventException("Essa imagem não está em base64");
+            }
         }
     }
 }

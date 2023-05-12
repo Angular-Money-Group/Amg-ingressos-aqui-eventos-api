@@ -8,6 +8,7 @@ using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
@@ -20,12 +21,13 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ILogger<TicketController>> _loggerMock = new Mock<ILogger<TicketController>>();
         private Mock<ILogger<TicketController>> _ticketMock = new Mock<ILogger<TicketController>>();
+        private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
         [SetUp]
         public void Setup()
         {
             _ticketController = new TicketController(_loggerMock.Object,
-            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object),
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object,  _webHostEnvironmentMock.Object),
             new TicketService(_ticketRepositoryMock.Object));
         }
 

@@ -6,6 +6,8 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Prime.UnitTests.Services
 {
@@ -16,11 +18,17 @@ namespace Prime.UnitTests.Services
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
 
+        private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+        private Pagination pagination = new Pagination();
+
+        private bool weekly;
+        private bool highlights;
+
         [SetUp]
         public void SetUp()
         {
             _eventRepositoryMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object);
+            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object);
         }
 
         [Test]
