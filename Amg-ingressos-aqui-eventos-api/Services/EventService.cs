@@ -70,6 +70,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
 
+                eventSave.Image = eventSave.Image!.Replace("data:image/jpeg;base64,", "");
+
                 var nomeArquivo = $"{Guid.NewGuid()}.jpg";
                 var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images", nomeArquivo);
                 string linkImagem = "http://api.ingressosaqui.com:3002/imagens/" + nomeArquivo;
