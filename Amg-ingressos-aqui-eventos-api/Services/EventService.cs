@@ -40,6 +40,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             return _messageReturn;
         }
+        public async Task<MessageReturn> FindEventByDescriptionAsync(string description)
+        {
+            try
+            {
+                _messageReturn.Data = await _eventRepository.FindByDescription<Event>(description);
+
+                return _messageReturn;
+            }
+            catch (FindByDescriptionException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
+        }
 
         public async Task<MessageReturn> SaveAsync(Event eventSave)
         {
@@ -48,10 +66,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(eventSave);
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-                
+
                 eventSave.Variant.ToList().ForEach(i =>
                 {
-                    i.IdEvent = _messageReturn.Data.ToString()??string.Empty;
+                    i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
                     i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
                 });
             }
@@ -86,11 +104,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetAllEventsAsync()
+        public async Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.GetAllEvents<object>();
+                if (highlights)
+                {
+                    _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(paginationOptions);
+                }
+                else if (weekly)
+                {
+                    _messageReturn.Data = await _eventRepository.GetWeeklyEvents<List<Event>>(paginationOptions);
+                }
+                else
+                {
+                    _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>();
+                }
             }
             catch (GetAllEventException ex)
             {
@@ -123,10 +152,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Número Endereço é Obrigatório.");
             if (eventSave.Address.Neighborhood == "")
                 throw new SaveEventException("Vizinhança é Obrigatório.");
-            if (eventSave.Address.Complement == "")
-                throw new SaveEventException("Complemento é Obrigatório.");
-            if (eventSave.Address.ReferencePoint == "")
-                throw new SaveEventException("Ponto de referência é Obrigatório.");
             if (eventSave.Address.City == "")
                 throw new SaveEventException("Cidade é Obrigatório.");
             if (eventSave.Address.State == "")

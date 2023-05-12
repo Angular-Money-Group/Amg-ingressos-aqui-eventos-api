@@ -13,11 +13,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? _Id { get; set; }
+
         /// <summary>
         /// name
         /// </summary>
         [Required]
         public string? Name { get; set; }
+
         /// <summary>
         /// Local
         /// </summary>
@@ -68,5 +70,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Id mongo Meio de Recebimento
         /// </summary>
         public string? IdOrganizer { get; set; }
+        
+        /// <summary>
+        /// Se o evento está em destaque
+        /// </summary>
+        [BsonDefaultValue(false)]
+        public bool Highlighted { get; set; }
     }
 }

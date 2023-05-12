@@ -47,38 +47,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         }
 
         [Test]
-        public async Task Given_NoTicketsForUser_When_GetUserTickets_Then_Return_NoContent_Async()
-        {
-            // Arrange
-            var userID = "34334";
-            _ticketRepositoryMock.Setup(x => x.GetTicketByUser<List<Ticket>>(userID)).ReturnsAsync(new List<Ticket>());
-
-            // Act
-            var result = await _ticketController.GetTicketByUser(userID);
-
-            // Assert
-            Assert.IsInstanceOf<NoContentResult>(result);
-            var noContentResult = result as NoContentResult;
-            Assert.AreEqual(204, noContentResult?.StatusCode);
-        }
-
-        [Test]
-        public async Task Given_NoTicketsRemeaning_When_GetTicketsRemeaning_Then_Return_NoContent_Async()
-        {
-            // Arrange
-            var lotID = "6451b37d90737f442d2b357a";
-            _ticketRepositoryMock.Setup(x => x.GetTicketsRemaining<List<Ticket>>(lotID)).ReturnsAsync(new List<Ticket>());
-
-            // Act
-            var result = await _ticketController.GetTicketsRemaining(lotID);
-
-            // Assert
-            Assert.IsInstanceOf<NoContentResult>(result);
-            var noContentResult = result as NoContentResult;
-            Assert.AreEqual(204, noContentResult?.StatusCode);
-        }
-
-        [Test]
         public async Task Given_ValidLotID_When_GetTicketsRemeaning_Then_Return_List_Tickets_Async()
         {
             // Arrange

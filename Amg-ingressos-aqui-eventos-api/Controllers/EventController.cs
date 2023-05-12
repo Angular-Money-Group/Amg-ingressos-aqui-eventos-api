@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
-    [Route("v1/eventos")]
+    [Route("v1/events")]
     public class EventController : ControllerBase
     {
         private readonly ILogger<EventController> _logger;
@@ -19,19 +19,18 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         }
 
         /// <summary>
-        /// Busca todos os eventos
+        /// Busca os eventos destacados ou semanais ou todos
         /// </summary>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getAllEvents")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetAllEventsAsync()
+        public async Task<IActionResult> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
         {
             try
             {
-                var result = await _eventService.GetAllEventsAsync();
+                var result = await _eventService.GetEventsAsync(highlights, weekly, paginationOptions);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -55,22 +54,46 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getEventById")]
+        [Route("{id}")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindByIdEventAsync(string id)
+        public async Task<IActionResult> FindByIdEventAsync([FromRoute]string id)
         {
             try
             {
                 var result = await _eventService.FindByIdAsync(id);
-                if(result.Message!= null && result.Message.Any()){
+                if (result.Message != null && result.Message.Any())
+                {
                     return NotFound(result.Message);
                 }
                 return Ok(result.Data);
             }
-            catch (FindByIdEventException ex)
+            catch (Exception ex)
             {
-                _logger.LogInformation(MessageLogErrors.FindByIdEventMessage, ex);
-                return NoContent();
+                _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
+            }
+        }
+
+        /// <summary>
+        /// Busca evento pela descrição
+        /// </summary>
+        /// <param name="description">Descrição desejada do Evento</param>
+        /// <returns>200 Evento da busca</returns>
+        /// <returns>204 Nenhum evento encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("searchEvents")]
+        [Produces("application/json")]
+        public async Task<IActionResult> FindEventByDescriptionAsync(string description)
+        {
+            try
+            {
+                var result = await _eventService.FindEventByDescriptionAsync(description);
+                if(result.Message!= null && result.Message.Any()){
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {

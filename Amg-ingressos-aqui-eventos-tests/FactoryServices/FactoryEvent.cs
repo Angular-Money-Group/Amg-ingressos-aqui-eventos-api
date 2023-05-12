@@ -13,9 +13,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Local = "Arena Race",
                 Type = "Show",
                 Image = "http://localhost/image.jpg",
-                Description = "Lorem Ipsum is simply dummy text of the printing" +
-                "and typesetting industry. Lorem Ipsum has been the industry's" +
-                 "standard dummy text ever since the 1500s,",
+                Description = "descricao",
                 Address = new Address()
                 {
                     AddressDescription = "Arena Race",
@@ -27,10 +25,11 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     City = "Uberlandia",
                     State = "MG",
                 },
-                StartDate = new DateTime(2023, 10, 30, 16, 00, 00),
+                StartDate = new DateTime(2023, 05, 11, 16, 00, 00),
                 EndDate = new DateTime(2023, 10, 31, 05, 00, 00),
                 IdMeansReceipt = "3b241101-e2bb-4255-8caf-4136c566a962",
                 IdOrganizer = "3b241101-e2bb-4255-8caf-4136c566a962",
+                Highlighted = true,
                 Variant = FactoryVariant.ListSimpleVariant().ToList()
             };
         }
