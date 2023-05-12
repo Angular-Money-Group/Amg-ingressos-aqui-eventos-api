@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
-    [Route("v1/eventos")]
+    [Route("v1/events")]
     public class EventController : ControllerBase
     {
         private readonly ILogger<EventController> _logger;
@@ -19,77 +19,18 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         }
 
         /// <summary>
-        /// Busca todos os eventos
+        /// Busca os eventos destacados ou semanais ou todos
         /// </summary>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getAllEvents")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetAllEventsAsync()
+        public async Task<IActionResult> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
         {
             try
             {
-                var result = await _eventService.GetAllEventsAsync();
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(MessageLogErrors.GetAllEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.GetAllEventMessage);
-            }
-        }
-
-        /// <summary>
-        /// Busca eventos da semana
-        /// </summary>
-        /// <returns>200 Lista de todos eventos</returns>
-        /// <returns>204 Nenhum evento encontrado</returns>
-        /// <returns>500 Erro inesperado</returns>
-        [HttpGet]
-        [Route("getWeeklyEvents")]
-        [Produces("application/json")]
-        public async Task<IActionResult> GetWeeklyEventsAsync(Pagination paginationOptions)
-        {
-            try
-            {
-                var result = await _eventService.GetWeeklyEventsAsync(paginationOptions);
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(MessageLogErrors.GetAllEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.GetAllEventMessage);
-            }
-        }
-
-        /// <summary>
-        /// Busca eventos Destacados
-        /// </summary>
-        /// <returns>200 Lista de todos eventos</returns>
-        /// <returns>204 Nenhum evento encontrado</returns>
-        /// <returns>500 Erro inesperado</returns>
-        [HttpGet]
-        [Route("getHighlightedEvents")]
-        [Produces("application/json")]
-        public async Task<IActionResult> GetHighlightedEventsAsync(Pagination paginationOptions)
-        {
-            try
-            {
-                var result = await _eventService.GetHighlightedEventsAsync(paginationOptions);
+                var result = await _eventService.GetEventsAsync(highlights, weekly, paginationOptions);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -113,14 +54,15 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getEventById")]
+        [Route("{id}")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindByIdEventAsync(string id)
+        public async Task<IActionResult> FindByIdEventAsync([FromRoute]string id)
         {
             try
             {
                 var result = await _eventService.FindByIdAsync(id);
-                if(result.Message!= null && result.Message.Any()){
+                if (result.Message != null && result.Message.Any())
+                {
                     return NotFound(result.Message);
                 }
                 return Ok(result.Data);
