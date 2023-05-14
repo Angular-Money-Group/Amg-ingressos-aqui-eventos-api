@@ -16,11 +16,11 @@ jobs:
       addToPath: true
 
   - task: PowerShell@2
-    displayName: 'Execute SSH commands on Hostinger VPS'
+    displayName: 'Create SSH script'
     inputs:
       targetType: 'inline'
       script: |
-        ssh -o StrictHostKeyChecking=no $(HOSTINGER_SSH_USERNAME)@$(HOSTINGER_SSH_HOST) << EOF
+        $sshScript = @'
         cd Amg-ingressos-aqui-eventos-api
         git checkout develop
         git pull
@@ -28,4 +28,24 @@ jobs:
         docker rm eventos-ticket-test
         docker build -t eventos-ticket .
         docker run -d -p 8080:80 eventos-ticket-test
-        EOF
+        '@
+
+        $sshScript | Out-File -FilePath $(Build.ArtifactStagingDirectory)/ssh_script.sh
+
+  - task: CopyFiles@2
+    displayName: 'Copy SSH script to agent'
+    inputs:
+      SourceFolder: '$(Build.ArtifactStagingDirectory)'
+      Contents: 'ssh_script.sh'
+      TargetFolder: '$(Agent.TempDirectory)'
+
+  - task: SSH@0
+    displayName: 'Execute SSH commands on Hostinger VPS'
+    inputs:
+      sshEndpoint: '$(HOSTINGER_SSH_HOST)'
+      username: '$(HOSTINGER_SSH_USERNAME)'
+      password: '$(HOSTINGER_SSH_PASSWORD)'
+      runOptions: 'commands'
+      commands: |
+        chmod +x $(Agent.TempDirectory)/ssh_script.sh
+        $(Agent.TempDirectory)/ssh_script.sh
