@@ -15,13 +15,12 @@ jobs:
       versionSpec: '3.x'
       addToPath: true
 
-  - task: SSH@0
+  - task: PowerShell@2
+    displayName: 'Execute SSH commands on Hostinger VPS'
     inputs:
-      sshEndpoint: '$(HOSTINGER_SSH_HOST)'
-      username: '$(HOSTINGER_SSH_USERNAME)'
-      password: '$(HOSTINGER_SSH_PASSWORD)'
-      runOptions: 'commands'
-      commands: |
+      targetType: 'inline'
+      script: |
+        ssh -o StrictHostKeyChecking=no $(HOSTINGER_SSH_USERNAME)@$(HOSTINGER_SSH_HOST) << EOF
         cd Amg-ingressos-aqui-eventos-api
         git checkout develop
         git pull
@@ -29,3 +28,4 @@ jobs:
         docker rm eventos-ticket-test
         docker build -t eventos-ticket .
         docker run -d -p 8080:80 eventos-ticket-test
+        EOF
