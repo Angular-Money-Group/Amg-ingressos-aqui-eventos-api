@@ -61,47 +61,51 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> SaveAsync(Event eventSave)
+public async Task<MessageReturn> SaveAsync(Event eventSave)
+{
+    try
+    {
+        ValidateModelSave(eventSave);
+        IsBase64Image(eventSave.Image!);
+
+        eventSave.Image = eventSave.Image!.Replace("data:image/jpeg;base64,", "");
+        
+        byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
+
+
+        var nomeArquivo = $"{Guid.NewGuid()}.jpg";
+        var directoryPath = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
+        Directory.CreateDirectory(directoryPath);
+
+        var filePath = Path.Combine(directoryPath, nomeArquivo);
+        string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivo;
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            try
-            {
-                ValidateModelSave(eventSave);
-                IsBase64Image(eventSave.Image!);
-
-                byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
-
-                eventSave.Image = eventSave.Image!.Replace("data:image/jpeg;base64,", "");
-
-                var nomeArquivo = $"{Guid.NewGuid()}.jpg";
-                var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "images", nomeArquivo);
-                string linkImagem = "http://api.ingressosaqui.com:3002/imagens/" + nomeArquivo;
-
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    stream.Write(imageBytes, 0, imageBytes.Length);
-                }
-
-                eventSave.Image = linkImagem;
-                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-
-                eventSave.Variant.ToList().ForEach(i =>
-                {
-                    i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
-                    i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
-                });
-            }
-            catch (SaveEventException ex)
-            {
-                _messageReturn.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return _messageReturn;
+            stream.Write(imageBytes, 0, imageBytes.Length);
         }
+
+        eventSave.Image = linkImagem;
+        _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+
+        eventSave.Variant.ToList().ForEach(i =>
+        {
+            i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
+            i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
+        });
+    }
+    catch (SaveEventException ex)
+    {
+        _messageReturn.Message = ex.Message;
+    }
+    catch (Exception ex)
+    {
+        throw ex;
+    }
+
+    return _messageReturn;
+}
+
 
         public async Task<MessageReturn> DeleteAsync(string id)
         {
