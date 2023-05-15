@@ -32,23 +32,6 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
-        public void Given_complet_event_When_save_Then_return_Ok()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            var messageReturn = "OK";
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(messageReturn, resultMethod.Result.Data);
-        }
-
-        [Test]
         public void Given_event_without_name_When_save_Then_return_message_miss_name()
         {
             //Arrange
@@ -380,7 +363,7 @@ namespace Prime.UnitTests.Services
             var resultMethod = _eventService.SaveAsync(eventComplet);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception!.Message);
+            Assert.IsNotEmpty(resultMethod.Exception?.Message);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("{id}")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindByIdEventAsync([FromRoute]string id)
+        public async Task<IActionResult> FindByIdEventAsync([FromRoute] string id)
         {
             try
             {
@@ -84,11 +84,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("searchEvents")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindEventByDescriptionAsync(string description)
+        public async Task<IActionResult> FindEventByNameAsync(string name)
         {
             try
             {
-                var result = await _eventService.FindEventByDescriptionAsync(description);
+                var result = await _eventService.FindEventByNameAsync(name);
                 if(result.Message!= null && result.Message.Any()){
                     _logger.LogInformation(result.Message);
                     return NoContent();
@@ -115,6 +115,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.SaveAsync(eventObject);
+
+            if(result.Message!= null && result.Message.Any()){
+                    _logger.LogInformation(result.Message);
+                    return StatusCode(500, MessageLogErrors.saveEventMessage);
+                }
 
                 return Ok(result.Data);
             }

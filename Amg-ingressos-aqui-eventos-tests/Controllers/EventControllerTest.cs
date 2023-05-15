@@ -41,11 +41,11 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             pagination.page = 1;
             pagination.pageSize = 10;
-            highlights = true;
+            highlights = false;
             weekly = false;
 
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
             var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as OkObjectResult);
@@ -57,21 +57,14 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         [Test]
         public async Task Given_Events_When_GetAllEvents_and_internal_error_Then_return_status_code_500_Async()
         {
-            // Arrange
-            pagination.page = 1;
-            pagination.pageSize = 10;
-            highlights = true;
-            weekly = false;
-
-            var messageReturn = FactoryEvent.ListSimpleEvent();
             var expectedMessage = MessageLogErrors.GetAllEventMessage;
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Throws(new Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).ThrowsAsync(new System.Exception("error conection database"));
 
             // Act
             var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as ObjectResult);
 
             // Assert
-            Assert.AreEqual(500, result!.StatusCode);
+            Assert.AreEqual(500, result.StatusCode);
             Assert.AreEqual(expectedMessage, result.Value);
         }
 
@@ -79,48 +72,48 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public async Task Given_events_When_GetAllEvents_not_foud_register_Then_return_message_empty_list_Async()
         {
             // Arrange
-            pagination.page = 1;
+            pagination.page = 100;
             pagination.pageSize = 10;
             highlights = true;
             weekly = false;
 
-            var expectedMessage = "Lista vazia";
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Throws(new GetAllEventException(expectedMessage));
+            var expectedMessage = "Eventos não encontrados";
+            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetAllEventException(expectedMessage));
 
             // Act
-            var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as NoContentResult);
+            var result = await _eventController.GetEventsAsync(highlights, weekly, pagination) as NoContentResult;
 
             // Assert
-            Assert.AreEqual(204, result!.StatusCode);
+            Assert.AreEqual(204, result?.StatusCode);
         }
 
         [Test]
-        public async Task Given_Events_When_FindEventsByDescription_Then_return_list_objects_events_Async()
+        public async Task Given_Events_When_FindEventsByName_Then_return_list_objects_events_Async()
         {
             // Arrange
-            var description = "descricao";
+            var name = "CBLOL";
 
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.FindByDescription<string>(description)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.FindByName<List<Event>>(name)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
-            var result = (await _eventController.FindEventByDescriptionAsync(description) as OkObjectResult);
+            var result = await _eventController.FindEventByNameAsync(name) as OkObjectResult;
 
             // Assert
-            Assert.AreEqual(messageReturn, result?.Value);
+            Assert.AreEqual(messageReturn, result!.Value);
         }
 
         [Test]
-        public async Task Given_Events_When_FindEventsByDescription_and_internal_error_Then_return_status_code_500_Async()
+        public async Task Given_Events_When_FindEventsByName_and_internal_error_Then_return_status_code_500_Async()
         {
-            var description = "descricao";
+            var name = "descricao";
             // Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            var expectedMessage = MessageLogErrors.GetAllEventMessage;
-            _eventRepositoryMock.Setup(x => x.FindByDescription<string>(description)).Throws(new Exception("error coxcnection database"));
+            var expectedMessage = MessageLogErrors.FindByIdEventMessage;
+            _eventRepositoryMock.Setup(x => x.FindByName<List<Event>>(name)).Throws(new System.Exception("error coxcnection database"));
 
             // Act
-            var result = (await _eventController.FindEventByDescriptionAsync(description) as ObjectResult);
+            var result = (await _eventController.FindEventByNameAsync(name) as ObjectResult);
 
             // Assert
             Assert.AreEqual(500, result!.StatusCode);
@@ -128,19 +121,19 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         }
 
         [Test]
-        public async Task Given_events_When_FindEventsByDescription_not_foud_register_Then_return_message_empty_list_Async()
+        public async Task Given_events_When_FindEventsByName_not_foud_register_Then_return_message_empty_list_Async()
         {
             // Arrange
-            var description = "3b241101-e2bb-4255-8caf-4136c566a962";
+            var name = "3b241101-e2bb-4255-8caf-4136c566a962";
 
             var expectedMessage = "Lista vazia";
-            _eventRepositoryMock.Setup(x => x.FindByDescription<string>(description)).Throws(new GetAllEventException(expectedMessage));
+            _eventRepositoryMock.Setup(x => x.FindByName<List<Event>>(name)).Throws(new FindByDescriptionException(expectedMessage));
 
             // Act
-            var result = (await _eventController.FindEventByDescriptionAsync(description) as NoContentResult);
+            var result = await _eventController.FindEventByNameAsync(name) as NoContentResult;
 
             // Assert
-            Assert.AreEqual(204, result!.StatusCode);
+            Assert.AreEqual(204, result?.StatusCode);
         }
 
         [Test]
@@ -182,14 +175,14 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var expectedMessage = "Sem registros";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).
+            _eventRepositoryMock.Setup(x => x.FindById<object>(id)).
                 Throws(new FindByIdEventException(expectedMessage));
 
             // Act
-            var result = (await _eventController.FindByIdEventAsync(id) as NoContentResult);
+            var result = await _eventController.FindByIdEventAsync(id) as NotFoundObjectResult;
 
             // Assert
-            Assert.AreEqual(204, result!.StatusCode);
+            Assert.AreEqual(404, result?.StatusCode);
         }
 
         [Test]
@@ -242,15 +235,15 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public async Task Given_event_When_Save_Then_return_message_created_Async()
         {
             // Arrange
-            var messageReturn = "Evento criado";
+            object messageReturn = null;
             var eventSave = FactoryEvent.SimpleEvent();
             _eventRepositoryMock.Setup(x => x.Save<object>(eventSave))
-                .Returns(Task.FromResult(messageReturn as object));
+                .Returns(Task.FromResult(messageReturn));
             _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             // Act
-            var result = (await _eventController.SaveEventAsync(eventSave) as OkObjectResult);
+            var result = await _eventController.SaveEventAsync(eventSave) as OkObjectResult;
 
             // Assert
             Assert.AreEqual(messageReturn, result?.Value);
@@ -262,10 +255,10 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var eventSave = FactoryEvent.SimpleEvent();
             var espectedReturn = MessageLogErrors.saveEventMessage;
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventSave)).Throws(new Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.Save<object>(eventSave)).Throws(new System.Exception("error conection database"));
 
             // Act
-            var result = (await _eventController.SaveEventAsync(eventSave) as ObjectResult);
+            var result = await _eventController.SaveEventAsync(eventSave) as ObjectResult;
 
             // Assert
             Assert.AreEqual(500, result!.StatusCode);
