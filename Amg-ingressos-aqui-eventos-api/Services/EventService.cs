@@ -36,17 +36,21 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
+            catch (FindByIdEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
             catch (Exception ex)
             {
                 throw ex;
             }
             return _messageReturn;
         }
-        public async Task<MessageReturn> FindEventByDescriptionAsync(string description)
+        public async Task<MessageReturn> FindEventByNameAsync(string name)
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.FindByDescription<Event>(description);
+                _messageReturn.Data = await _eventRepository.FindByName<List<Event>>(name);
 
                 return _messageReturn;
             }
@@ -93,6 +97,7 @@ public async Task<MessageReturn> SaveAsync(Event eventSave)
             i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
             i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
         });
+ 
     }
     catch (SaveEventException ex)
     {

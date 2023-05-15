@@ -6,7 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     {
         Task<object> Save<T>(object eventComplet);
         Task<object> FindById<T>(object id);
-        Task<List<Event>> FindByDescription<T>(string description);
+        Task<List<Event>> FindByName<T>(string name);
         Task<object> Delete<T>(object id);
         Task<List<Event>> GetAllEvents<T>();
         Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
