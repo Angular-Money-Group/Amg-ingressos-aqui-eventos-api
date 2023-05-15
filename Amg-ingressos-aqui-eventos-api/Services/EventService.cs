@@ -68,7 +68,7 @@ public async Task<MessageReturn> SaveAsync(Event eventSave)
         ValidateModelSave(eventSave);
         IsBase64Image(eventSave.Image!);
 
-        eventSave.Image = eventSave.Image!.Replace("data:image/jpeg;base64,", "");
+        eventSave.Image = Regex.Replace(eventSave.Image!, @"data:image/.*?;base64,", "");
         
         byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
 
