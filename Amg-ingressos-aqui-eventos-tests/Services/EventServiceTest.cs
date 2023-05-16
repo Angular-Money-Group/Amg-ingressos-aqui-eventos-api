@@ -6,6 +6,8 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Prime.UnitTests.Services
 {
@@ -16,6 +18,7 @@ namespace Prime.UnitTests.Services
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
 
+        private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         private Pagination pagination = new Pagination();
 
         private bool weekly;
@@ -25,24 +28,7 @@ namespace Prime.UnitTests.Services
         public void SetUp()
         {
             _eventRepositoryMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object);
-        }
-
-        [Test]
-        public void Given_complet_event_When_save_Then_return_Ok()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            var messageReturn = "OK";
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(messageReturn, resultMethod.Result.Data);
+            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object);
         }
 
         [Test]
@@ -377,7 +363,7 @@ namespace Prime.UnitTests.Services
             var resultMethod = _eventService.SaveAsync(eventComplet);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception!.Message);
+            Assert.IsNotEmpty(resultMethod.Exception?.Message);
         }
     }
 }

@@ -1,9 +1,9 @@
-using System.Text;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
+using System.Text.RegularExpressions;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -12,11 +12,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private IEventRepository _eventRepository;
         private IVariantService _variantService;
         private MessageReturn _messageReturn;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EventService(IEventRepository eventRepository, IVariantService variantService)
+        public EventService(IEventRepository eventRepository, IVariantService variantService, IWebHostEnvironment webHostEnvironment)
         {
             _eventRepository = eventRepository;
             _variantService = variantService;
+            _webHostEnvironment = webHostEnvironment;
             _messageReturn = new MessageReturn();
         }
 
@@ -34,17 +36,21 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
+            catch (FindByIdEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
             catch (Exception ex)
             {
                 throw ex;
             }
             return _messageReturn;
         }
-        public async Task<MessageReturn> FindEventByDescriptionAsync(string description)
+        public async Task<MessageReturn> FindEventByNameAsync(string name)
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.FindByDescription<Event>(description);
+                _messageReturn.Data = await _eventRepository.FindByName<List<Event>>(name);
 
                 return _messageReturn;
             }
@@ -59,31 +65,52 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> SaveAsync(Event eventSave)
+public async Task<MessageReturn> SaveAsync(Event eventSave)
+{
+    try
+    {
+        ValidateModelSave(eventSave);
+        IsBase64Image(eventSave.Image!);
+
+        eventSave.Image = Regex.Replace(eventSave.Image!, @"data:image/.*?;base64,", "");
+        
+        byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
+
+
+        var nomeArquivo = $"{Guid.NewGuid()}.jpg";
+        var directoryPath = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
+        Directory.CreateDirectory(directoryPath);
+
+        var filePath = Path.Combine(directoryPath, nomeArquivo);
+        string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivo;
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            try
-            {
-                ValidateModelSave(eventSave);
-
-                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-
-                eventSave.Variant.ToList().ForEach(i =>
-                {
-                    i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
-                    i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
-                });
-            }
-            catch (SaveEventException ex)
-            {
-                _messageReturn.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return _messageReturn;
+            stream.Write(imageBytes, 0, imageBytes.Length);
         }
+
+        eventSave.Image = linkImagem;
+        _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+
+        eventSave.Variant.ToList().ForEach(i =>
+        {
+            i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
+            i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
+        });
+ 
+    }
+    catch (SaveEventException ex)
+    {
+        _messageReturn.Message = ex.Message;
+    }
+    catch (Exception ex)
+    {
+        throw ex;
+    }
+
+    return _messageReturn;
+}
+
 
         public async Task<MessageReturn> DeleteAsync(string id)
         {
@@ -162,6 +189,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Data Fim é Obrigatório.");
             if (!eventSave.Variant.Any())
                 throw new SaveEventException("Variante é Obrigatório.");
+        }
+
+        public void IsBase64Image(string base64String)
+        {
+            if (string.IsNullOrEmpty(base64String))
+                throw new SaveEventException("Imagem é obrigatório");
+
+            var base64Data = Regex.Match(base64String, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+
+            try
+            {
+                byte[] imageData = Convert.FromBase64String(base64Data);
+            }
+            catch (FormatException)
+            {
+                throw new SaveEventException("Essa imagem não está em base64");
+            }
         }
     }
 }
