@@ -75,9 +75,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         }
 
         /// <summary>
-        /// Busca evento pela descrição
+        /// Busca evento pelo nome
         /// </summary>
-        /// <param name="description">Descrição desejada do Evento</param>
+        /// <param name="name">Nome desejada do Evento</param>
         /// <returns>200 Evento da busca</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
@@ -89,6 +89,34 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.FindEventByNameAsync(name);
+                if(result.Message!= null && result.Message.Any()){
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
+            }
+        }
+
+        /// <summary>
+        /// Busca os eventos do produtor
+        /// </summary>
+        /// <param name="id">Descrição desejada do Evento</param>
+        /// <returns>200 Evento da busca</returns>
+        /// <returns>204 Nenhum evento encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("getEvents/{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> FindProducerEventsAsync([FromRoute] string id, Pagination paginationOptions)
+        {
+            try
+            {
+                var result = await _eventService.FindProducerEventsAsync(id, paginationOptions);
                 if(result.Message!= null && result.Message.Any()){
                     _logger.LogInformation(result.Message);
                     return NoContent();
