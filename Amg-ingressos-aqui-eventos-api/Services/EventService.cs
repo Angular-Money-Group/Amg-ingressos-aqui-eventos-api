@@ -65,51 +65,63 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-public async Task<MessageReturn> SaveAsync(Event eventSave)
-{
-    try
-    {
-        ValidateModelSave(eventSave);
-        IsBase64Image(eventSave.Image!);
-
-        eventSave.Image = Regex.Replace(eventSave.Image!, @"data:image/.*?;base64,", "");
-        
-        byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
-
-
-        var nomeArquivo = $"{Guid.NewGuid()}.jpg";
-        var directoryPath = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
-        Directory.CreateDirectory(directoryPath);
-
-        var filePath = Path.Combine(directoryPath, nomeArquivo);
-        string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivo;
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        public async Task<MessageReturn> SaveAsync(Event eventSave)
         {
-            stream.Write(imageBytes, 0, imageBytes.Length);
+            try
+            {
+                ValidateModelSave(eventSave);
+                IsBase64Image(eventSave.Image!);
+
+                eventSave.Image = Regex.Replace(eventSave.Image!, @"data:image/.*?;base64,", "");
+
+                byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
+
+                var nomeArquivoImage = $"{Guid.NewGuid()}.jpg";
+                var directoryPathImage = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
+
+                var nomeArquivoDescription = $"{Guid.NewGuid()}.html";
+                var directoryPathDescription = Path.Combine(_webHostEnvironment.ContentRootPath, "descriptions");
+
+
+                Directory.CreateDirectory(directoryPathImage);
+                Directory.CreateDirectory(directoryPathDescription);
+
+                var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
+                var filePathDescription = Path.Combine(directoryPathImage, nomeArquivoImage);
+
+
+                string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
+
+                string linkDescriptions = "https://api.ingressosaqui.com/descriptions/" + directoryPathImage;
+
+                using (var stream = new FileStream(filePathImage, FileMode.Create))
+                {
+                    stream.Write(imageBytes, 0, imageBytes.Length);
+                }
+
+                eventSave.Image = linkImagem;
+                eventSave.Description = linkDescriptions;
+
+                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+
+                eventSave.Variant.ToList().ForEach(i =>
+                {
+                    i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
+                    i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
+                });
+
+            }
+            catch (SaveEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
         }
-
-        eventSave.Image = linkImagem;
-        _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-
-        eventSave.Variant.ToList().ForEach(i =>
-        {
-            i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
-            i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
-        });
- 
-    }
-    catch (SaveEventException ex)
-    {
-        _messageReturn.Message = ex.Message;
-    }
-    catch (Exception ex)
-    {
-        throw ex;
-    }
-
-    return _messageReturn;
-}
 
 
         public async Task<MessageReturn> DeleteAsync(string id)
@@ -145,8 +157,25 @@ public async Task<MessageReturn> SaveAsync(Event eventSave)
                 }
                 else
                 {
-                    _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>();
+                    _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>(paginationOptions);
                 }
+            }
+            catch (GetAllEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> FindProducerEventsAsync(string id, Pagination paginationOptions)
+        {
+            try
+            {
+                _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(id, paginationOptions);
             }
             catch (GetAllEventException ex)
             {

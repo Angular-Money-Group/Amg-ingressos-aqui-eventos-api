@@ -279,6 +279,21 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
+        public void Given_id_event_When_FindProducerEventsAsync_Then_return_list_object_Event()
+        {
+            //Arrange
+            var eventComplet = FactoryEvent.ListSimpleEvent();
+            var id = "645470c21c48bb400466aa19";
+            _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Returns(Task.FromResult(eventComplet as List<Event>));
+
+            //Act
+            var result = _eventService.FindProducerEventsAsync(id, pagination);
+
+            //Assert
+            Assert.AreEqual(eventComplet, result.Result.Data);
+        }
+
+        [Test]
         public void Given_id_event_without_24_digits_When_findById_Then_return_objectEvent()
         {
             //Arrange
@@ -340,7 +355,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             //Act
             var resultTask = _eventService.GetEventsAsync(highlights, weekly, pagination);

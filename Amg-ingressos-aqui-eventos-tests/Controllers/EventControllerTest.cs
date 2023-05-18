@@ -45,7 +45,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             weekly = false;
 
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
             var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as OkObjectResult);
@@ -58,7 +58,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public async Task Given_Events_When_GetAllEvents_and_internal_error_Then_return_status_code_500_Async()
         {
             var expectedMessage = MessageLogErrors.GetAllEventMessage;
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>()).ThrowsAsync(new System.Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).ThrowsAsync(new System.Exception("error conection database"));
 
             // Act
             var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as ObjectResult);
@@ -135,6 +135,61 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Assert
             Assert.AreEqual(204, result?.StatusCode);
         }
+
+        [Test]
+        public async Task Given_Events_When_FindProducerEvents_Then_return_list_objects_events_Async()
+        {
+            var id = "645470c21c48bb400466aa19";
+            pagination.page = 1;
+            pagination.pageSize = 10;
+
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+
+            // Act
+            var result = (await _eventController.FindProducerEventsAsync(id, pagination) as OkObjectResult);
+
+            // Assert
+            Assert.AreEqual(messageReturn, result?.Value);
+        }
+
+        [Test]
+        public async Task Given_Events_When_FindProducerEvents_and_internal_error_Then_return_status_code_500_Async()
+        {
+            var id = "645470c21c48bb400466aa19";
+            pagination.page = 1;
+            pagination.pageSize = 10;
+            // Arrange
+            var messageReturn = FactoryEvent.ListSimpleEvent();
+            var expectedMessage = MessageLogErrors.FindByIdEventMessage;
+            _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Throws(new System.Exception("error coxcnection database"));
+
+            // Act
+            var result = (await _eventController.FindProducerEventsAsync(id, pagination) as ObjectResult);
+
+            // Assert
+            Assert.AreEqual(500, result!.StatusCode);
+            Assert.AreEqual(expectedMessage, result.Value);
+        }
+
+        [Test]
+        public async Task Given_events_When_FindProducerEvents_not_foud_register_Then_return_message_empty_list_Async()
+        {
+            // Arrange
+            var id = "645470c21c48bb400466aa19";
+            pagination.page = 1000;
+            pagination.pageSize = 10;
+
+            var expectedMessage = "Lista vazia";
+            _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Throws(new GetAllEventException(expectedMessage));
+
+            // Act
+            var result = await _eventController.FindProducerEventsAsync(id, pagination) as NoContentResult;
+
+            // Assert
+            Assert.AreEqual(204, result?.StatusCode);
+        }
+
 
         [Test]
         public async Task Given_id_event_When_FindById_Then_return_event_Async()

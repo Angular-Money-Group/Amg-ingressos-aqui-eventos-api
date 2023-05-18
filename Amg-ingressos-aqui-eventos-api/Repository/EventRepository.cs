@@ -99,13 +99,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<Event>> GetAllEvents<T>()
+        public async Task<List<Event>> GetAllEvents<T>(Pagination paginationOptions)
         {
             try
             {
                 List<Event> pResults = _eventCollection.Find(Builders<Event>.Filter.Empty).ToList();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
+                
+                pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
+                pResults.Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                .Take(paginationOptions.pageSize)
+                .ToList();
 
                 return pResults;
             }
@@ -150,7 +155,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-        
+
         public Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions)
         {
             try
@@ -171,6 +176,28 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
             catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<Event>> FindByProducer<T>(string id, Pagination paginationOptions)
+        {
+            try
+            {
+                var filter = Builders<Event>.Filter.Eq("IdOrganizer", id);
+
+                List<Event> pResults = _eventCollection.Find(filter).ToList()
+                .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                .Take(paginationOptions.pageSize)
+                .ToList();
+
+                if (!pResults.Any())
+                    throw new GetAllEventException("Eventos não encontrados");
+
+                return pResults;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
