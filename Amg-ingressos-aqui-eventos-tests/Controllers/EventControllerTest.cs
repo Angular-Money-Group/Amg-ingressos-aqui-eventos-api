@@ -11,14 +11,17 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using MongoDB.Driver;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
     public class EventControllerTest
     {
         private EventController _eventController;
+        private IEventRepository _eventRepository;
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private Mock<IMongoCollection<Event>> _eventCollectionMock = new Mock<IMongoCollection<Event>>();
         private Mock<ILogger<EventController>> _loggerMock = new Mock<ILogger<EventController>>();
         private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
@@ -52,6 +55,59 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             // Assert
             Assert.AreEqual(messageReturn, result?.Value);
+        }
+
+        [Test]
+        public async Task Given_Events_When_HighlightEventAsync_Then_return_edited_event_Async()
+        {
+
+            var messageReturn = FactoryEvent.SimpleEvent();
+
+            var id = "6462946db12323abeff9253f";
+
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).Returns(Task.FromResult(messageReturn as Event)!);
+
+            // Act
+            var result = (await _eventController.HighlightEventAsync(id) as OkObjectResult);
+
+            // Assert
+            Assert.AreEqual(messageReturn, result?.Value);
+        }
+
+        [Test]
+        public async Task Given_Events_When_SetHighlightEvent_Then_Return_400_When_Max_Highlighted_Flag_Toggled()
+        {
+            var messageReturn = FactoryEvent.SimpleEvent();
+
+            var expectedMessage = "Maximo de Eventos destacados atingido";
+
+            var id = "6462946db12323abeff9253f";
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).ThrowsAsync(new MaxHighlightedEvents("Maximo de Eventos destacados atingido"));
+
+            // Act
+            var result = (await _eventController.HighlightEventAsync(id) as ObjectResult);
+
+            // Assert
+            Assert.AreEqual(400, result?.StatusCode);
+            Assert.AreEqual(expectedMessage, result?.Value);
+        }
+
+        [Test]
+        public async Task Given_Events_When_HighlightEventAsync_Then_return_return_status_code_500_Async()
+        {
+            var messageReturn = FactoryEvent.SimpleEvent();
+
+            var expectedMessage = MessageLogErrors.highlightEventmessage;
+
+            var id = "6462946db12323abeff9253f";
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).ThrowsAsync(new System.Exception("error conection database"));
+
+            // Act
+            var result = (await _eventController.HighlightEventAsync(id) as ObjectResult);
+
+            // Assert
+            Assert.AreEqual(500, result?.StatusCode);
+            Assert.AreEqual(expectedMessage, result?.Value);
         }
 
         [Test]
