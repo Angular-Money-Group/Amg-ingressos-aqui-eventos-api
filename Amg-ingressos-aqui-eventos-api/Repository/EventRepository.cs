@@ -76,14 +76,13 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<Event>> FindByName<T>(string name)
+        public async Task<List<Event>> FindByName<T>(string nome)
         {
             try
             {
-                var regex = new BsonRegularExpression(name, "i"); // "i" para ignorar maiúsculas e minúsculas
-                var filter = Builders<Event>.Filter.Regex("name", regex);
+                var filter = Builders<Event>.Filter.Regex(g => g.Name, new BsonRegularExpression(nome, "i"));
 
-                List<Event> pResults = _eventCollection.Find(filter).ToList();
+                List<Event> pResults = await _eventCollection.Find(filter).ToListAsync();
                 if (!pResults.Any())
                     throw new FindByDescriptionException("Eventos não encontrados");
 
@@ -147,7 +146,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 List<Event> pResults = _eventCollection.Find(Builders<Event>.Filter.Empty).ToList();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
-                
+
                 pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
                 pResults.Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
                 .Take(paginationOptions.pageSize)

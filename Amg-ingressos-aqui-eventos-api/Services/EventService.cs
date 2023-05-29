@@ -87,7 +87,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 Directory.CreateDirectory(directoryPathDescription);
 
                 var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
-                var filePathDescription = Path.Combine(directoryPathImage, nomeArquivoImage);
+                var filePathDescription = Path.Combine(directoryPathDescription, nomeArquivoDescription);
 
 
                 string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
