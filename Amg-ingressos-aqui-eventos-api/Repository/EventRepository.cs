@@ -99,6 +99,47 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<Event> SetHighlightEvent<T>(string id)
+        {
+            try
+            {
+                List<Event> pHighlightedEvents = _eventCollection.Find(Builders<Event>.Filter.Eq("Highlighted", true)).ToList();
+
+                if (pHighlightedEvents.Count >= 9)
+                    throw new MaxHighlightedEvents("Maximo de Eventos destacados atingido");
+
+                var filter = Builders<Event>.Filter.Eq("_Id", id);
+
+                Event eventDoc = _eventCollection.Find(filter).FirstOrDefault();
+
+                if (eventDoc == null)
+                    throw new FindByDescriptionException("Evento não encontrado");
+
+                var isHighlighted = eventDoc.Highlighted;
+                var newValue = !isHighlighted;
+
+                var updated = Builders<Event>.Update.Set(e => e.Highlighted, newValue);
+
+                var pResults = _eventCollection.UpdateOne(filter, updated);
+
+
+                eventDoc.Highlighted = !eventDoc.Highlighted;
+                return eventDoc;
+            }
+            catch (FindByDescriptionException ex)
+            {
+                throw ex;
+            }
+            catch (MaxHighlightedEvents ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<List<Event>> GetAllEvents<T>(Pagination paginationOptions)
         {
             try

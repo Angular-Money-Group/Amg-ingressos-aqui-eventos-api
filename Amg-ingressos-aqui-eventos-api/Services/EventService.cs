@@ -115,6 +115,28 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
+             catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
+        }
+        public async Task<MessageReturn> HighlightEventAsync(string id)
+        {
+            try
+            {
+                _messageReturn.Data = await _eventRepository.SetHighlightEvent<Event>(id);
+
+                return _messageReturn;
+            }
+            catch (FindByDescriptionException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (MaxHighlightedEvents ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
             catch (Exception ex)
             {
                 throw ex;

@@ -89,7 +89,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.FindEventByNameAsync(name);
-                if(result.Message!= null && result.Message.Any()){
+                if (result.Message != null && result.Message.Any())
+                {
                     _logger.LogInformation(result.Message);
                     return NoContent();
                 }
@@ -117,7 +118,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.FindProducerEventsAsync(id, paginationOptions);
-                if(result.Message!= null && result.Message.Any()){
+                if (result.Message != null && result.Message.Any())
+                {
                     _logger.LogInformation(result.Message);
                     return NoContent();
                 }
@@ -144,7 +146,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             {
                 var result = await _eventService.SaveAsync(eventObject);
 
-            if(result.Message!= null && result.Message.Any()){
+                if (result.Message != null && result.Message.Any())
+                {
                     _logger.LogInformation(result.Message);
                     return StatusCode(500, MessageLogErrors.saveEventMessage);
                 }
@@ -155,6 +158,41 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             {
                 _logger.LogError(MessageLogErrors.saveEventMessage, ex);
                 return StatusCode(500, MessageLogErrors.saveEventMessage);
+            }
+        }
+
+        /// <summary>
+        /// Edita destaque evento
+        /// </summary>
+        /// <param name="id">Corpo Evento a ser Gravado</param>
+        /// <returns>200 Evento criado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpPut]
+        [Route("highlightEvent/{id}")]
+        public async Task<IActionResult> HighlightEventAsync([FromRoute] string id)
+        {
+            try
+            {
+                var result = await _eventService.HighlightEventAsync(id);
+
+                if (result.Message != null && result.Message.Any())
+                {
+
+                    if (result.Message == "Maximo de Eventos destacados atingido")
+                    {
+                        _logger.LogInformation(result.Message);
+                        return StatusCode(400, result.Message);
+                    }
+                    _logger.LogInformation(result.Message);
+                    return StatusCode(500, MessageLogErrors.highlightEventmessage);
+                }
+
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.highlightEventmessage, ex);
+                return StatusCode(500, MessageLogErrors.highlightEventmessage);
             }
         }
 
