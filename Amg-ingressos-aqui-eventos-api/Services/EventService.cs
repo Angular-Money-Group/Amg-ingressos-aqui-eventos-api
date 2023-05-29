@@ -92,7 +92,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
 
-                string linkDescriptions = "https://api.ingressosaqui.com/descriptions/" + directoryPathImage;
+                string linkDescriptions = "https://api.ingressosaqui.com/descriptions/" + nomeArquivoDescription;
 
                 using (var stream = new FileStream(filePathImage, FileMode.Create))
                 {
