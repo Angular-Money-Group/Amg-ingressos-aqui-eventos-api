@@ -25,13 +25,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getTickets")]
+        [Route("user/{idUser}")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetTicketByUser(string id)
+        public async Task<IActionResult> GetTicketByUser([FromRoute]string idUser)
         {
             try
             {
-                var result = await _ticketService.GetTicketByUser(id);
+                var result = await _ticketService.GetTicketByUser(idUser);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -55,13 +55,44 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getTicketsRemaining")]
+        [Route("lote/{idLote}")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetTicketsRemaining(string idLote)
+        public async Task<IActionResult> GetTicketsRemainingByLot([FromRoute]string idLote)
         {
             try
             {
-                var result = await _ticketService.GetTicketsRemaining(idLote);
+                var result = await _ticketService.GetTicketsRemainingByLot(idLote);
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
+                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Busca todos os ingressos do usuário
+        /// </summary>
+        /// <param name="id">Id do lote</param>
+        /// <returns>200 Retorna a quantidade de tickets disponiveis</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetTicketById([FromRoute]string id)
+        {
+            try
+            {
+                var result = await _ticketService.GetTicketById(id);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -87,9 +118,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpPut]
-        [Route("updateTicket")]
+        [Route("{id}")]
         [Produces("application/json")]
-        public async Task<IActionResult> UpdateTicketsAsync(string id, [FromBody] Ticket ticketObject)
+        public async Task<IActionResult> UpdateTicketsAsync([FromRoute]string id, [FromBody]Ticket ticketObject)
         {
             try
             {

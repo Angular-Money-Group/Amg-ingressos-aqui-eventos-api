@@ -37,5 +37,10 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonDefaultValue(false)]
         public bool isSold { get; set; }
+        
+        /// <summary>
+        /// QrCode
+        /// </summary>
+        public string QrCode { get; set; }
     }
 }

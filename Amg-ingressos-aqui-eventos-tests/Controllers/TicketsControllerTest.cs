@@ -37,7 +37,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var userID = "644178cb940d123bafb3a4ae";
             var messageReturn = FactoryTicket.ListSimpleTicket();
-            _ticketRepositoryMock.Setup(x => x.GetTicketByUser<object>(userID)).Returns(Task.FromResult(messageReturn as List<Ticket>)!);
+            _ticketRepositoryMock.Setup(x => x.GetTickets<object>(It.IsAny<Ticket>()))
+                .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
             // Act
             var result = await _ticketController.GetTicketByUser(userID);
@@ -54,10 +55,11 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var lotID = "6451b37790737f442d2b3551";
             var messageReturn = FactoryTicket.ListSimpleTicket();
-            _ticketRepositoryMock.Setup(x => x.GetTicketsRemaining<object>(lotID)).Returns(Task.FromResult(messageReturn as List<Ticket>)!);
+            _ticketRepositoryMock.Setup(x => x.GetTickets<object>(It.IsAny<Ticket>()))
+                .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
             // Act
-            var result = await _ticketController.GetTicketsRemaining(lotID);
+            var result = await _ticketController.GetTicketsRemainingByLot(lotID);
 
             // Assert
             Assert.IsInstanceOf<OkObjectResult>(result);

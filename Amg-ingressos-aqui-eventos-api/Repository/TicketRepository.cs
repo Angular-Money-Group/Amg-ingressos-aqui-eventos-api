@@ -13,11 +13,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     [ExcludeFromCodeCoverage]
     public class TicketRepository<T> : ITicketRepository
     {
-        private readonly IMongoCollection<Ticket> _variantCollection;
+        private readonly IMongoCollection<Ticket> _ticketCollection;
         private readonly MongoClient _mongoClient;
         public TicketRepository(IDbConnection<Ticket> dbConnection)
         {
-            _variantCollection = dbConnection.GetConnection("tickets");
+            _ticketCollection = dbConnection.GetConnection("tickets");
             _mongoClient = dbConnection.GetClient();
         }
 
@@ -26,7 +26,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
             try
             {
-                await _variantCollection.InsertOneAsync(ticket as Ticket);
+                await _ticketCollection.InsertOneAsync(ticket as Ticket);
                 return ((Ticket)ticket).Id;
             }
             catch (SaveTicketException ex)
@@ -38,45 +38,30 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-
-        public async Task<List<Ticket>> GetTicketByUser<T>(string id)
+        public async Task<List<Ticket>> GetTickets<T>(Ticket ticket)
         {
             try
-            {
-                // Cria um filtro para buscar tickets com o ID do usuário especificado
-                var filter = Builders<Ticket>.Filter.Eq("IdUser", id);
+            {                
+                var builder = Builders<Ticket>.Filter;
+                var filter = builder.Empty;
 
-                // Busca os tickets que correspondem ao filtro
-                var result = await _variantCollection.Find(filter).ToListAsync();
-                if (!result.Any() || result.Count == 0)
-                    throw new FindTicketByUserException("Tickets não encontrados");
+                if (!string.IsNullOrWhiteSpace(ticket.Id))
+                    filter &=  builder.Eq(x => x.Id, ticket.Id);                    
+                    
+                if(!string.IsNullOrEmpty(ticket.IdLot))
+                    filter &= builder.Eq(x => x.IdLot, ticket.IdLot);
+
+                if(!string.IsNullOrEmpty(ticket.IdUser))
+                    filter &= builder.Eq(x => x.IdUser, ticket.IdUser);
+
+                var result = await _ticketCollection.Find(filter).ToListAsync();
+                
+                if (result == null)
+                    throw new FindTicketByUserException("Ticket não encontrado");
 
                 return result;
             }
             catch (FindTicketByUserException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public async Task<List<Ticket>> GetTicketsRemaining<T>(string id)
-        {
-            try
-            {
-                // Cria um filtro para buscar tickets com o ID do lot especificado
-                var filter = Builders<Ticket>.Filter.Eq("IdLot", id) & Builders<Ticket>.Filter.Exists("IdUser", false);
-
-                // Busca os tickets que correspondem ao filtro
-                var result = await _variantCollection.Find(filter).ToListAsync();
-                if (!result.Any() || result.Count == 0)
-                    throw new GetRemeaningTicketsExepition("Tickets não encontrados");
-
-                return result;
-            }
-            catch (GetRemeaningTicketsExepition ex)
             {
                 throw ex;
             }
@@ -98,14 +83,14 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                         .Set("Position", ticketObject.Position);
 
                 // Busca os tickets que correspondem ao filtro
-                var result = await _variantCollection.UpdateOneAsync(filter, update);
+                var result = await _ticketCollection.UpdateOneAsync(filter, update);
 
                 if (result.ModifiedCount == 0)
                 {
                     throw new NotModificateTicketsExeption("O ticket não foi atualizado");
                 }
                 
-                return await _variantCollection.Find(filter).ToListAsync();
+                return await _ticketCollection.Find(filter).ToListAsync();
             }
             catch (NotModificateTicketsExeption ex)
             {
@@ -117,5 +102,4 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
     }
-
 }
