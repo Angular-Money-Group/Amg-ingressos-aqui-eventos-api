@@ -70,6 +70,36 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+        public async Task<List<Ticket>> GetTicketsRemaining<T>(string id)
+        {
+            try
+            {
+                // Cria um filtro para buscar tickets com o ID do lot especificado
+                var filter = Builders<Ticket>.Filter.Eq("IdLot", id);
+
+                // Cria um filtro para verificar se o campo "IdUser" é nulo
+                var idUserFilter = Builders<Ticket>.Filter.Type("IdUser", BsonType.Null) | Builders<Ticket>.Filter.Exists("IdUser", false);
+
+                // Combina os filtros usando o operador And
+                var combinedFilter = Builders<Ticket>.Filter.And(filter, idUserFilter);
+
+
+                // Busca os tickets que correspondem ao filtro
+                var result = await _ticketCollection.Find(combinedFilter).ToListAsync();
+                if (!result.Any() || result.Count == 0)
+                    throw new GetRemeaningTicketsExepition("Tickets não encontrados");
+
+                return result;
+            }
+            catch (GetRemeaningTicketsExepition ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<object> UpdateTicketsAsync<T>(string id, Ticket ticketObject)
         {
             try

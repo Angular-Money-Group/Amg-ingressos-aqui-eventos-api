@@ -14,12 +14,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
     public class LotService : ILotService
     {
         private ILotRepository _lotRepository;
+        private ITicketRepository _ticketRepository;
         private ITicketService _ticketService;
         private MessageReturn _messageReturn;
 
-        public LotService(ILotRepository lotRepository, ITicketService ticketService)
+        public LotService(ILotRepository lotRepository, ITicketService ticketService, ITicketRepository ticketRepository)
         {
             _lotRepository = lotRepository;
+            _ticketRepository = ticketRepository;
             _ticketService = ticketService;
             _messageReturn = new MessageReturn();
         }
@@ -41,9 +43,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (SaveTicketException ex)
             {
-               DeleteAsync(lot.Id);
-               _messageReturn.Message = ex.Message;
-           }
+                DeleteAsync(lot.Id);
+                _messageReturn.Message = ex.Message;
+            }
             catch (SaveLotException ex)
             {
                 DeleteAsync(lot.Id);
@@ -56,6 +58,42 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
 
             return _messageReturn;
+        }
+
+        public async Task<MessageReturn> VerifyLotsAvaibleAsync(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+
+                var lotsStatus = new List<LotAvailable>();
+
+                List<Lot> pLotsByVariant = await _lotRepository.FindByIdVariant<List<Lot>>(id);
+
+                if (pLotsByVariant.Count == 0)
+                {
+                    throw new FindLotsByIdVariantException("Variantes não encrontradas");
+                }
+
+                for (int i = 0; i < pLotsByVariant.Count; i++)
+                {
+                    lotsStatus.Add(await CheckTicketAvailability(pLotsByVariant[i]));
+                };
+
+                _messageReturn.Data = lotsStatus;
+
+            }
+            catch (FindLotsByIdVariantException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+
+            return _messageReturn;
+
         }
         private async Task DeleteAsync(string id)
         {
@@ -84,6 +122,58 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveLotException("Data Inicio de venda é Obrigatório.");
             else if (lot.EndDateSales == DateTime.MinValue || lot.EndDateSales == DateTime.MaxValue)
                 throw new SaveLotException("Data final de venda é Obrigatório.");
+        }
+
+        private async Task<LotAvailable> CheckTicketAvailability(Lot lot)
+        {
+            try
+            {
+                var pResult = await _ticketRepository.GetTicketsRemaining<List<Lot>>(lot.Id);
+
+                DateTime currentDate = DateTime.Now;
+                DateTime endDateSales = lot.EndDateSales;
+
+                if (pResult.Count == 0)
+                {
+                    return new LotAvailable()
+                    {
+                        Idlot = lot.Id,
+                        Available = false
+                    };
+                }
+                else if (endDateSales <= currentDate)
+                {
+                    return new LotAvailable()
+                    {
+                        Idlot = lot.Id,
+                        Available = false
+                    };
+                }
+                else
+                {
+                    return new LotAvailable()
+                    {
+                        Idlot = lot.Id,
+                        Available = true
+                    };
+                }
+            }
+            catch (GetRemeaningTicketsExepition ex)
+            {
+                return new LotAvailable()
+                {
+                    Idlot = lot.Id,
+                    Available = false
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LotAvailable()
+                {
+                    Idlot = lot.Id,
+                    Available = false
+                };
+            }
         }
     }
 }

@@ -51,7 +51,29 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
             catch (System.Exception ex)
             {
-                throw;
+                throw ex;
+            }
+        }
+
+        public async Task<List<Lot>> FindByIdVariant<T>(string id)
+        {
+            try
+            {
+                var filter = Builders<Lot>.Filter.Eq("IdVariant", id);
+                var pResult = _lotCollection.Find(filter).ToList();
+
+                if(!pResult.Any() || pResult.Count == 0)
+                    throw new FindLotsByIdVariantException("Lots não encontrados");
+
+                return pResult;
+            }
+            catch (FindLotsByIdVariantException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
             }
         }
     }

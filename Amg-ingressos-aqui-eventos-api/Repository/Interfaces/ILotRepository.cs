@@ -6,5 +6,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     {
         Task<object> Save<T>(object lot);
         Task<object> Delete<T>(object id);
+        Task<List<Lot>> FindByIdVariant<T>(string id);
     }
 }
