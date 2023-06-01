@@ -143,7 +143,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                List<Event> pResults = _eventCollection.Find(Builders<Event>.Filter.Empty).ToList();
+                var filter = Builders<Event>.Filter.Gt(e => e.EndDate, DateTime.Now);
+                
+                List<Event> pResults = _eventCollection.Find(filter).ToList();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 
