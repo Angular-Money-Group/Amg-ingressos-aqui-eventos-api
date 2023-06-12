@@ -1,5 +1,6 @@
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
@@ -71,36 +72,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 ValidateModelSave(eventSave);
                 IsBase64Image(eventSave.Image!);
-
-                eventSave.Image = Regex.Replace(eventSave.Image!, @"data:image/.*?;base64,", "");
-
-                byte[] imageBytes = Convert.FromBase64String(eventSave.Image!);
-
-                var nomeArquivoImage = $"{Guid.NewGuid()}.jpg";
-                var directoryPathImage = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
-
-                var nomeArquivoDescription = $"{Guid.NewGuid()}.html";
-                var directoryPathDescription = Path.Combine(_webHostEnvironment.ContentRootPath, "descriptions");
-
-
-                Directory.CreateDirectory(directoryPathImage);
-                Directory.CreateDirectory(directoryPathDescription);
-
-                var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
-                var filePathDescription = Path.Combine(directoryPathDescription, nomeArquivoDescription);
-
-
-                string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
-
-                string linkDescriptions = "https://api.ingressosaqui.com/descriptions/" + nomeArquivoDescription;
-
-                using (var stream = new FileStream(filePathImage, FileMode.Create))
-                {
-                    stream.Write(imageBytes, 0, imageBytes.Length);
-                }
-
-                eventSave.Image = linkImagem;
-                eventSave.Description = linkDescriptions;
+                eventSave.Image = StoreImageAndGenerateLinkToAccess(eventSave.Image!);
+                eventSave.Description = StoreDescriptionAndGenerateLinkToAccess(eventSave.Description!);
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
@@ -115,7 +88,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -210,6 +183,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
+        public async Task<MessageReturn> EditEventsAsync(string id, Event eventEdit)
+        {
+            try
+            {
+                if(eventEdit.Image != null){
+                    IsBase64Image(eventEdit.Image!);
+                    eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
+                };
+
+                eventEdit.Description = StoreDescriptionAndGenerateLinkToAccess(eventEdit.Description!);
+
+                _messageReturn.Data = await _eventRepository.Edit<Event>(id, eventEdit);
+
+            }
+            catch (GetAllEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
+        }
+
         private void ValidateModelSave(Event eventSave)
         {
             if (eventSave.Name == "")
@@ -242,7 +240,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Variante é Obrigatório.");
         }
 
-        public void IsBase64Image(string base64String)
+        private void IsBase64Image(string base64String)
         {
             if (string.IsNullOrEmpty(base64String))
                 throw new SaveEventException("Imagem é obrigatório");
@@ -256,6 +254,56 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             catch (FormatException)
             {
                 throw new SaveEventException("Essa imagem não está em base64");
+            }
+        }
+
+        private string StoreImageAndGenerateLinkToAccess(string image)
+        {
+            try
+            {
+                image = Regex.Replace(image, @"data:image/.*?;base64,", "");
+
+                byte[] imageBytes = Convert.FromBase64String(image);
+
+                var nomeArquivoImage = $"{Guid.NewGuid()}.jpg";
+                var directoryPathImage = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
+
+                Directory.CreateDirectory(directoryPathImage);
+
+                var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
+
+                string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
+
+
+                using (var stream = new FileStream(filePathImage, FileMode.Create))
+                {
+                    stream.Write(imageBytes, 0, imageBytes.Length);
+                }
+                return linkImagem;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private string StoreDescriptionAndGenerateLinkToAccess(string description)
+        {
+            try
+            {
+                var nomeArquivoDescription = $"{Guid.NewGuid()}.html";
+                var directoryPathDescription = Path.Combine(_webHostEnvironment.ContentRootPath, "descriptions");
+                var filePathDescription = Path.Combine(directoryPathDescription, nomeArquivoDescription);
+
+                Directory.CreateDirectory(directoryPathDescription);
+
+                string linkDescriptions = "https://api.ingressosaqui.com/descriptions/" + nomeArquivoDescription;
+
+                return linkDescriptions;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

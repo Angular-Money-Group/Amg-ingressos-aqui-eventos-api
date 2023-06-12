@@ -49,6 +49,10 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Variant")]
         public Variant[] Variant { get; set; }
+
+        [JsonProperty("Highlighted")]
+        public bool Highlighted { get; set; }
+        
     }
 
     public partial class Address

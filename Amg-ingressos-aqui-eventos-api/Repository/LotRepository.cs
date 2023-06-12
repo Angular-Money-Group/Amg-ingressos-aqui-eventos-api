@@ -5,6 +5,7 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using System.Data;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
+using MongoDB.Bson;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -23,6 +24,58 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var filter = Builders<Lot>.Filter.Eq(l => l.Id, id.ToString());
                 var deleteResult = await _lotCollection.DeleteOneAsync(filter);
+                if (deleteResult.DeletedCount == 1)
+                    return "Lote deletado";
+                else
+                    throw new SaveLotException("algo deu errado ao deletar");
+            }
+            catch (SaveLotException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Lot> Edit<T>(string id, Lot lotObj)
+        {
+            try
+            {
+                var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
+
+                var update = Builders<Lot>.Update.Combine();
+
+                foreach (var property in typeof(Lot).GetProperties())
+                {
+                    if (property.GetValue(lotObj) != null && property.Name != "_Id")
+                    {
+                        update = update.Set(property.Name, property.GetValue(lotObj));
+                    }
+                }
+
+                object value = await _lotCollection.UpdateOneAsync(filtro, update);
+
+                return (value as Lot)!;
+            }
+            catch (SaveEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<object> DeleteMany<T>(List<string> Lot)
+        {
+            try
+            {
+                var filtro = Builders<Lot>.Filter.In("_id", Lot);
+
+                var deleteResult = await _lotCollection.DeleteManyAsync(filtro);
                 if (deleteResult.DeletedCount == 1)
                     return "Lote deletado";
                 else

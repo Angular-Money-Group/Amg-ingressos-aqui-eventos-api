@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<object> FindById<T>(object id)
+        public async Task<List<GetEvents>> FindById<T>(object id)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 var filter = Builders<Event>.Filter.Gt(e => e.EndDate, DateTime.Now);
-                
+
                 List<Event> pResults = _eventCollection.Find(filter).ToList();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
@@ -251,6 +251,36 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 await _eventCollection.InsertOneAsync(eventComplet as Event);
                 return (eventComplet as Event)!._Id!;
+            }
+            catch (SaveEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Event> Edit<T>(string id, Event eventObj)
+        {
+            try
+            {
+                var filtro = Builders<Event>.Filter.Eq("_id", ObjectId.Parse(id));
+
+                var update = Builders<Event>.Update.Combine();
+
+                foreach (var property in typeof(Event).GetProperties())
+                {
+                    if (property.GetValue(eventObj) != null && property.Name != "_Id")
+                    {
+                        update = update.Set(property.Name, property.GetValue(eventObj));
+                    }
+                }
+
+                object value = await _eventCollection.UpdateOneAsync(filtro, update);
+
+                return (eventObj as Event)!;
             }
             catch (SaveEventException ex)
             {

@@ -197,6 +197,34 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         }
 
         /// <summary>
+        /// Editar Evento 
+        /// </summary>
+        /// <param name="id">Id Evento</param>
+        /// <returns>200 Evento Editado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [Route("{id}")]
+        [HttpPatch]
+        public async Task<IActionResult> EditEventAsync([FromRoute] string id, [FromBody] Event eventEdit)
+        {
+            try
+            {
+                var result = await _eventService.EditEventsAsync(id, eventEdit);
+
+                return Ok(result.Data);
+            }
+            catch (DeleteEventException ex)
+            {
+                _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.deleteEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.deleteEventMessage);
+            }
+        }
+
+        /// <summary>
         /// Delete Evento 
         /// </summary>
         /// <param name="id">Id Evento</param>

@@ -20,7 +20,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                if(ticket.IdLot== null)
+                if (ticket.IdLot == null)
                     throw new SaveTicketException("Id Lote é Obrigatório.");
                 if (ticket?.Value == 0)
                     throw new SaveTicketException("Valor do Ingresso é Obrigatório.");
@@ -35,6 +35,44 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw ex;
             }
             catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> DeleteAsync(List<string> tickets)
+        {
+            try
+            {
+                _messageReturn.Data = await _ticketRepository.DeleteMany<object>(tickets);
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> DeleteTickets(string LotID)
+        {
+            try
+            {
+                _messageReturn.Data = await _ticketRepository.Delete<object>(LotID);
+            }
+            catch (SaveTicketException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -106,7 +144,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idLot.ValidateIdMongo();
                 var ticket = new Ticket() { IdLot = idLot };
                 var result = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
-                _messageReturn.Data = result.Where(i=> i.IdUser == null).ToList();
+                _messageReturn.Data = result.Where(i => i.IdUser == null).ToList();
 
             }
             catch (GetRemeaningTicketsExepition ex)
@@ -154,12 +192,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticket){
+        public async Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticket)
+        {
             try
             {
                 id.ValidateIdMongo();
 
-                _messageReturn.Data = await _ticketRepository.UpdateTicketsAsync<object>(id,ticket);
+                _messageReturn.Data = await _ticketRepository.UpdateTicketsAsync<object>(id, ticket);
             }
             catch (NotModificateTicketsExeption ex)
             {

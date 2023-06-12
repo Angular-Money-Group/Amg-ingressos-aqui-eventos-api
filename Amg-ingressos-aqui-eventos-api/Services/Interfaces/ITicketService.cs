@@ -10,5 +10,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> GetTicketsRemainingByLot(string idLot);
         Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticketObject);
         Task<MessageReturn> GetTicketById(string id);
+        Task<MessageReturn> DeleteTickets(string LotId);
     }
 }
