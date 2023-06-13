@@ -14,6 +14,7 @@ namespace Prime.UnitTests.Services
     public class EventServiceTest
     {
         private EventService _eventService;
+        private Mock<HttpClient> _clientMock = new Mock<HttpClient>();
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
@@ -23,12 +24,13 @@ namespace Prime.UnitTests.Services
 
         private bool weekly;
         private bool highlights;
+        private bool getName;
 
         [SetUp]
         public void SetUp()
         {
             _eventRepositoryMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object);
+            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object,_clientMock.Object);
         }
 
         [Test]
@@ -358,7 +360,7 @@ namespace Prime.UnitTests.Services
             _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             //Act
-            var resultTask = _eventService.GetEventsAsync(highlights, weekly, pagination);
+            var resultTask = _eventService.GetEventsAsync(highlights, weekly, getName, pagination);
 
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);

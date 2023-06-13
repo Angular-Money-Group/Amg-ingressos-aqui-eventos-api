@@ -17,6 +17,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
     {
         private TicketController _ticketController;
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
+        private Mock<HttpClient> _clientMock = new Mock<HttpClient>();
+
         private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ILogger<TicketController>> _loggerMock = new Mock<ILogger<TicketController>>();
@@ -27,7 +29,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public void Setup()
         {
             _ticketController = new TicketController(_loggerMock.Object,
-            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object,  _webHostEnvironmentMock.Object),
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object, _clientMock.Object),
             new TicketService(_ticketRepositoryMock.Object));
         }
 
@@ -53,8 +55,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public async Task Given_ValidLotID_When_GetTicketsRemeaning_Then_Return_List_Tickets_Async()
         {
             // Arrange
-            var lotID = "6451b37790737f442d2b3551";
-            var messageReturn = FactoryTicket.ListSimpleTicket();
+            var lotID = "6451b37d90737f442d2b357a";
+            var messageReturn = FactoryTicket.ListSimpleTicketWithoutIdUser();
             _ticketRepositoryMock.Setup(x => x.GetTickets<object>(It.IsAny<Ticket>()))
                 .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 

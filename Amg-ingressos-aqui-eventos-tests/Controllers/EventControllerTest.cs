@@ -19,6 +19,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
     {
         private EventController _eventController;
         private IEventRepository _eventRepository;
+        private Mock<HttpClient> _clientMock = new Mock<HttpClient>();
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<IMongoCollection<Event>> _eventCollectionMock = new Mock<IMongoCollection<Event>>();
@@ -30,12 +31,13 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
         private bool highlights;
         private bool weekly;
+        private bool getName;
 
         [SetUp]
         public void Setup()
         {
             _eventController = new EventController(_loggerMock.Object,
-            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object));
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object, _clientMock.Object));
         }
 
         [Test]
@@ -46,12 +48,13 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             pagination.pageSize = 10;
             highlights = false;
             weekly = false;
+            getName = false;
 
             var messageReturn = FactoryEvent.ListSimpleEvent();
             _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
-            var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as OkObjectResult);
+            var result = (await _eventController.GetEventsAsync(highlights, weekly,getName, pagination) as OkObjectResult);
 
             // Assert
             Assert.AreEqual(messageReturn, result?.Value);
@@ -117,7 +120,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).ThrowsAsync(new System.Exception("error conection database"));
 
             // Act
-            var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as ObjectResult);
+            var result = (await _eventController.GetEventsAsync(highlights, weekly,getName, pagination) as ObjectResult);
 
             // Assert
             Assert.AreEqual(500, result.StatusCode);
@@ -137,7 +140,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetAllEventException(expectedMessage));
 
             // Act
-            var result = await _eventController.GetEventsAsync(highlights, weekly, pagination) as NoContentResult;
+            var result = await _eventController.GetEventsAsync(highlights, weekly,getName, pagination) as NoContentResult;
 
             // Assert
             Assert.AreEqual(204, result?.StatusCode);

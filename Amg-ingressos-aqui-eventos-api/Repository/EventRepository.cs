@@ -144,17 +144,17 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 var filter = Builders<Event>.Filter.Gt(e => e.EndDate, DateTime.Now);
-                
+
                 List<Event> pResults = _eventCollection.Find(filter).ToList();
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 
                 pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
-                pResults.Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                List<Event> pagedResults = pResults.Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
                 .Take(paginationOptions.pageSize)
                 .ToList();
 
-                return pResults;
+                return pagedResults;
             }
             catch (GetAllEventException ex)
             {
