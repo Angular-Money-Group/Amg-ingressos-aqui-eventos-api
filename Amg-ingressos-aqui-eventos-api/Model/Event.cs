@@ -50,6 +50,14 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public DateTime EndDate { get; set; }
+
+        /// <summary>
+        /// status Lot
+        /// </summary>
+        [Required]
+        [JsonProperty("Status")]
+        public Enum.StatusEvent Status { get; set; }
+
         /// <summary>
         /// Endereço
         /// </summary>

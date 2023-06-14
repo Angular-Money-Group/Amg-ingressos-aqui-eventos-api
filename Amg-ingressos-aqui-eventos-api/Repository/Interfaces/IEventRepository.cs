@@ -1,4 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
 {
@@ -10,7 +11,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<Event>> FindByProducer<T>(string id, Pagination paginationOptions);
         Task<List<Event>> FindByName<T>(string name);
         Task<object> Delete<T>(object id);
-        Task<List<Event>> GetAllEvents<T>(Pagination paginationOptions);
+        Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions);
     }

@@ -4,6 +4,13 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using System.Text.RegularExpressions;
+using static System.Net.Http.HttpClient;
+using Newtonsoft.Json;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -14,11 +21,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private MessageReturn _messageReturn;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EventService(IEventRepository eventRepository, IVariantService variantService, IWebHostEnvironment webHostEnvironment)
+        private HttpClient _client;
+
+
+        public EventService(IEventRepository eventRepository, IVariantService variantService, IWebHostEnvironment webHostEnvironment, HttpClient client)
         {
             _eventRepository = eventRepository;
             _variantService = variantService;
             _webHostEnvironment = webHostEnvironment;
+            _client = client;
             _messageReturn = new MessageReturn();
         }
 
@@ -102,6 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 eventSave.Image = linkImagem;
                 eventSave.Description = linkDescriptions;
 
+                eventSave.Status = Enum.StatusEvent.Active;
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
                 eventSave.Variant.ToList().ForEach(i =>
@@ -115,7 +127,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -179,7 +191,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
                 else
                 {
-                    _messageReturn.Data = await _eventRepository.GetAllEvents<List<Event>>(paginationOptions);
+                    var allEvents = await _eventRepository.GetAllEvents<List<GetEventsWithNames>>(paginationOptions);
+
+                    _messageReturn.Data = allEvents;
                 }
             }
             catch (GetAllEventException ex)
