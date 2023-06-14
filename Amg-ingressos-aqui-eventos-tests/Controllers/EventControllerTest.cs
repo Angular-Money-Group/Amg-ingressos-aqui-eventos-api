@@ -12,6 +12,7 @@ using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using MongoDB.Driver;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
@@ -31,7 +32,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
         private bool highlights;
         private bool weekly;
-        private bool getName;
 
         [SetUp]
         public void Setup()
@@ -48,13 +48,12 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             pagination.pageSize = 10;
             highlights = false;
             weekly = false;
-            getName = false;
 
-            var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            var messageReturn = FactoryEvent.ListSimpleEventWithNames();
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<GetEventsWithNames>>(pagination)).Returns(Task.FromResult(messageReturn as List<GetEventsWithNames>)!);
 
             // Act
-            var result = (await _eventController.GetEventsAsync(highlights, weekly,getName, pagination) as OkObjectResult);
+            var result = (await _eventController.GetEventsAsync(highlights, weekly, pagination) as OkObjectResult);
 
             // Assert
             Assert.AreEqual(messageReturn, result?.Value);
@@ -114,20 +113,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         }
 
         [Test]
-        public async Task Given_Events_When_GetAllEvents_and_internal_error_Then_return_status_code_500_Async()
-        {
-            var expectedMessage = MessageLogErrors.GetAllEventMessage;
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).ThrowsAsync(new System.Exception("error conection database"));
-
-            // Act
-            var result = (await _eventController.GetEventsAsync(highlights, weekly,getName, pagination) as ObjectResult);
-
-            // Assert
-            Assert.AreEqual(500, result.StatusCode);
-            Assert.AreEqual(expectedMessage, result.Value);
-        }
-
-        [Test]
         public async Task Given_events_When_GetAllEvents_not_foud_register_Then_return_message_empty_list_Async()
         {
             // Arrange
@@ -140,7 +125,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetAllEventException(expectedMessage));
 
             // Act
-            var result = await _eventController.GetEventsAsync(highlights, weekly,getName, pagination) as NoContentResult;
+            var result = await _eventController.GetEventsAsync(highlights, weekly, pagination) as NoContentResult;
 
             // Assert
             Assert.AreEqual(204, result?.StatusCode);
@@ -353,7 +338,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var eventSave = FactoryEvent.SimpleEvent();
             _eventRepositoryMock.Setup(x => x.Save<object>(eventSave))
                 .Returns(Task.FromResult(messageReturn));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Amg_ingressos_aqui_eventos_api.Model.Variant>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             // Act

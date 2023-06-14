@@ -8,6 +8,7 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Prime.UnitTests.Services
 {
@@ -24,7 +25,6 @@ namespace Prime.UnitTests.Services
 
         private bool weekly;
         private bool highlights;
-        private bool getName;
 
         [SetUp]
         public void SetUp()
@@ -238,7 +238,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Variant = new List<Variant>();
+            eventComplet.Variant = new List<Amg_ingressos_aqui_eventos_api.Model.Variant>();
             var expectedMessage = new MessageReturn() { Message = "Variante é Obrigatório." };
 
             //Act
@@ -356,11 +356,11 @@ namespace Prime.UnitTests.Services
         public void Given_Events_When_GetAllEvents_Then_return_list_objects_events()
         {
             //Arrange
-            var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<Event>>(pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            var messageReturn = FactoryEvent.ListSimpleEventWithNames();
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<GetEventsWithNames>>(pagination)).Returns(Task.FromResult(messageReturn as List<GetEventsWithNames>)!);
 
             //Act
-            var resultTask = _eventService.GetEventsAsync(highlights, weekly, getName, pagination);
+            var resultTask = _eventService.GetEventsAsync(highlights, weekly, pagination);
 
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);
@@ -373,7 +373,7 @@ namespace Prime.UnitTests.Services
             var eventComplet = FactoryEvent.SimpleEvent();
             _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).
                 Throws(new Exception("Erro ao conectar a base de dados"));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Amg_ingressos_aqui_eventos_api.Model.Variant>()))
                 .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
 
             //Act

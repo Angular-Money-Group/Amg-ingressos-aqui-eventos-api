@@ -65,5 +65,28 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                     as: 'tickets'
                                 }
                             }";
+
+        public const string GetEventWithName = @"{
+$lookup: {
+from: 'producers',
+                                    'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
+pipeline: [
+                                        {
+$match: {
+$expr: {
+$eq: [{ '$toString': '$_id' },'$$idOrganizer']
+                                                }
+                                            }
+                                        },
+                                                    {
+                $project: {
+                    _id: 0,
+                    name: 1
+                }
+            }
+                                    ],
+as: 'User'
+                                }
+                            }";
     }
 }

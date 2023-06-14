@@ -10,6 +10,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -176,7 +177,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly, bool getName, Pagination paginationOptions)
+        public async Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
         {
             try
             {
@@ -190,29 +191,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
                 else
                 {
-                    var allEvents = await _eventRepository.GetAllEvents<List<Event>>(paginationOptions);
-
-                    if (getName)
-                    {
-                        for (var i = 0; i < allEvents.Count; i++)
-                        {
-                            HttpResponseMessage response = await _client.GetAsync("https://api.ingressosaqui.com/v1/profile/getProducer/" + allEvents[i].IdOrganizer);
-
-                            response.EnsureSuccessStatusCode();
-
-                            string responseBody = await response.Content.ReadAsStringAsync();
-
-                            var responseData = JsonConvert.DeserializeObject<MessageReturn>(responseBody);
-
-                            JObject dataObject = responseData.Data as JObject;
-                            if (dataObject != null)
-                            {
-                                string producerName = dataObject["producer"]["name"]?.ToString();
-
-                                allEvents[i].IdOrganizer = producerName;
-                            }
-                        }
-                    }
+                    var allEvents = await _eventRepository.GetAllEvents<List<GetEventsWithNames>>(paginationOptions);
 
                     _messageReturn.Data = allEvents;
                 }

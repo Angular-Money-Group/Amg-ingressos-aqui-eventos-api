@@ -139,21 +139,29 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<Event>> GetAllEvents<T>(Pagination paginationOptions)
+        public async Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions)
         {
             try
             {
-                var filter = Builders<Event>.Filter.Gt(e => e.EndDate, DateTime.Now);
 
-                List<Event> pResults = _eventCollection.Find(filter).ToList();
+                var json = QuerysMongo.GetEventWithName;
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] {
+                    document                };
+
+                List<GetEventsWithNames> pResults = _eventCollection
+                                                .Aggregate<GetEventsWithNames>(pipeline).ToList();
+
                 if (!pResults.Any())
                     throw new GetAllEventException("Eventos não encontrados");
 
                 pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
-                List<Event> pagedResults = pResults.Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
-                .Take(paginationOptions.pageSize)
-                .ToList();
 
+                int startIndex = (paginationOptions.page - 1) * paginationOptions.pageSize;
+                List<GetEventsWithNames> pagedResults = pResults
+                                                        .Skip(startIndex)
+                                                        .Take(paginationOptions.pageSize)
+                                                        .ToList();
                 return pagedResults;
             }
             catch (GetAllEventException ex)
