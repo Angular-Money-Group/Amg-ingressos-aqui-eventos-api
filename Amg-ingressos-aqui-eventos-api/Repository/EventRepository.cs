@@ -269,5 +269,35 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
+        public async Task<Event> Edit<T>(string id, Event eventObj)
+        {
+            try
+            {
+                var filtro = Builders<Event>.Filter.Eq("_id", ObjectId.Parse(id));
+
+                var update = Builders<Event>.Update.Combine();
+
+                foreach (var property in typeof(Event).GetProperties())
+                {
+                    if (property.GetValue(eventObj) != null && property.Name != "_Id")
+                    {
+                        update = update.Set(property.Name, property.GetValue(eventObj));
+                    }
+                }
+
+                object value = await _eventCollection.UpdateOneAsync(filtro, update);
+
+                return (eventObj as Event)!;
+            }
+            catch (SaveEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

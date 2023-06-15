@@ -2,6 +2,7 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
+using Amg_ingressos_aqui_eventos_api.Utils;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -45,6 +46,81 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
+
+        public async Task<MessageReturn> EditAsync(string id, Variant varinatEdit)
+        {
+            try
+            {
+                _messageReturn.Data = await _variantRepository.Edit<object>(id, varinatEdit);
+            }
+            catch (SaveLotException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+
+        public async Task<MessageReturn> DeleteAsync(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+
+                var variant = await _variantRepository.FindById<List<Variant>>(id);
+
+                variant[0].Lot.ToList().ForEach(async i =>
+                {
+                    _lotService.DeleteAsync(i.Id);
+                });
+
+                _messageReturn.Data = await _variantRepository.Delete<object>(id);
+            }
+            catch (SaveLotException ex)
+            {
+                DeleteAsync(id);
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                DeleteAsync(id);
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> DeleteManyAsync(List<Model.Querys.Variant> Variant)
+        {
+            try
+            {
+                Variant.ForEach(async variant =>
+                {
+                    var LotsId = variant.Lot.Select(d => d.Id).ToList();
+
+                    await _lotService.DeleteManyAsync(LotsId);
+                });
+
+                List<string> variantId = Variant.Select(v => v.Id).ToList();
+                _messageReturn.Data = await _variantRepository.DeleteMany<object>(variantId);
+            }
+            catch (SaveLotException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
         private void ValidateModelSave(Variant variant)
         {
             if (variant.Name == "")
@@ -53,7 +129,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveVariantException("Lote é Obrigatório.");
             if (variant.HasPositions)
             {
-                if(variant.LocaleImage== string.Empty)
+                if (variant.LocaleImage == string.Empty)
                     throw new SaveVariantException("Imagem Variante é Obrigatório.");
                 if (variant.Positions.PeoplePerPositions == 0)
                     throw new SaveVariantException("Pessoas por posição é Obrigatório.");

@@ -14,5 +14,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions);
+        Task<Event> Edit<T>(string id, Event eventEdit);
     }
 }

@@ -66,6 +66,25 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                 }
                             }";
 
+        public const string GetLotsByVariant = @"{
+                                $lookup: {
+                                    from: 'lots',
+                                    'let': { variantId : { '$toString': '$_id' }},
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $eq: [
+                                                        '$IdVariant',
+                                                        '$$variantId'
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    as: 'Lot'
+                                                                    }
+                            }";
         public const string GetEventWithName = @"{
 $lookup: {
 from: 'producers',

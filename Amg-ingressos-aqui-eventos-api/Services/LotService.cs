@@ -14,12 +14,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
     public class LotService : ILotService
     {
         private ILotRepository _lotRepository;
+        private ITicketRepository _ticketRepository;
         private ITicketService _ticketService;
         private MessageReturn _messageReturn;
 
-        public LotService(ILotRepository lotRepository, ITicketService ticketService)
+        public LotService(ILotRepository lotRepository, ITicketService ticketService, ITicketRepository ticketRepository)
         {
             _lotRepository = lotRepository;
+            _ticketRepository = ticketRepository;
             _ticketService = ticketService;
             _messageReturn = new MessageReturn();
         }
@@ -41,9 +43,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (SaveTicketException ex)
             {
-               DeleteAsync(lot.Id);
-               _messageReturn.Message = ex.Message;
-           }
+                DeleteAsync(lot.Id);
+                _messageReturn.Message = ex.Message;
+            }
             catch (SaveLotException ex)
             {
                 DeleteAsync(lot.Id);
@@ -57,7 +59,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
-        private async Task DeleteAsync(string id)
+        public async Task<MessageReturn> DeleteAsync(string id)
         {
             try
             {
@@ -74,6 +76,62 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 DeleteAsync(id);
                 throw ex;
             }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> EditAsync(string id, Lot lotEdit)
+        {
+            try
+            {
+                _messageReturn.Data = await _lotRepository.Edit<object>(id, lotEdit);
+
+                await _ticketService.DeleteTickets(id);
+
+                for (int i = 0; i < lotEdit.TotalTickets; i++)
+                {
+                    await _ticketService.SaveAsync(new Ticket()
+                    {
+                        IdLot = id,
+                        Value = lotEdit.ValueTotal / lotEdit.TotalTickets
+                    });
+                }
+
+            }
+            catch (SaveLotException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> DeleteManyAsync(List<string> Lot)
+        {
+            try
+            {
+                Lot.ForEach(async lotId =>
+                {
+                    await _ticketService.DeleteTickets(lotId);
+                });
+
+                _messageReturn.Data = await _lotRepository.DeleteMany<object>(Lot);
+
+            }
+            catch (SaveLotException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
         }
 
         private void ValidateModelSave(Lot lot)
