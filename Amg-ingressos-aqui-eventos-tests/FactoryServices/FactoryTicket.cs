@@ -42,6 +42,30 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 }
             };
         }
+        internal static IEnumerable<Ticket> ListSimpleTicketWithoutIdUser()
+        {
+            return new List<Ticket>(){
+                new Ticket(){
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdUser = null,
+                    Position = string.Empty,
+                    Value = new decimal(150)
+                },
+                new Ticket(){
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdUser = null,
+
+                    Position = string.Empty,
+                    Value = new decimal(200)
+                },
+                new Ticket(){
+                    IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
+                    IdUser = null,
+                    Position = string.Empty,
+                    Value = new decimal(300)
+                }
+            };
+        }
         internal static IEnumerable<Ticket> ListSimpleTicketWithPosition()
         {
             return new List<Ticket>(){

@@ -12,6 +12,7 @@ namespace Prime.UnitTests.Services
     public class LotServiceTest
     {
         private LotService _lotService;
+        private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
 
@@ -19,7 +20,7 @@ namespace Prime.UnitTests.Services
         public void SetUp()
         {
             _lotRepositoryMock = new Mock<ILotRepository>();
-            _lotService = new LotService(_lotRepositoryMock.Object,_ticketServiceMock.Object);
+            _lotService = new LotService(_lotRepositoryMock.Object,_ticketServiceMock.Object, _ticketRepositoryMock.Object);
         }
 
         [Test]
