@@ -5,13 +5,7 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using System.Text.RegularExpressions;
-using static System.Net.Http.HttpClient;
-using Newtonsoft.Json;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
+
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -86,6 +80,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 eventSave.Image = StoreImageAndGenerateLinkToAccess(eventSave.Image!);
 
                 eventSave.Status = Enum.StatusEvent.Active;
+            
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
                 eventSave.Variant.ToList().ForEach(i =>
