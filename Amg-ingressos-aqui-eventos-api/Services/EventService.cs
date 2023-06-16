@@ -5,13 +5,7 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using System.Text.RegularExpressions;
-using static System.Net.Http.HttpClient;
-using Newtonsoft.Json;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
+
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -84,9 +78,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(eventSave);
                 IsBase64Image(eventSave.Image!);
                 eventSave.Image = StoreImageAndGenerateLinkToAccess(eventSave.Image!);
-                eventSave.Description = StoreDescriptionAndGenerateLinkToAccess(eventSave.Description!);
 
                 eventSave.Status = Enum.StatusEvent.Active;
+            
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
                 eventSave.Variant.ToList().ForEach(i =>
@@ -206,7 +200,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
                 };
 
-                eventEdit.Description = StoreDescriptionAndGenerateLinkToAccess(eventEdit.Description!);
 
                 _messageReturn.Data = await _eventRepository.Edit<Event>(id, eventEdit);
 
@@ -300,25 +293,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw ex;
             }
         }
-        private string StoreDescriptionAndGenerateLinkToAccess(string description)
-        {
-            try
-            {
-                var nomeArquivoDescription = $"{Guid.NewGuid()}.html";
-                var directoryPathDescription = Path.Combine(_webHostEnvironment.ContentRootPath, "descriptions");
-                var filePathDescription = Path.Combine(directoryPathDescription, nomeArquivoDescription);
-
-                Directory.CreateDirectory(directoryPathDescription);
-
-                string linkDescriptions = "https://api.ingressosaqui.com/descriptions/" + nomeArquivoDescription;
-
-                return linkDescriptions;
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+       
     }
 }

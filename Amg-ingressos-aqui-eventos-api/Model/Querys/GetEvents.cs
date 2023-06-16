@@ -52,6 +52,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Highlighted")]
         public bool Highlighted { get; set; }
+
+        [JsonProperty("Highlighted")]
+        public Enum.StatusEvent Status { get; set; }
         
     }
 
@@ -126,7 +129,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public long TotalTickets { get; set; }
 
         [JsonProperty("ValueTotal")]
-        public long ValueTotal { get; set; }
+        public float ValueTotal { get; set; }
 
         [JsonProperty("StartDateSales")]
         public DateTime StartDateSales { get; set; }
