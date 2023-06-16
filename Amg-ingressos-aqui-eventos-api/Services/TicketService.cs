@@ -3,6 +3,8 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
+using Amg_ingressos_aqui_eventos_api.Dto;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -66,11 +68,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> DeleteTickets(string LotID)
+        public async Task<MessageReturn> DeleteTicketsByLot(string lotId)
         {
             try
             {
-                _messageReturn.Data = await _ticketRepository.Delete<object>(LotID);
+                _messageReturn.Data = await _ticketRepository.DeleteByLot<object>(lotId);
             }
             catch (SaveTicketException ex)
             {
@@ -172,6 +174,48 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var ticket = new Ticket() { Id = id };
                 _messageReturn.Data = (Ticket)_ticketRepository.GetTickets<List<Ticket>>(ticket).Result.FirstOrDefault();
+
+            }
+            catch (GetRemeaningTicketsExepition ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> GetTicketByIdDataUser(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+                var ticketUserData = (GetTicketDataUser)_ticketRepository
+                                                .GetTicketByIdDataUser<GetTicketDataUser>(id).Result;
+                _messageReturn.Data = new TicketUserDto()
+                {
+                    Id= ticketUserData._id,
+                    IdLot= ticketUserData.IdLot,
+                    IdUser = ticketUserData.IdUser,
+                    isSold = ticketUserData.isSold,
+                    QrCode = ticketUserData.QrCode,
+                    Value = ticketUserData.Value,
+                    User = new UserDto(){
+                        _id = ticketUserData.User.FirstOrDefault()._id,
+                        cpf = ticketUserData.User.FirstOrDefault().cpf,
+                        email=ticketUserData.User.FirstOrDefault().email,
+                        name=ticketUserData.User.FirstOrDefault().name
+                    }
+                };
 
             }
             catch (GetRemeaningTicketsExepition ex)

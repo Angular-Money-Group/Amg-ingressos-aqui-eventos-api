@@ -86,7 +86,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _lotRepository.Edit<object>(id, lotEdit);
 
-                await _ticketService.DeleteTickets(id);
+                await _ticketService.DeleteTicketsByLot(id);
 
                 for (int i = 0; i < lotEdit.TotalTickets; i++)
                 {
@@ -116,7 +116,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Lot.ForEach(async lotId =>
                 {
-                    await _ticketService.DeleteTickets(lotId);
+                    await _ticketService.DeleteTicketsByLot(lotId);
                 });
 
                 _messageReturn.Data = await _lotRepository.DeleteMany<object>(Lot);

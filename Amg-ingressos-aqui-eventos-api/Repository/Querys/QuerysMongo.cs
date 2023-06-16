@@ -65,7 +65,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                     as: 'tickets'
                                 }
                             }";
-
         public const string GetLotsByVariant = @"{
                                 $lookup: {
                                     from: 'lots',
@@ -86,26 +85,44 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                                                     }
                             }";
         public const string GetEventWithName = @"{
-$lookup: {
-from: 'producers',
-                                    'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
-pipeline: [
-                                        {
-$match: {
-$expr: {
-$eq: [{ '$toString': '$_id' },'$$idOrganizer']
-                                                }
-                                            }
-                                        },
-                                                    {
-                $project: {
-                    _id: 0,
-                    name: 1
-                }
-            }
-                                    ],
-as: 'User'
+                                        $lookup: {
+                                        from: 'producers',
+                                                                            'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
+                                        pipeline: [
+                                                                                {
+                                        $match: {
+                                        $expr: {
+                                        $eq: [{ '$toString': '$_id' },'$$idOrganizer']
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                            {
+                                                        $project: {
+                                                            _id: 0,
+                                                            name: 1
+                                                        }
+                                                    }
+                                                                            ],
+                                        as: 'User'
                                 }
                             }";
+        public const string GetTicketByIdDataUser = @"{
+                                $lookup: {
+                                    from: 'customers',
+                                    'let': { idUser : { '$toString': '$IdUser' }},
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $eq: [{ '$toString': '$_id' },'$$idUser']
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    as: 'User'
+                                }
+                            }";
+
+    
     }
 }
