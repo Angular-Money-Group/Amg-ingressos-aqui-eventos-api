@@ -55,15 +55,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     document
                 };
                 List<GetEvents> pResults = _eventCollection
-                                                .Aggregate<GetEvents>(pipeline).ToList();
-
-                //var result = await _eventCollection.FindAsync<Event>(x => x._Id == id as string)
-                //    .Result.FirstOrDefaultAsync();
-
-
-                if (pResults == null)
-                    throw new FindByIdEventException("Evento não encontrado");
-
+                                                .Aggregate<GetEvents>(pipeline).ToList() ?? throw new FindByIdEventException("Evento não encontrado");
                 return pResults;
             }
             catch (FindByIdEventException ex)

@@ -6,6 +6,8 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 
 using MongoDB.Bson;
+using Amg_ingressos_aqui_eventos_api.Repository.Querys;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -37,7 +39,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-
         public async Task<object> DeleteMany<T>(List<string> tickets)
         {
 
@@ -60,8 +61,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-
-        public async Task<object> Delete<T>(string idLot)
+        public async Task<object> DeleteByLot<T>(string idLot)
         {
 
             try
@@ -116,19 +116,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-
-        public async Task<List<string>> GetTicketsByLot<T>(string id)
+        public async Task<List<string>> GetTicketsByLot<T>(string idLot)
         {
             try
             {
-                var filter = Builders<Ticket>.Filter.Eq("IdLot", id);
+                var filter = Builders<Ticket>.Filter.Eq("IdLot", idLot);
 
                 var tickets = await _ticketCollection.Find(filter).ToListAsync();
 
-                var result = tickets.Select(e => e.Id).ToList();
-
-                if (result == null)
-                    throw new FindTicketByUserException("Ticket não encontrado");
+                var result = tickets.Select(e => e.Id).ToList() ?? throw new FindTicketByUserException("Ticket não encontrado");
 
                 return result;
             }
@@ -141,17 +137,17 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-        public async Task<object> UpdateTicketsAsync<T>(string id, Ticket ticketObject)
+        public async Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket)
         {
             try
             {
                 // Cria um filtro para buscar tickets com o ID do lot especificado
                 var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
                 var update = Builders<Ticket>.Update
-                        .Set("IdUser", ticketObject.IdUser)
-                        .Set("Value", ticketObject.Value)
-                        .Set("isSold", ticketObject.isSold)
-                        .Set("Position", ticketObject.Position);
+                        .Set("IdUser", ticket.IdUser)
+                        .Set("Value", ticket.Value)
+                        .Set("isSold", ticket.isSold)
+                        .Set("Position", ticket.Position);
 
                 // Busca os tickets que correspondem ao filtro
                 var result = await _ticketCollection.UpdateOneAsync(filter, update);
@@ -164,6 +160,35 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 return await _ticketCollection.Find(filter).ToListAsync();
             }
             catch (NotModificateTicketsExeption ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<object> GetTicketByIdDataUser<T>(string id)
+        {
+            try
+            {
+                var json = QuerysMongo.GetTicketByIdDataUser;
+
+                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] {
+                    documentFilter,
+                    documentFilter1,
+                    document
+                };
+                GetTicketDataUser pResults = _ticketCollection
+                                                .Aggregate<GetTicketDataUser>(pipeline)
+                                                .FirstOrDefault() ?? throw new FindByIdEventException("Evento não encontrado");
+                return pResults;
+            }
+            catch (FindByIdEventException ex)
             {
                 throw ex;
             }

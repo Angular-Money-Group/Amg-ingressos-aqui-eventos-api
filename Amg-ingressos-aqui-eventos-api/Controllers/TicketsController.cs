@@ -110,6 +110,37 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         }
 
         /// <summary>
+        /// Busca todos os ingressos do usuário
+        /// </summary>
+        /// <param name="id">Id do lote</param>
+        /// <returns>200 Retorna a quantidade de tickets disponiveis</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("{id}/datauser")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetTicketByIdDataUser([FromRoute]string id)
+        {
+            try
+            {
+                var result = await _ticketService.GetTicketByIdDataUser(id);
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
+                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Edita os dados do Ticket
         /// </summary>
         /// <param name="id">Id do ticket</param>
