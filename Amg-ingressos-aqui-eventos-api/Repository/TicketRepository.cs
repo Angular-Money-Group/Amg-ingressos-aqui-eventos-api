@@ -147,7 +147,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                         .Set("IdUser", ticket.IdUser)
                         .Set("Value", ticket.Value)
                         .Set("isSold", ticket.isSold)
-                        .Set("Position", ticket.Position);
+                        .Set("Position", ticket.Position)
+                        .Set("QrCode", ticket.QrCode);
 
                 // Busca os tickets que correspondem ao filtro
                 var result = await _ticketCollection.UpdateOneAsync(filter, update);
