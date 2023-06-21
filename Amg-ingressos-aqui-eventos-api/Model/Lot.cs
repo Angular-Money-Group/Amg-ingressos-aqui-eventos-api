@@ -50,6 +50,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [JsonProperty("Status")]
         public Enum.StatusLot Status { get; set; }
+
+        
+        /// <summary>
+        /// Precisa verificar os documentos?
+        /// </summary>
+        [JsonProperty("reqDocs")]
+        public bool ReqDocs { get; set; }
         /// <summary>
         /// Id Variant
         /// </summary>

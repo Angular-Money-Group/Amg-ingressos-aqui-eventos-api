@@ -70,6 +70,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public string LocaleImage { get; set; }
 
         /// <summary>
+        /// Precisa verificar os documentos?
+        /// </summary>
+        [JsonProperty("reqDocs")]
+        public bool ReqDocs { get; set; }
+
+        /// <summary>
         /// Posicoes/cadeiras
         /// </summary>
          [JsonProperty("Positions")]

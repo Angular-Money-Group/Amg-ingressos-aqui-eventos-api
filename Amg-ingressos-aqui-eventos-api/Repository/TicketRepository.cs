@@ -175,14 +175,17 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 var json = QuerysMongo.GetTicketByIdDataUser;
+                var json1 = QuerysMongo.GetTicketByIdDataLot;
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument document1 = BsonDocument.Parse(json1);
 
                 BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
                 BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
-                BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] {
+                    document,
+                    document1,
                     documentFilter,
                     documentFilter1,
-                    document
                 };
                 GetTicketDataUser pResults = _ticketCollection
                                                 .Aggregate<GetTicketDataUser>(pipeline)

@@ -39,6 +39,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public bool isSold { get; set; }
         
         /// <summary>
+        /// Precisa verificar os documentos?
+        /// </summary>
+        public bool ReqDocs { get; set; }
+
+        /// <summary>
         /// QrCode
         /// </summary>
         public string QrCode { get; set; }
