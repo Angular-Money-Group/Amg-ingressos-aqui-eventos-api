@@ -13,12 +13,13 @@ namespace Prime.UnitTests.Services
     {
         private TicketService _ticketService;
         private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
+        private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
 
         [SetUp]
         public void SetUp()
         {
             _ticketRepositoryMock = new Mock<ITicketRepository>();
-            _ticketService = new TicketService(_ticketRepositoryMock.Object);
+            _ticketService = new TicketService(_ticketRepositoryMock.Object, _variantRepositoryMock.Object);
         }
 
         [Test]
