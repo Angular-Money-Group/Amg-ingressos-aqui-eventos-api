@@ -24,11 +24,14 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var result = await _eventCollection.DeleteOneAsync(x => x._Id == id as string);
-                if (result.DeletedCount >= 1)
-                    return "Evento Deletado";
-                else
-                    throw new DeleteEventException("Evento não encontrado");
+                var filter = Builders<Event>.Filter.Eq("_Id", id);
+
+                var update = Builders<Event>.Update.Set("Status", Enum.StatusEvent.Canceled);
+
+                object value = await _eventCollection.UpdateOneAsync(filter, update);
+
+                return value;
+
             }
             catch (DeleteEventException ex)
             {
@@ -138,8 +141,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 var json = QuerysMongo.GetEventWithName;
                 BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[] {
-                    document                };
+                BsonDocument[] pipeline = new BsonDocument[]
+                {
+                    document,
+                    new BsonDocument("$match", new BsonDocument("Status", 0))
+                    };
 
                 List<GetEventsWithNames> pResults = _eventCollection
                                                 .Aggregate<GetEventsWithNames>(pipeline).ToList();
@@ -176,7 +182,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 var filter = Builders<Event>.Filter.And(
                     Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
-                    Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1))
+                    Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1)),
+                    Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
                 );
 
                 List<Event> pResults = _eventCollection.Find(filter).ToList()
@@ -202,7 +209,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var filter = Builders<Event>.Filter.Eq("Highlighted", true);
+                var filter = Builders<Event>.Filter.And(Builders<Event>.Filter.Eq("Highlighted", true),
+                    Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
+                );
 
                 List<Event> pResults = _eventCollection.Find(filter).ToList()
                 .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)

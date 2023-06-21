@@ -38,6 +38,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("IdMeansReceipt")]
         public string IdMeansReceipt { get; set; }
+        
+        [JsonProperty("ReqDocs")]
+        public bool ReqDocs { get; set; }
 
         [JsonProperty("IdOrganizer")]
         public string IdOrganizer { get; set; }
