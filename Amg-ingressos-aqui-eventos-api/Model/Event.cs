@@ -83,11 +83,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public string? IdOrganizer { get; set; }
         
         /// <summary>
-        /// Precisa verificar os documentos?
-        /// </summary>
-        public bool ReqDocs { get; set; }
-
-        /// <summary>
         /// Se o evento está em destaque
         /// </summary>
         [BsonDefaultValue(false)]

@@ -109,7 +109,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw;
             }
         }
-        public async Task<List<Variant>> FindById<T>(object id)
+        public async Task<List<Variant>> FindById<T>(string id)
         {
             try
             {

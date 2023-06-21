@@ -109,17 +109,33 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
         public const string GetTicketByIdDataUser = @"{
                                 $lookup: {
                                     from: 'customers',
-                                    'let': { idUser : { '$toString': '$IdUser' }},
+                                    let: { idUser: { $toString: '$IdUser' } },
                                     pipeline: [
                                         {
                                             $match: {
                                                 $expr: {
-                                                    $eq: [{ '$toString': '$_id' },'$$idUser']
+                                                    $eq: [{ $toString: '$_id' }, '$$idUser']
                                                 }
                                             }
                                         }
                                     ],
                                     as: 'User'
+                                }
+                            }";
+        public const string GetTicketByIdDataLot = @"{
+                                $lookup: {
+                                    from: 'lots',
+                                    let: { idLot: { $toString: '$IdLot' } },
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $eq: [{ $toString: '$_id' }, '$$idLot']
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    as: 'Lot'
                                 }
                             }";
 

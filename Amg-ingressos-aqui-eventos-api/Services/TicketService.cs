@@ -11,11 +11,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
     public class TicketService : ITicketService
     {
         private ITicketRepository _ticketRepository;
+        private IVariantRepository _variantRepository;
         private MessageReturn _messageReturn;
 
-        public TicketService(ITicketRepository ticketRepository)
+        public TicketService(ITicketRepository ticketRepository, IVariantRepository variantRepository)
         {
             _ticketRepository = ticketRepository;
+            _variantRepository = variantRepository;
             _messageReturn = new MessageReturn();
         }
         public async Task<MessageReturn> SaveAsync(Ticket ticket)
@@ -201,20 +203,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var ticketUserData = (GetTicketDataUser)_ticketRepository
                                                 .GetTicketByIdDataUser<GetTicketDataUser>(id).Result;
+
+                var variantData = _variantRepository.FindById<List<Model.Variant>>(ticketUserData.Lot.FirstOrDefault().IdVariant).Result;
+
                 _messageReturn.Data = new TicketUserDto()
                 {
                     Id= ticketUserData._id,
                     IdLot= ticketUserData.IdLot,
-                    IdUser = ticketUserData.IdUser,
-                    isSold = ticketUserData.isSold,
+                    Status = ticketUserData.Status,
                     QrCode = ticketUserData.QrCode,
                     Value = ticketUserData.Value,
+                    Variante = variantData.FirstOrDefault().Name,
+
                     User = new UserDto(){
                         _id = ticketUserData.User.FirstOrDefault()._id,
                         cpf = ticketUserData.User.FirstOrDefault().cpf,
                         email=ticketUserData.User.FirstOrDefault().email,
                         name=ticketUserData.User.FirstOrDefault().name
-                    }
+                    },
                 };
 
             }

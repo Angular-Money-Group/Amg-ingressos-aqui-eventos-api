@@ -36,6 +36,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     await _ticketService.SaveAsync(new Ticket()
                     {
+                        ReqDocs = lot.ReqDocs,
                         IdLot = _messageReturn.Data.ToString(),
                         Value = lot.ValueTotal / lot.TotalTickets
                     });
