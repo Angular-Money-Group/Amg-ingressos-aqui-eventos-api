@@ -63,6 +63,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public Address? Address { get; set; }
+        
         /// <summary>
         /// Lista de Variants
         /// </summary>
@@ -70,15 +71,22 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [JsonProperty("Variant")]
         public List<Variant> Variant { get; set; }
+        
         /// <summary>
         /// Id mongo Meio de Recebimento
         /// </summary>
         public string? IdMeansReceipt { get; set; }
+        
         /// <summary>
-        /// Id mongo Meio de Recebimento
+        /// Id mongo organizador do evento
         /// </summary>
         public string? IdOrganizer { get; set; }
         
+        /// <summary>
+        /// Precisa verificar os documentos?
+        /// </summary>
+        public bool ReqDocs { get; set; }
+
         /// <summary>
         /// Se o evento está em destaque
         /// </summary>

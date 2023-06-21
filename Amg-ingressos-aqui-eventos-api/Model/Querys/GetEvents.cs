@@ -139,6 +139,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Status")]
         public long Status { get; set; }
+        
+        [JsonProperty("ReqDocs")]
+        public bool ReqDocs { get; set; }
 
         [JsonProperty("IdVariant")]
         public string IdVariant { get; set; }
