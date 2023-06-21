@@ -21,6 +21,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
         private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private Mock<ILogger<TicketController>> _loggerMock = new Mock<ILogger<TicketController>>();
         private Mock<ILogger<TicketController>> _ticketMock = new Mock<ILogger<TicketController>>();
         private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
@@ -30,7 +31,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             _ticketController = new TicketController(_loggerMock.Object,
             new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object, _clientMock.Object),
-            new TicketService(_ticketRepositoryMock.Object));
+            new TicketService(_ticketRepositoryMock.Object, _variantRepositoryMock.Object));
         }
 
         [Test]
