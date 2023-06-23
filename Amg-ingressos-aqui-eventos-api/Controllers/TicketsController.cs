@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v1/tickets")]
+    [Produces("application/json")]
     public class TicketController : ControllerBase
     {
         private readonly ILogger<TicketController> _logger;
         private readonly ITicketService _ticketService;
 
-        public TicketController(ILogger<TicketController> logger, IEventService eventService, ITicketService ticketService)
+        public TicketController(ILogger<TicketController> logger, ITicketService ticketService)
         {
             _logger = logger;
             _ticketService = ticketService;
@@ -26,7 +27,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("user/{idUser}")]
-        [Produces("application/json")]
         public async Task<IActionResult> GetTicketByUser([FromRoute]string idUser)
         {
             try
@@ -56,7 +56,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("lote/{idLote}")]
-        [Produces("application/json")]
         public async Task<IActionResult> GetTicketsRemainingByLot([FromRoute]string idLote)
         {
             try
@@ -87,7 +86,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}")]
-        [Produces("application/json")]
         public async Task<IActionResult> GetTicketById([FromRoute]string id)
         {
             try
@@ -118,7 +116,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}/datauser")]
-        [Produces("application/json")]
         public async Task<IActionResult> GetTicketByIdDataUser([FromRoute]string id)
         {
             try
@@ -144,18 +141,52 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// Edita os dados do Ticket
         /// </summary>
         /// <param name="id">Id do ticket</param>
-        /// <param name="ticketObject">Objeto do ticket a ser alterado</param>
+        /// <param name="ticket">Objeto do ticket a ser alterado</param>
         /// <returns>200 Edita os dados do Ticket</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpPut]
         [Route("{id}")]
-        [Produces("application/json")]
-        public async Task<IActionResult> UpdateTicketsAsync([FromRoute]string id, [FromBody]Ticket ticketObject)
+        public async Task<IActionResult> UpdateTicketsAsync([FromRoute]string id, [FromBody]Ticket ticket)
         {
             try
             {
-                var result = await _ticketService.UpdateTicketsAsync(id, ticketObject);
+                var result = await _ticketService.UpdateTicketsAsync(id, ticket);
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+
+                return Ok(result.Data);
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
+                return StatusCode(444, MessageLogErrors.NotModificateTickets);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
+                return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edita os dados do Ticket
+        /// </summary>
+        /// <param name="id">Id do ticket</param>
+        /// <param name="ticket">Objeto do ticket a ser alterado</param>
+        /// <returns>200 Edita os dados do Ticket</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpPost]
+        public async Task<IActionResult> SaveTicketsAsync([FromBody]Ticket ticket)
+        {
+            try
+            {
+                var result = await _ticketService.SaveAsync(ticket);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -176,5 +207,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
             }
         }
+    
+    
+    
     }
 }
