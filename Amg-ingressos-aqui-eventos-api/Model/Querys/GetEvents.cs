@@ -55,6 +55,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Highlighted")]
         public Enum.StatusEvent Status { get; set; }
+                
+        [JsonProperty("Colabs")]
+        public List<string>? Colabs { get; set; }
         
     }
 
@@ -113,6 +116,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Lot")]
         public Lot[] Lot { get; set; }
+
     }
 
     public class Lot
@@ -145,6 +149,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("IdVariant")]
         public string IdVariant { get; set; }
+
     }
 
     public class Positions

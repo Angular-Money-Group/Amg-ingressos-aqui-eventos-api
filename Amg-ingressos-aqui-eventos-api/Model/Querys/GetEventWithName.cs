@@ -53,6 +53,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("User")]
         public List<Producer> User { get; set; }
+                
+        [JsonProperty("Colabs")]
+        public List<string>? Colabs { get; set; }
     };
 
     public class Producer
