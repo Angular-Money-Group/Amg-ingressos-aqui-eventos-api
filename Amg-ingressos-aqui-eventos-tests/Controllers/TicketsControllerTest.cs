@@ -30,7 +30,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public void Setup()
         {
             _ticketController = new TicketController(_loggerMock.Object,
-            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object, _clientMock.Object),
             new TicketService(_ticketRepositoryMock.Object, _variantRepositoryMock.Object));
         }
 
