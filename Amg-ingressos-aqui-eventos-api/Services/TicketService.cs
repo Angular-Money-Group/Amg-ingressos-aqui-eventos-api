@@ -210,6 +210,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     Id= ticketUserData._id,
                     IdLot= ticketUserData.IdLot,
+                    IdUser= ticketUserData.IdUser,
                     Status = ticketUserData.Status,
                     QrCode = ticketUserData.QrCode,
                     Value = ticketUserData.Value,
