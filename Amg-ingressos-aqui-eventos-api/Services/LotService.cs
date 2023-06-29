@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
-using System.Text;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
 
@@ -34,11 +29,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = await _lotRepository.Save<object>(lot);
                 for (int i = 0; i < lot.TotalTickets; i++)
                 {
-                    await _ticketService.SaveAsync(new Ticket()
+                    _ticketService.SaveAsync(new Ticket()
                     {
                         ReqDocs = lot.ReqDocs,
                         IdLot = _messageReturn.Data.ToString(),
-                        Value = lot.ValueTotal / lot.TotalTickets
+                        Value = lot.ValueTotal
                     });
                 }
             }

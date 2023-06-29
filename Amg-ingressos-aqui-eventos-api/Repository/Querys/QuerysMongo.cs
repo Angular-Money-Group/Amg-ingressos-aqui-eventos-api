@@ -139,6 +139,5 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                 }
                             }";
 
-    
     }
 }
