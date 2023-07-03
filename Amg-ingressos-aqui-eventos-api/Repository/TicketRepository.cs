@@ -24,7 +24,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
         public async Task<object> Save<T>(object ticket)
         {
-
             try
             {
                 await _ticketCollection.InsertOneAsync(ticket as Ticket);
@@ -34,7 +33,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 throw ex;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -169,7 +168,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-
         public async Task<object> GetTicketByIdDataUser<T>(string id)
         {
             try
@@ -200,6 +198,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 throw ex;
             }
+        }
+        public async Task<object> SaveMany(List<Ticket> lstTicket)
+        {
+            try
+            {
+                _ticketCollection.InsertMany(lstTicket);
+            }
+            catch (SaveTicketException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return "Ok";
         }
     }
 }

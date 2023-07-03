@@ -82,12 +82,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 eventSave.Status = Enum.StatusEvent.Active;
             
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+                if(_messageReturn.Data == null)
+                    throw new SaveEventException("");
 
                 eventSave.Variant.ToList().ForEach(i =>
                 {
-                    i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
-                    i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
+                    i.IdEvent = _messageReturn.Data.ToString();
+                    //i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
                 });
+
+                _variantService.SaveManyAsync(eventSave.Variant).Result.Data.ToString();
+
 
             }
             catch (SaveEventException ex)

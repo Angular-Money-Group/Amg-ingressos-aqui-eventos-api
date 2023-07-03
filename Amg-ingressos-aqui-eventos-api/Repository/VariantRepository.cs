@@ -35,6 +35,23 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<object> SaveMany<T>(List<Variant> lstVariant)
+        {
+            try
+            {
+                await _variantCollection.InsertManyAsync(lstVariant);
+                return lstVariant;
+            }
+            catch (SaveVariantException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<object> Delete<T>(object id)
         {
             try
