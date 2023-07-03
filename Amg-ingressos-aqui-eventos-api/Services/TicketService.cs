@@ -20,6 +20,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _variantRepository = variantRepository;
             _messageReturn = new MessageReturn();
         }
+
         public async Task<MessageReturn> SaveAsync(Ticket ticket)
         {
             try
@@ -32,6 +33,28 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ticket?.IdLot?.ValidateIdMongo();
 
                 _messageReturn.Data = await _ticketRepository.Save<object>(ticket!);
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+        public async Task<MessageReturn> SaveManyAsync(List<Ticket> lstTicket){
+            try
+            {
+                _messageReturn.Data = await _ticketRepository.SaveMany(lstTicket);
             }
             catch (SaveTicketException ex)
             {

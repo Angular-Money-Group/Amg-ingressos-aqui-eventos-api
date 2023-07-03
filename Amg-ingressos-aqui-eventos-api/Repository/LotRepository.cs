@@ -102,7 +102,23 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 throw ex;
             }
-            catch (System.Exception ex)
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task<object> SaveMany<T>(List<Lot> Lot)
+        {
+            try
+            {
+                await _lotCollection.InsertManyAsync(Lot);
+                return Lot;
+            }
+            catch (SaveLotException ex)
+            {
+                throw ex;
+            }
+            catch (Exception)
             {
                 throw;
             }

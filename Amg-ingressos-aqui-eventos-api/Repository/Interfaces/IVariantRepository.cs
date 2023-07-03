@@ -6,6 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     {
         Task<List<Variant>> FindById<T>(string IdVariant);
         Task<object> Save<T>(object variant);
+        Task<object> SaveMany<T>(List<Variant> lstVariant);
         Task<Variant> Edit<T>(string id, Variant variantObj);
         Task<object> Delete<T>(object IdVariant);
         Task<object> DeleteMany<T>(List<string> variants);

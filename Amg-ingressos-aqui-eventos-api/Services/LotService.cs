@@ -20,6 +20,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _ticketService = ticketService;
             _messageReturn = new MessageReturn();
         }
+
         public async Task<MessageReturn> SaveAsync(Lot lot)
         {
             try
@@ -27,15 +28,18 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(lot);
                 lot.Status = Enum.StatusLot.Open;
                 _messageReturn.Data = await _lotRepository.Save<object>(lot);
+                List<Ticket> listTicket = new List<Ticket>();
                 for (int i = 0; i < lot.TotalTickets; i++)
                 {
-                    _ticketService.SaveAsync(new Ticket()
+                    listTicket.Add(new Ticket()
                     {
                         ReqDocs = lot.ReqDocs,
                         IdLot = _messageReturn.Data.ToString(),
                         Value = lot.ValueTotal
                     });
                 }
+
+                _ticketService.SaveManyAsync(listTicket);
             }
             catch (SaveTicketException ex)
             {
@@ -55,6 +59,46 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
+
+        public async Task<MessageReturn> SaveManyAsync(List<Lot> listLot)
+        {
+            try
+            {
+                listLot.ForEach(i => { ValidateModelSave(i); });
+
+                //listLot.Status = Enum.StatusLot.Open;
+                _messageReturn.Data = await _lotRepository.SaveMany<object>(listLot);
+                listLot.ForEach(x =>
+                {
+                    List<Ticket> listTicket = new List<Ticket>();
+                    for (int i = 0; i < x.TotalTickets; i++)
+                    {
+                        listTicket.Add(new Ticket()
+                        {
+                            ReqDocs = x.ReqDocs,
+                            IdLot = x.Id,
+                            Value = x.ValueTotal
+                        });
+                    }
+                    _ticketService.SaveManyAsync(listTicket);
+                });
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (SaveLotException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
         public async Task<MessageReturn> DeleteAsync(string id)
         {
             try

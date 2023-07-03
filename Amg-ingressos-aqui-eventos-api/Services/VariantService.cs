@@ -138,5 +138,40 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new SaveVariantException("Total de posições é Obrigatório.");
             }
         }
+
+        public async Task<MessageReturn> SaveManyAsync(List<Variant> listVariant)
+        {
+            try
+            {
+                listVariant.ForEach(v => {
+                    ValidateModelSave(v);
+                    v.Status = Enum.StatusVariant.Active;
+                });
+                _messageReturn.Data = await _variantRepository.SaveMany<Variant>(listVariant);
+                
+                listVariant.ForEach(async i =>
+                {
+                    var IdentificateLot = 1;
+                    i.Lot.ForEach(l => { 
+                        l.Identificate = IdentificateLot;
+                        l.ReqDocs = i.ReqDocs;
+                        l.IdVariant = i.Id;
+                        IdentificateLot++;    
+                    });
+                    _lotService.SaveManyAsync(i.Lot);
+                });
+
+            }
+            catch (SaveVariantException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
     }
 }

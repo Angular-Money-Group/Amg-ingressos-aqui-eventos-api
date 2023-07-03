@@ -116,7 +116,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Lot")]
         public Lot[] Lot { get; set; }
-
+        [JsonProperty("ReqDocs")]
+        public bool ReqDocs { get; set; }
+        
     }
 
     public class Lot
