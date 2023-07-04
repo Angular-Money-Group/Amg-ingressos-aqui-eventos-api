@@ -28,20 +28,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 var update = Builders<Event>.Update.Set("Status", Enum.StatusEvent.Canceled);
 
-                var action = await _eventCollection.UpdateOneAsync(filter, update);
+                object value = await _eventCollection.UpdateOneAsync(filter, update);
 
-                if (action.MatchedCount == 0)
-                {
-                    throw new DeleteEventException("Evento não encontrado");
-                }
-                
-                else if (action.ModifiedCount == 0)
-                {
-                    throw new DeleteEventException("Evento já excluido");
-                }
-
-                var value = "Evento deletado com sucesso";
                 return value;
+
             }
             catch (DeleteEventException ex)
             {
