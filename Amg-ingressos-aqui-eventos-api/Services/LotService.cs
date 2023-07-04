@@ -133,7 +133,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     await _ticketService.SaveAsync(new Ticket()
                     {
                         IdLot = id,
-                        Value = lotEdit.ValueTotal / lotEdit.TotalTickets
+                        Value = lotEdit.ValueTotal
                     });
                 }
 
