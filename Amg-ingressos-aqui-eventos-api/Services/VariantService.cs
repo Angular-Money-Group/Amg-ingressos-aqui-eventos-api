@@ -152,11 +152,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 listVariant.ForEach(async i =>
                 {
                     var IdentificateLot = 1;
-                    i.Lot.ForEach(l => { 
+                    i.Lot.ForEach(l => {
+                        l.Status = IdentificateLot == 1 ? Enum.StatusLot.Open : Enum.StatusLot.Wait;
                         l.Identificate = IdentificateLot;
                         l.ReqDocs = i.ReqDocs;
                         l.IdVariant = i.Id;
-                        IdentificateLot++;    
+                        IdentificateLot++;   
                     });
                     _lotService.SaveManyAsync(i.Lot);
                 });
