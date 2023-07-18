@@ -26,7 +26,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IActionResult> GetEventsAsync(bool highlights, bool weekly,   Pagination paginationOptions)
+        public async Task<IActionResult> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
         {
             try
             {
