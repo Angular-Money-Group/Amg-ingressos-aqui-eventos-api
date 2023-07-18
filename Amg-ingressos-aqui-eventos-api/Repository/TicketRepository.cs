@@ -180,14 +180,14 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
                 BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
                 BsonDocument[] pipeline = new BsonDocument[] {
-                    document,
-                    document1,
                     documentFilter,
                     documentFilter1,
+                    document,
+                    document1,
                 };
-                GetTicketDataUser pResults = _ticketCollection
+                GetTicketDataUser pResults = await _ticketCollection
                                                 .Aggregate<GetTicketDataUser>(pipeline)
-                                                .FirstOrDefault() ?? throw new FindByIdEventException("Evento não encontrado");
+                                                .FirstOrDefaultAsync() ?? throw new FindByIdEventException("Evento não encontrado");
                 return pResults;
             }
             catch (FindByIdEventException ex)
