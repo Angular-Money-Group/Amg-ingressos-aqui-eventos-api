@@ -237,12 +237,12 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             {
                 var result = await _eventService.DeleteAsync(id);
 
-                return Ok(result.Data);
+                return Ok(result.Data); 
             }
             catch (DeleteEventException ex)
             {
                 _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
-                return NoContent();
+                return NotFound();
             }
             catch (Exception ex)
             {
