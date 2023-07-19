@@ -68,6 +68,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         [JsonProperty("IdVariant")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdVariant { get; set; }
     }
 }
