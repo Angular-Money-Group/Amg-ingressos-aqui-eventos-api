@@ -87,10 +87,5 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonDefaultValue(false)]
         public bool Highlighted { get; set; }
-        
-        /// <summary>
-        /// Se o evento está em destaque
-        /// </summary>
-        public List<string>? Colabs { get; set; }
     }
 }
