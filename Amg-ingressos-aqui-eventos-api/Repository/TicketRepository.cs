@@ -89,6 +89,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var builder = Builders<Ticket>.Filter;
                 var filter = builder.Empty;
+                filter &= builder.Eq(x => x.IdUser, null);
 
                 if (!string.IsNullOrWhiteSpace(ticket.Id))
                     filter &= builder.Eq(x => x.Id, ticket.Id);
@@ -97,7 +98,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     filter &= builder.Eq(x => x.IdLot, ticket.IdLot);
 
                 if (!string.IsNullOrEmpty(ticket.IdUser))
-                    filter &= builder.Eq(x => x.IdUser, ticket.IdUser);
+                    filter &= builder.Eq(x => x.IdUser, null);
 
                 var result = await _ticketCollection.Find(filter).ToListAsync();
 

@@ -246,9 +246,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var filter = Builders<Event>.Filter.Eq("IdOrganizer", id);
+                var filter = Builders<Event>.Filter.Eq("IdOrganizer", ObjectId.Parse(id));
 
-                List<Event> pResults = _eventCollection.Find(filter).ToList()
+                var pResults = _eventCollection.Find(filter).ToList()
                 .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
                 .Take(paginationOptions.pageSize)
                 .ToList();

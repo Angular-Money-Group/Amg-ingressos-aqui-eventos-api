@@ -191,7 +191,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
-            var result = (await _eventController.FindProducerEventsAsync(id, pagination) as OkObjectResult);
+            var result = (await _eventController.FindByOrganizerAsync(id, pagination) as OkObjectResult);
 
             // Assert
             Assert.AreEqual(messageReturn, result?.Value);
@@ -209,7 +209,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Throws(new System.Exception("error coxcnection database"));
 
             // Act
-            var result = (await _eventController.FindProducerEventsAsync(id, pagination) as ObjectResult);
+            var result = (await _eventController.FindByOrganizerAsync(id, pagination) as ObjectResult);
 
             // Assert
             Assert.AreEqual(500, result!.StatusCode);
@@ -228,7 +228,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Throws(new GetAllEventException(expectedMessage));
 
             // Act
-            var result = await _eventController.FindProducerEventsAsync(id, pagination) as NoContentResult;
+            var result = await _eventController.FindByOrganizerAsync(id, pagination) as NoContentResult;
 
             // Assert
             Assert.AreEqual(204, result?.StatusCode);

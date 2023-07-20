@@ -179,11 +179,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> FindProducerEventsAsync(string id, Pagination paginationOptions)
+        public async Task<MessageReturn> FindByOrganizerAsync(string idOrganizer, Pagination paginationOptions)
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(id, paginationOptions);
+                _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(idOrganizer, paginationOptions);
             }
             catch (GetAllEventException ex)
             {

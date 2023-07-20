@@ -42,9 +42,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public Address Address { get; set; }
 
         [JsonProperty("IdMeansReceipt")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdMeansReceipt { get; set; }
 
         [JsonProperty("IdOrganizer")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdOrganizer { get; set; }
 
         [JsonProperty("Variant")]
@@ -109,6 +111,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public long Status { get; set; }
 
         [JsonProperty("IdEvent")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdEvent { get; set; }
 
         [JsonProperty("Description")]
@@ -150,6 +153,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public bool ReqDocs { get; set; }
 
         [JsonProperty("IdVariant")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdVariant { get; set; }
 
     }
