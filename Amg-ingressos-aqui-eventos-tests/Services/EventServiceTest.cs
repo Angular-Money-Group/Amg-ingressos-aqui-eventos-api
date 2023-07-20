@@ -289,7 +289,7 @@ namespace Prime.UnitTests.Services
             _eventRepositoryMock.Setup(x => x.FindByProducer<List<Event>>(id, pagination)).Returns(Task.FromResult(eventComplet as List<Event>));
 
             //Act
-            var result = _eventService.FindProducerEventsAsync(id, pagination);
+            var result = _eventService.FindByOrganizerAsync(id, pagination);
 
             //Assert
             Assert.AreEqual(eventComplet, result.Result.Data);

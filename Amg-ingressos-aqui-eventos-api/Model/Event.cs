@@ -12,29 +12,29 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? _Id { get; set; }
+        public string _Id { get; set; }
 
         /// <summary>
         /// name
         /// </summary>
         [Required]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Local
         /// </summary>
         [Required]
-        public string? Local { get; set; }
+        public string Local { get; set; }
         /// <summary>
         /// Type
         /// </summary>
         [Required]
-        public string? Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Image
         /// </summary>
         [Required]
-        public string? Image { get; set; }
+        public string Image { get; set; }
         /// <summary>
         /// Descrição
         /// </summary>
@@ -75,12 +75,14 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Id mongo Meio de Recebimento
         /// </summary>
-        public string? IdMeansReceipt { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string IdMeansReceipt { get; set; }
         
         /// <summary>
         /// Id mongo organizador do evento
         /// </summary>
-        public string? IdOrganizer { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string IdOrganizer { get; set; }
         
         /// <summary>
         /// Se o evento está em destaque

@@ -11,10 +11,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdLot { get; set; }
         public object Position { get; set; }
         public decimal Value { get; set; }
-        
+
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdUser { get; set; }
         public bool isSold { get; set; }
@@ -54,7 +55,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public Enum.StatusLot Status { get; set; }
 
         public bool ReqDocs { get; set; }
-
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdVariant { get; set; }
     }
 

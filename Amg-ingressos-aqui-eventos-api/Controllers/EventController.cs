@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v1/events")]
+    [Produces("application/json")]
     public class EventController : ControllerBase
     {
         private readonly ILogger<EventController> _logger;
@@ -55,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}")]
-        [Produces("application/json")]
+        
         public async Task<IActionResult> FindByIdEventAsync([FromRoute] string id)
         {
             try
@@ -106,18 +107,18 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Busca os eventos do produtor
         /// </summary>
-        /// <param name="id">Descrição desejada do Evento</param>
+        /// <param name="idOrganizer">Descrição desejada do Evento</param>
         /// <returns>200 Evento da busca</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("getEvents/{id}")]
+        [Route("getEvents/{idOrganizer}")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindProducerEventsAsync([FromRoute] string id, Pagination paginationOptions)
+        public async Task<IActionResult> FindByOrganizerAsync([FromRoute] string idOrganizer, Pagination paginationOptions)
         {
             try
             {
-                var result = await _eventService.FindProducerEventsAsync(id, paginationOptions);
+                var result = await _eventService.FindByOrganizerAsync(idOrganizer, paginationOptions);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
