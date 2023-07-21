@@ -56,7 +56,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}")]
-        
         public async Task<IActionResult> FindByIdEventAsync([FromRoute] string id)
         {
             try
