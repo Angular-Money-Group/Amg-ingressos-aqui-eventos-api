@@ -10,7 +10,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
         public const string GetEventQuery = @"{
                                 $lookup: {
                                     from: 'variants',
-                                    'let': { eventId : { '$toString': '$_id' }},
+                                    'let': { eventId : '$_id' },
                                     pipeline: [
                                         {
                                             $match: {
@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                         {
                                             $lookup: {
                                                 from: 'lots',
-                                                'let': { variantId : { '$toString': '$_id' }},
+                                                'let': { variantId : '$_id'},
                                                 pipeline: [
                                                     {
                                                         $match: {

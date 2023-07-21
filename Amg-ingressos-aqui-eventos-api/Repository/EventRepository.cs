@@ -5,8 +5,6 @@ using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
-using MongoDB.Driver.Core.Operations;
-using MongoDB.Bson.Serialization;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 
@@ -59,11 +57,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var json = QuerysMongo.GetEventQuery;
 
-                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
-                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
+                //BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': '$_id' }}");
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': ObjectId('" + id.ToString() + "') }] }}");
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] {
-                    documentFilter,
+                    //documentFilter,
                     documentFilter1,
                     document
                 };
