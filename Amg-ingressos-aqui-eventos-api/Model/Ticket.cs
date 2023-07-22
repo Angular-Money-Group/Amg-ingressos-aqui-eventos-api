@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
@@ -10,6 +11,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
+        [JsonProperty("_id")]
         public string Id { get; set; }
         
         /// <summary>

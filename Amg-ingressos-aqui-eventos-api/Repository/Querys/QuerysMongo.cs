@@ -138,6 +138,43 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                     as: 'Lot'
                                 }
                             }";
+        public const string GetTicketByIdDataEvent = @"{
+                                            $lookup:
+                                                {
+                                                    from: 'lots',
+                                                    localField: 'IdLot',
+                                                    foreignField: '_id',
+                                                    as: 'Lot'
+                                                }
+                                        }, 
+                                        {
+                                            $lookup:
+                                                {
+                                                    from: 'variants',
+                                                    localField: 'Lot.IdVariant',
+                                                    foreignField: '_id',
+                                                    as: 'Variant'
+                                                }
+                                        }, 
+                                        {
+                                            $lookup:
+                                                {
+                                                    from: 'events',
+                                                    localField: 'Variant.IdEvent',
+                                                    foreignField: '_id',
+                                                    as: 'Event'
+                                                }
+                                        },
+                                        {
+                                            $unwind: '$Lot'
+                                        },
+                                        {
+                                            $unwind: '$Variant'
+                                        },
+                                        {
+                                            $unwind: '$Event'
+                                        }";
 
+    
     }
 }

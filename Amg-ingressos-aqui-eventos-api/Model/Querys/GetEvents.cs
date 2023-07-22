@@ -1,11 +1,7 @@
-    using System;
-    using System.Collections.Generic;
-
-    using System.Globalization;
+using Newtonsoft.Json;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
+
 
 namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 {
@@ -57,10 +53,10 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Highlighted")]
         public Enum.StatusEvent Status { get; set; }
-                
+
         [JsonProperty("Colabs")]
         public List<string>? Colabs { get; set; }
-        
+
     }
 
     public partial class Address
@@ -121,7 +117,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public Lot[] Lot { get; set; }
         [JsonProperty("ReqDocs")]
         public bool ReqDocs { get; set; }
-        
+
     }
 
     public class Lot
@@ -148,7 +144,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
 
         [JsonProperty("Status")]
         public long Status { get; set; }
-        
+
         [JsonProperty("ReqDocs")]
         public bool ReqDocs { get; set; }
 
