@@ -9,6 +9,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> DeleteByLot<T>(string idLot);
         Task<List<Ticket>> GetTickets<T>(Ticket ticket);
         Task<object> GetTicketByIdDataUser<T>(string id);
+        Task<object> GetTicketByIdDataEvent<T>(string id);
         Task<List<string>> GetTicketsByLot<T>(string idLot);
         Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket);
         Task<object> SaveMany(List<Ticket> lstTicket);

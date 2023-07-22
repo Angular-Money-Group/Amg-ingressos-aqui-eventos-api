@@ -16,7 +16,6 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         public Enum.StatusTicket Status { get; set; }
         public string QrCode { get; set; }
         public UserDto User { get; set; }
-        public string Variante { get; set; }
         
     }
 }

@@ -200,6 +200,75 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+        public async Task<object> GetTicketByIdDataEvent<T>(string id)
+        {
+            try
+            {
+                //var json = QuerysMongo.GetTicketByIdDataEvent;
+                //BsonDocument document = BsonDocument.Parse(@json);
+
+                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
+                BsonDocument lookupLots = BsonDocument.Parse(@"{
+                                                                    $lookup:
+                                                                        {
+                                                                            from: 'lots',
+                                                                            localField: 'IdLot',
+                                                                            foreignField: '_id',
+                                                                            as: 'Lot'
+                                                                        }
+                                                                }");
+                BsonDocument lookupVariants = BsonDocument.Parse(@"{
+                                                                    $lookup:
+                                                                        {
+                                                                            from: 'variants',
+                                                                            localField: 'Lot.IdVariant',
+                                                                            foreignField: '_id',
+                                                                            as: 'Variant'
+                                                                        }
+                                                                }");
+                BsonDocument lookupEvents = BsonDocument.Parse(@"{
+                                                                    $lookup:
+                                                                        {
+                                                                            from: 'events',
+                                                                            localField: 'Variant.IdEvent',
+                                                                            foreignField: '_id',
+                                                                            as: 'Event'
+                                                                        }
+                                                                }");
+                BsonDocument uniwindLot = BsonDocument.Parse(@"{
+                                                                    $unwind: '$Lot'
+                                                                }");
+                BsonDocument uniwindVariant = BsonDocument.Parse(@"{
+                                                                    $unwind: '$Variant'
+                                                                }");
+                BsonDocument uniwindEvent = BsonDocument.Parse(@"{
+                                                                    $unwind: '$Event'
+                                                                }");
+                BsonDocument[] pipeline = new BsonDocument[] {
+                    documentFilter,
+                    documentFilter1,
+                    lookupLots,
+                    lookupVariants,
+                    lookupEvents,
+                    uniwindLot,
+                    uniwindVariant,
+                    uniwindEvent
+                };
+                GetTicketDataEvent pResults = await _ticketCollection
+                                                .Aggregate<GetTicketDataEvent>(pipeline)
+                                                .FirstOrDefaultAsync() ?? throw new FindByIdEventException("Evento não encontrado");
+                return pResults;
+            }
+            catch (FindByIdEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<object> SaveMany(List<Ticket> lstTicket)
         {
             try

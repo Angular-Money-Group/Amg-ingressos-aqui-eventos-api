@@ -51,7 +51,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
-        public async Task<MessageReturn> SaveManyAsync(List<Ticket> lstTicket){
+        public async Task<MessageReturn> SaveManyAsync(List<Ticket> lstTicket)
+        {
             try
             {
                 _messageReturn.Data = await _ticketRepository.SaveMany(lstTicket);
@@ -227,23 +228,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var ticketUserData = (GetTicketDataUser)_ticketRepository
                                                 .GetTicketByIdDataUser<GetTicketDataUser>(id).Result;
 
-                var variantData = _variantRepository.FindById<List<Model.Variant>>(ticketUserData.Lot.FirstOrDefault().IdVariant).Result;
+                //var variantData = _variantRepository.FindById<List<Model.Variant>>(ticketUserData.Lot.FirstOrDefault().IdVariant).Result;
 
                 _messageReturn.Data = new TicketUserDto()
                 {
-                    Id= ticketUserData._id,
-                    IdLot= ticketUserData.IdLot,
-                    IdUser= ticketUserData.IdUser,
-                    Status = ticketUserData.Status,
+                    Id = ticketUserData.Id,
+                    IdLot = ticketUserData.IdLot,
+                    IdUser = ticketUserData.IdUser,
                     QrCode = ticketUserData.QrCode,
                     Value = ticketUserData.Value,
-                    Variante = variantData.FirstOrDefault().Name,
+                    //Variante = variantData.FirstOrDefault().Name,
 
-                    User = new UserDto(){
+                    User = new UserDto()
+                    {
                         _id = ticketUserData.User.FirstOrDefault()._id,
                         cpf = ticketUserData.User.FirstOrDefault().cpf,
-                        email=ticketUserData.User.FirstOrDefault().email,
-                        name=ticketUserData.User.FirstOrDefault().name
+                        email = ticketUserData.User.FirstOrDefault().email,
+                        name = ticketUserData.User.FirstOrDefault().name
                     },
                 };
 
@@ -265,7 +266,33 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
+        public async Task<MessageReturn> GetTicketByIdDataEvent(string id)
+        {
+            try
+            {
+                id.ValidateIdMongo();
+                var ticket = (GetTicketDataEvent)_ticketRepository
+                                                .GetTicketByIdDataEvent<GetTicketDataEvent>(id).Result;
+                _messageReturn.Data = ticket;
 
+            }
+            catch (GetRemeaningTicketsExepition ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
         public async Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticket)
         {
             try
