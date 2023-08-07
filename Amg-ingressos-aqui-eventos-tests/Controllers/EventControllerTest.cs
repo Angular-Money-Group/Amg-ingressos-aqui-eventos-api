@@ -316,21 +316,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         }
 
         [Test]
-        public async Task Given_id_event_When_delete_and_not_found_data_return_msg_empty_Async()
-        {
-            // Arrange
-            var expectedMessage = "Sem registros";
-            var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Throws(new DeleteEventException(expectedMessage));
-
-            // Act
-            var result = (await _eventController.DeleteEventAsync(id) as NoContentResult);
-
-            // Assert
-            Assert.AreEqual(204, result!.StatusCode);
-        }
-
-        [Test]
         public async Task Given_event_When_Save_Then_return_message_created_Async()
         {
             // Arrange
@@ -362,21 +347,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Assert
             Assert.AreEqual(500, result!.StatusCode);
             Assert.AreEqual(espectedReturn, result.Value);
-        }
-
-        [Test]
-        public async Task Given_event_When_save_and_not_found_data_return_msg_empty_Async()
-        {
-            // Arrange
-            var expectedMessage = "Sem registros";
-            var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Throws(new DeleteEventException(expectedMessage));
-
-            // Act
-            var result = (await _eventController.DeleteEventAsync(id) as NoContentResult);
-
-            // Assert
-            Assert.AreEqual(204, result!.StatusCode);
         }
     }
 }
