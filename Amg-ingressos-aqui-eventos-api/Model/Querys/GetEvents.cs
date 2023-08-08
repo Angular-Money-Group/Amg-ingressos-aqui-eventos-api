@@ -37,6 +37,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         [JsonProperty("Address")]
         public Address Address { get; set; }
 
+                [JsonProperty("Courtesy")]
+        public Courtesy? Courtesy { get; set; }
+
         [JsonProperty("IdMeansReceipt")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdMeansReceipt { get; set; }

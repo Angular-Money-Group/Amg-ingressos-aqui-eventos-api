@@ -19,8 +19,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int Status { get; set; }
-        public GetAddress Address { get; set; }
-
+        public GetAddress Address { get; set; }        
+        public Courtesy? Courtesy { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdMeansReceipt { get; set; }
 
