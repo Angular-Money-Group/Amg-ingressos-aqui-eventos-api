@@ -78,18 +78,37 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(eventSave);
                 IsBase64Image(eventSave.Image!);
                 eventSave.Image = StoreImageAndGenerateLinkToAccess(eventSave.Image!);
-
                 eventSave.Status = Enum.StatusEvent.Active;
-            
+                eventSave.Courtesy = new Courtesy()
+                  {
+                      RemainingCourtesy = new List<RemainingCourtesy>(),
+                      CourtesyHistory = new List<CourtesyHistory>()
+                  };
+
+                eventSave.Variant.ToList().ForEach(i =>
+                {
+                    if (i.QuantityCourtesy > 0)
+                    {
+                        var RemainingCourtesy = new RemainingCourtesy
+                        {
+                            Variant = i.Name,
+                            Quantity = i.QuantityCourtesy
+                        };
+
+                        eventSave.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
+                    }
+                });
+
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-                if(_messageReturn.Data == null)
+                if (_messageReturn.Data == null)
                     throw new SaveEventException("");
+
 
                 eventSave.Variant.ToList().ForEach(i =>
                 {
                     i.IdEvent = _messageReturn.Data.ToString();
-                    //i.Id = _variantService.SaveAsync(i).Result.Data.ToString();
                 });
+
 
                 _variantService.SaveManyAsync(eventSave.Variant).Result.Data.ToString();
 
@@ -200,7 +219,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                if(eventEdit.Image != null){
+                if (eventEdit.Image != null)
+                {
                     IsBase64Image(eventEdit.Image!);
                     eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
                 };
@@ -298,6 +318,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw ex;
             }
         }
-       
+
     }
 }

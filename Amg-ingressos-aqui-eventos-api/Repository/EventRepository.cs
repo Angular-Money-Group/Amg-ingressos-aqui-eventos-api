@@ -266,6 +266,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
+                eventComplet = eventComplet as Event;
                 await _eventCollection.InsertOneAsync(eventComplet as Event);
                 return (eventComplet as Event)!._Id!;
             }

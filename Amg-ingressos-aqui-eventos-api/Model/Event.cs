@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Amg_ingressos_aqui_eventos_api.Model;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -70,6 +71,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [JsonProperty("Variant")]
         public List<Variant> Variant { get; set; }
+        
+        /// <summary>
+        /// Lista de Variants
+        /// </summary>
+        [JsonProperty("courtesy")]
+        public Courtesy? Courtesy { get; set; }
         
         /// <summary>
         /// Id mongo Meio de Recebimento
