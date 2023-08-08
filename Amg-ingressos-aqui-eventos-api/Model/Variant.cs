@@ -44,7 +44,15 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [JsonProperty("IdEvent")]
         [BsonRepresentation(BsonType.ObjectId)]
+
         public string IdEvent { get; set; }
+        /// <summary>
+        /// Id Evento
+        /// </summary>
+        [Required]
+        [JsonProperty("quantityCourtesy")]
+        public int QuantityCourtesy { get; set; }
+        
         /// <summary>
         /// Lista de lotes
         /// </summary>
