@@ -40,6 +40,20 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<StatusTicketsRow> GetCourtesyStatusById<T>(string id)
+        {
+            try
+            {
+                var filter = Builders<StatusTicketsRow>.Filter.Eq("_id", ObjectId.Parse(id));
+                var pResult = _ticketStatusCollection.Find(filter).ToList();
+                return pResult.FirstOrDefault();
+
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<object> UpdateTicketsRowAsync<T>(string id, StatusTicketsRow ticket)
         {
             try

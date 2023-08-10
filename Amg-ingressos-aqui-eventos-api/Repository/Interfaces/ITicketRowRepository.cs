@@ -6,5 +6,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     {
         Task<string> SaveRowAsync<T>(StatusTicketsRow ticket);
         Task<object> UpdateTicketsRowAsync<T>(string id, StatusTicketsRow ticket);
+        Task<StatusTicketsRow> GetCourtesyStatusById<T>(string id);
     }
 }

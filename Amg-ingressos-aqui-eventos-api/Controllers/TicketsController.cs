@@ -178,7 +178,10 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateTicketsAsync([FromRoute] string id, [FromBody] Ticket ticket)
+        public async Task<IActionResult> UpdateTicketsAsync(
+            [FromRoute] string id,
+            [FromBody] Ticket ticket
+        )
         {
             try
             {
@@ -249,17 +252,18 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
         [Route("sendCourtesy")]
-        public async Task<IActionResult> SendCourtesyTickets([FromBody] GenerateCourtesyTicketDto courtesyTicketDto)
+        public async Task<IActionResult> SendCourtesyTickets(
+            [FromBody] GenerateCourtesyTicketDto courtesyTicketDto
+        )
         {
             var _messageReturn = new MessageReturn();
 
             try
             {
                 var result = _ticketService.SendCourtesyTickets(courtesyTicketDto);
-                
+
                 _messageReturn.Data = "Enviando courtesias";
                 return Ok(_messageReturn);
-
             }
             catch (NotModificateTicketsExeption ex)
             {
@@ -271,9 +275,30 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
                 return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
             }
-
         }
 
+        /// <summary>
+        /// Edita os dados do Ticket
+        /// </summary>
+        /// <param name="id">Id do ticket</param>
+        /// <returns>200 Edita os dados do Ticket</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("courtesy/{id}")]
+        public async Task<IActionResult> GetCourtesyStatus([FromRoute] string id)
+        {
+            try
+            {
+                var result = await _ticketService.GetCourtesyStatus(id);
 
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
+                return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
+            }
+        }
     }
 }
