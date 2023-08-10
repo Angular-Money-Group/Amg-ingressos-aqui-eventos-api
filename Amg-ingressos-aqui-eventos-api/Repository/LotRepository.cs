@@ -91,6 +91,26 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<Lot> GetLotByIdVariant<T>(string idVariant)
+        {
+            try
+            {
+                var filtro = Builders<Lot>.Filter.Eq("IdVariant", ObjectId.Parse(idVariant));
+
+                var pResult = _lotCollection.Find(filtro).ToList();
+                
+                return pResult.FirstOrDefault() ?? throw new FindByIdEventException("Lote não encontrado");
+            }
+            catch (FindByIdEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<object> Save<T>(object Lot)
         {
             try

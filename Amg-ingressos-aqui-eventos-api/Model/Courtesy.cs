@@ -10,8 +10,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Remaining courtesy quantity
         /// </summary>
-        [BsonElement("RemainingCourtesyQuantity")]
-        [JsonPropertyName("remainingCourtesyQuantity")]
+        [BsonElement("RemainingCourtesy")]
+        [JsonPropertyName("RemainingCourtesy")]
         public List<RemainingCourtesy> RemainingCourtesy { get; set; }
 
         /// <summary>
@@ -65,8 +65,15 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Courtesy history date
         /// </summary>
-        [BsonElement("Variant")]
-        [JsonPropertyName("variant")]
-        public string Variant { get; set; }
+        [BsonElement("VariantName")]
+        [JsonPropertyName("variantName")]
+        public string VariantName { get; set; }
+
+        /// <summary>
+        /// Courtesy history date
+        /// </summary>
+        [BsonElement("VariantId")]
+        [JsonPropertyName("variantId")]
+        public string VariantId { get; set; }
     }
 }

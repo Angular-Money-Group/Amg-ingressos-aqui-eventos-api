@@ -1,3 +1,4 @@
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
@@ -14,5 +15,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> GetTicketByIdDataEvent(string id);
         Task<MessageReturn> DeleteTicketsByLot(string LotId);
         Task<MessageReturn> SaveManyAsync(List<Ticket> ticket);
+        Task<MessageReturn> SendCourtesyTickets(GenerateCourtesyTicketDto courtesyTicketDto);
     }
 }

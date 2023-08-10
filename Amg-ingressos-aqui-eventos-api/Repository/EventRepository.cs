@@ -79,6 +79,26 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<Event> FindByIdVariant<T>(string id)
+        {
+            try
+            {
+                var filter = Builders<Event>.Filter.Eq("_Id", ObjectId.Parse(id));
+
+                var pResult = _eventCollection.Find(filter).ToList();
+
+                return pResult.FirstOrDefault() ?? throw new FindByIdEventException("Evento não encontrado");
+            }
+            catch (FindByIdEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<List<Event>> FindByName<T>(string nome)
         {
             try

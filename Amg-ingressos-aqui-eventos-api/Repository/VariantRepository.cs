@@ -13,6 +13,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     public class VariantRepository<T> : IVariantRepository
     {
         private readonly IMongoCollection<Variant> _variantCollection;
+
         public VariantRepository(IDbConnection<Variant> dbconnection)
         {
             _variantCollection = dbconnection.GetConnection("variants");
@@ -74,21 +75,21 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-         public async Task<Variant> Edit<T>(string id, Variant variantObj)
+        public async Task<Variant> Edit<T>(string id, Variant variantObj)
         {
             try
             {
                 var filtro = Builders<Variant>.Filter.Eq("_id", ObjectId.Parse(id));
-                
-                var update = Builders<Variant>.Update.Combine();
 
-                foreach (var property in typeof(Variant).GetProperties())
-                {
-                    if (property.GetValue(variantObj) != null && property.Name != "_Id")
-                    {
-                        update = update.Set(property.Name, property.GetValue(variantObj));
-                    }
-                }
+                var update = Builders<Variant>.Update
+                    .Set("Name", variantObj.Name)
+                    .Set("Description", variantObj.Description)
+                    .Set("HasPositions", variantObj.HasPositions)
+                    .Set("Status", variantObj.Status)
+                    .Set("IdEvent", variantObj.IdEvent)
+                    .Set("QuantityCourtesy", variantObj.QuantityCourtesy)
+                    .Set("ReqDocs", variantObj.ReqDocs)
+                    .Set("Positions", variantObj.Positions);
 
                 await _variantCollection.UpdateOneAsync(filtro, update);
 
@@ -110,7 +111,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var filter = Builders<Variant>.Filter.In("_id", variants);
 
-
                 var deleteResult = await _variantCollection.DeleteManyAsync(filter);
                 if (deleteResult.DeletedCount >= 1)
                     return "Variantes deletadas";
@@ -126,19 +126,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw;
             }
         }
+
         public async Task<List<Variant>> FindById<T>(string id)
         {
             try
             {
-
                 var json = QuerysMongo.GetLotsByVariant;
 
                 BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument documentFilter = BsonDocument.Parse(@"{ $match: { '_id': '" + id.ToString() + "' }}");
-                BsonDocument[] pipeline = new BsonDocument[] {
-                    document,
-                    documentFilter,
-                };
+                BsonDocument documentFilter = BsonDocument.Parse(
+                    @"{ $match: { '_id': '" + id.ToString() + "' }}"
+                );
+                BsonDocument[] pipeline = new BsonDocument[] { document, documentFilter, };
 
                 var pResults = _variantCollection.Aggregate<Variant>(pipeline).ToList();
 
@@ -158,7 +157,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 throw;
             }
-
         }
     }
 }
