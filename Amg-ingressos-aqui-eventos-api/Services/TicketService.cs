@@ -73,6 +73,30 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
+        public async Task<MessageReturn> GetCourtesyStatus(string id)
+        {
+            try
+            {
+                _messageReturn.Data = await _ticketRowRepository.GetCourtesyStatusById<StatusTicketsRow>(id);
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
         public async Task<MessageReturn> SaveManyAsync(List<Ticket> lstTicket)
         {
             try
@@ -243,7 +267,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 UpdateEventCourtesyAndRemainingQuantity(
                     eventToGenerateTicket,
                     variantToGenerateTicket,
-                    courtesyTicket
+                    courtesyTicket,
+                    rowId
                 );
 
                 for (var i = 0; i < courtesyTicket.quantity; i++)
@@ -304,7 +329,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private void UpdateEventCourtesyAndRemainingQuantity(
             Model.Event eventToGenerateTicket,
             Model.Variant variantToGenerateTicket,
-            GenerateCourtesyTicketDto CourtesyTicket
+            GenerateCourtesyTicketDto CourtesyTicket,
+            string rowId
         )
         {
             var editEvent = eventToGenerateTicket;
@@ -315,7 +341,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     Email = CourtesyTicket.Email,
                     Date = DateTime.Now,
                     Variant = variantToGenerateTicket.Name,
-                    Quantity = CourtesyTicket.quantity
+                    Quantity = CourtesyTicket.quantity,
+                    IdStatusEmail = rowId
                 }
             );
 

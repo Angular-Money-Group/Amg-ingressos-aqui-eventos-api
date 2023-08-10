@@ -32,6 +32,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public string Email { get; set; }
 
         /// <summary>
+        /// Email associated with courtesy history
+        /// </summary>
+        [BsonElement("IdStatusEmail")]
+        [JsonPropertyName("idStatusEmail")]
+        public string IdStatusEmail { get; set; }
+
+        /// <summary>
         /// Courtesy history date
         /// </summary>
         [BsonElement("Date")]
