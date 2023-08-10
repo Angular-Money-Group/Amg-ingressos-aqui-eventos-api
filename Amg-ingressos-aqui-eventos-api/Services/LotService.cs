@@ -173,6 +173,26 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
+        
+        public async Task<MessageReturn> GetLotByIdVariant(string idVariant)
+        {
+            try
+            {
+                _messageReturn.Data = await _lotRepository.GetLotByIdVariant<Lot>(idVariant);
+
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            return _messageReturn;
+        }
 
         private void ValidateModelSave(Lot lot)
         {

@@ -6,7 +6,6 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using System.Text.RegularExpressions;
 
-
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class EventService : IEventService
@@ -18,8 +17,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         private HttpClient _client;
 
-
-        public EventService(IEventRepository eventRepository, IVariantService variantService, IWebHostEnvironment webHostEnvironment, HttpClient client)
+        public EventService(
+            IEventRepository eventRepository,
+            IVariantService variantService,
+            IWebHostEnvironment webHostEnvironment,
+            HttpClient client
+        )
         {
             _eventRepository = eventRepository;
             _variantService = variantService;
@@ -52,6 +55,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             return _messageReturn;
         }
+
         public async Task<MessageReturn> FindEventByNameAsync(string name)
         {
             try
@@ -80,39 +84,40 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 eventSave.Image = StoreImageAndGenerateLinkToAccess(eventSave.Image!);
                 eventSave.Status = Enum.StatusEvent.Active;
                 eventSave.Courtesy = new Courtesy()
-                  {
-                      RemainingCourtesy = new List<RemainingCourtesy>(),
-                      CourtesyHistory = new List<CourtesyHistory>()
-                  };
-
-                eventSave.Variant.ToList().ForEach(i =>
                 {
-                    if (i.QuantityCourtesy > 0)
-                    {
-                        var RemainingCourtesy = new RemainingCourtesy
-                        {
-                            Variant = i.Name,
-                            Quantity = i.QuantityCourtesy
-                        };
+                    RemainingCourtesy = new List<RemainingCourtesy>(),
+                    CourtesyHistory = new List<CourtesyHistory>()
+                };
 
-                        eventSave.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
-                    }
-                });
+                var variantId = "";
+
+                eventSave.Variant
+                    .ToList()
+                    .ForEach(i =>
+                    {
+                        variantId = _variantService.SaveAsync(i).Result.Data.ToString();
+
+                        if (i.QuantityCourtesy > 0)
+                        {
+                            var RemainingCourtesy = new RemainingCourtesy
+                            {
+                                VariantId = i.Id,
+                                VariantName = i.Name,
+                                Quantity = i.QuantityCourtesy
+                            };
+
+                            eventSave.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
+                        }
+                    });
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
-                if (_messageReturn.Data == null)
-                    throw new SaveEventException("");
 
-
-                eventSave.Variant.ToList().ForEach(i =>
+                for (int i = 0; i < eventSave.Variant.Count; i++)
                 {
-                    i.IdEvent = _messageReturn.Data.ToString();
-                });
+                    eventSave.Variant[i].IdEvent = _messageReturn.Data.ToString();
 
-
-                _variantService.SaveManyAsync(eventSave.Variant).Result.Data.ToString();
-
-
+                    _ = _variantService.EditAsync(variantId, eventSave.Variant[i]).Result;
+                }
             }
             catch (SaveEventException ex)
             {
@@ -124,6 +129,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             return _messageReturn;
         }
+
         public async Task<MessageReturn> HighlightEventAsync(string id)
         {
             try
@@ -148,7 +154,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-
         public async Task<MessageReturn> DeleteAsync(string id)
         {
             try
@@ -168,21 +173,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly, Pagination paginationOptions)
+        public async Task<MessageReturn> GetEventsAsync(
+            bool highlights,
+            bool weekly,
+            Pagination paginationOptions
+        )
         {
             try
             {
                 if (highlights)
                 {
-                    _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(paginationOptions);
+                    _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(
+                        paginationOptions
+                    );
                 }
                 else if (weekly)
                 {
-                    _messageReturn.Data = await _eventRepository.GetWeeklyEvents<List<Event>>(paginationOptions);
+                    _messageReturn.Data = await _eventRepository.GetWeeklyEvents<List<Event>>(
+                        paginationOptions
+                    );
                 }
                 else
                 {
-                    var allEvents = await _eventRepository.GetAllEvents<List<GetEventsWithNames>>(paginationOptions);
+                    var allEvents = await _eventRepository.GetAllEvents<List<GetEventsWithNames>>(
+                        paginationOptions
+                    );
 
                     _messageReturn.Data = allEvents;
                 }
@@ -198,11 +213,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> FindByOrganizerAsync(string idOrganizer, Pagination paginationOptions)
+        public async Task<MessageReturn> FindByOrganizerAsync(
+            string idOrganizer,
+            Pagination paginationOptions
+        )
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(idOrganizer, paginationOptions);
+                _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(
+                    idOrganizer,
+                    paginationOptions
+                );
             }
             catch (GetAllEventException ex)
             {
@@ -223,11 +244,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     IsBase64Image(eventEdit.Image!);
                     eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
-                };
-
+                }
+                ;
 
                 _messageReturn.Data = await _eventRepository.Edit<Event>(id, eventEdit);
-
             }
             catch (GetAllEventException ex)
             {
@@ -277,7 +297,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             if (string.IsNullOrEmpty(base64String))
                 throw new SaveEventException("Imagem é obrigatório");
 
-            var base64Data = Regex.Match(base64String, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+            var base64Data = Regex
+                .Match(base64String, @"data:image/(?<type>.+?),(?<data>.+)")
+                .Groups["data"].Value;
 
             try
             {
@@ -298,14 +320,16 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 byte[] imageBytes = Convert.FromBase64String(image);
 
                 var nomeArquivoImage = $"{Guid.NewGuid()}.jpg";
-                var directoryPathImage = Path.Combine(_webHostEnvironment.ContentRootPath, "images");
+                var directoryPathImage = Path.Combine(
+                    _webHostEnvironment.ContentRootPath,
+                    "images"
+                );
 
                 Directory.CreateDirectory(directoryPathImage);
 
                 var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
 
                 string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
-
 
                 using (var stream = new FileStream(filePathImage, FileMode.Create))
                 {
@@ -318,6 +342,5 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw ex;
             }
         }
-
     }
 }

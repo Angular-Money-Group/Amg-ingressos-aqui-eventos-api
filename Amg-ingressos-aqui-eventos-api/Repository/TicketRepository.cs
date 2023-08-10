@@ -15,11 +15,17 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     public class TicketRepository<T> : ITicketRepository
     {
         private readonly IMongoCollection<Ticket> _ticketCollection;
+        private readonly IMongoCollection<StatusTicketsRow> _ticketStatusCollection;
         private readonly MongoClient _mongoClient;
-        public TicketRepository(IDbConnection<Ticket> dbConnection)
+
+        public TicketRepository(
+            IDbConnection<Ticket> dbConnection,
+            IDbConnection<StatusTicketsRow> dbConnectionCourtesy
+        )
         {
-            _ticketCollection = dbConnection.GetConnection("tickets");
             _mongoClient = dbConnection.GetClient();
+            _ticketCollection = dbConnection.GetConnection("tickets");
+            _ticketStatusCollection = dbConnectionCourtesy.GetConnection("statusCourtesyTickets");
         }
 
         public async Task<object> Save<T>(object ticket)
@@ -40,7 +46,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         }
         public async Task<object> DeleteMany<T>(List<string> tickets)
         {
-
             try
             {
                 var filtro = Builders<Ticket>.Filter.In("_id", tickets);
@@ -62,7 +67,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         }
         public async Task<object> DeleteByLot<T>(string idLot)
         {
-
             try
             {
                 var filtro = Builders<Ticket>.Filter.Eq("IdLot", idLot);
@@ -83,6 +87,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
         public async Task<List<Ticket>> GetTickets<T>(Ticket ticket)
         {
             try
@@ -116,6 +121,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
         public async Task<List<string>> GetTicketsByLot<T>(string idLot)
         {
             try
@@ -124,7 +130,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 var tickets = await _ticketCollection.Find(filter).ToListAsync();
 
-                var result = tickets.Select(e => e.Id).ToList() ?? throw new FindTicketByUserException("Ticket não encontrado");
+                var result =
+                    tickets.Select(e => e.Id).ToList()
+                    ?? throw new FindTicketByUserException("Ticket não encontrado");
 
                 return result;
             }
@@ -137,6 +145,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
         public async Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket)
         {
             try
@@ -144,11 +153,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 // Cria um filtro para buscar tickets com o ID do lot especificado
                 var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
                 var update = Builders<Ticket>.Update
-                        .Set("IdUser", ticket.IdUser)
-                        .Set("Value", ticket.Value)
-                        .Set("isSold", ticket.isSold)
-                        .Set("Position", ticket.Position)
-                        .Set("QrCode", ticket.QrCode);
+                    .Set("IdUser", ticket.IdUser)
+                    .Set("Value", ticket.Value)
+                    .Set("isSold", ticket.isSold)
+                    .Set("Position", ticket.Position)
+                    .Set("QrCode", ticket.QrCode);
 
                 // Busca os tickets que correspondem ao filtro
                 var result = await _ticketCollection.UpdateOneAsync(filter, update);
@@ -178,17 +187,24 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument document1 = BsonDocument.Parse(json1);
 
-                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
-                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
-                BsonDocument[] pipeline = new BsonDocument[] {
+                BsonDocument documentFilter = BsonDocument.Parse(
+                    @"{$addFields:{'_id': { '$toString': '$_id' }}}"
+                );
+                BsonDocument documentFilter1 = BsonDocument.Parse(
+                    @"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}"
+                );
+                BsonDocument[] pipeline = new BsonDocument[]
+                {
                     documentFilter,
                     documentFilter1,
                     document,
                     document1,
                 };
-                GetTicketDataUser pResults = await _ticketCollection
-                                                .Aggregate<GetTicketDataUser>(pipeline)
-                                                .FirstOrDefaultAsync() ?? throw new FindByIdEventException("Evento não encontrado");
+                GetTicketDataUser pResults =
+                    await _ticketCollection
+                        .Aggregate<GetTicketDataUser>(pipeline)
+                        .FirstOrDefaultAsync()
+                    ?? throw new FindByIdEventException("Evento não encontrado");
                 return pResults;
             }
             catch (FindByIdEventException ex)
@@ -200,6 +216,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
         public async Task<object> GetTicketByIdDataEvent<T>(string id)
         {
             try
@@ -207,9 +224,14 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 //var json = QuerysMongo.GetTicketByIdDataEvent;
                 //BsonDocument document = BsonDocument.Parse(@json);
 
-                BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': { '$toString': '$_id' }}}");
-                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}");
-                BsonDocument lookupLots = BsonDocument.Parse(@"{
+                BsonDocument documentFilter = BsonDocument.Parse(
+                    @"{$addFields:{'_id': { '$toString': '$_id' }}}"
+                );
+                BsonDocument documentFilter1 = BsonDocument.Parse(
+                    @"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}"
+                );
+                BsonDocument lookupLots = BsonDocument.Parse(
+                    @"{
                                                                     $lookup:
                                                                         {
                                                                             from: 'lots',
@@ -217,8 +239,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                                                                             foreignField: '_id',
                                                                             as: 'Lot'
                                                                         }
-                                                                }");
-                BsonDocument lookupVariants = BsonDocument.Parse(@"{
+                                                                }"
+                );
+                BsonDocument lookupVariants = BsonDocument.Parse(
+                    @"{
                                                                     $lookup:
                                                                         {
                                                                             from: 'variants',
@@ -226,8 +250,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                                                                             foreignField: '_id',
                                                                             as: 'Variant'
                                                                         }
-                                                                }");
-                BsonDocument lookupEvents = BsonDocument.Parse(@"{
+                                                                }"
+                );
+                BsonDocument lookupEvents = BsonDocument.Parse(
+                    @"{
                                                                     $lookup:
                                                                         {
                                                                             from: 'events',
@@ -235,17 +261,25 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                                                                             foreignField: '_id',
                                                                             as: 'Event'
                                                                         }
-                                                                }");
-                BsonDocument uniwindLot = BsonDocument.Parse(@"{
+                                                                }"
+                );
+                BsonDocument uniwindLot = BsonDocument.Parse(
+                    @"{
                                                                     $unwind: '$Lot'
-                                                                }");
-                BsonDocument uniwindVariant = BsonDocument.Parse(@"{
+                                                                }"
+                );
+                BsonDocument uniwindVariant = BsonDocument.Parse(
+                    @"{
                                                                     $unwind: '$Variant'
-                                                                }");
-                BsonDocument uniwindEvent = BsonDocument.Parse(@"{
+                                                                }"
+                );
+                BsonDocument uniwindEvent = BsonDocument.Parse(
+                    @"{
                                                                     $unwind: '$Event'
-                                                                }");
-                BsonDocument[] pipeline = new BsonDocument[] {
+                                                                }"
+                );
+                BsonDocument[] pipeline = new BsonDocument[]
+                {
                     documentFilter,
                     documentFilter1,
                     lookupLots,
@@ -255,9 +289,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     uniwindVariant,
                     uniwindEvent
                 };
-                GetTicketDataEvent pResults = await _ticketCollection
-                                                .Aggregate<GetTicketDataEvent>(pipeline)
-                                                .FirstOrDefaultAsync() ?? throw new FindByIdEventException("Evento não encontrado");
+                GetTicketDataEvent pResults =
+                    await _ticketCollection
+                        .Aggregate<GetTicketDataEvent>(pipeline)
+                        .FirstOrDefaultAsync()
+                    ?? throw new FindByIdEventException("Evento não encontrado");
                 return pResults;
             }
             catch (FindByIdEventException ex)
@@ -269,6 +305,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
         public async Task<object> SaveMany(List<Ticket> lstTicket)
         {
             try

@@ -1,4 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
@@ -27,7 +28,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("user/{idUser}")]
-        public async Task<IActionResult> GetTicketByUser([FromRoute]string idUser)
+        public async Task<IActionResult> GetTicketByUser([FromRoute] string idUser)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("lote/{idLote}")]
-        public async Task<IActionResult> GetTicketsRemainingByLot([FromRoute]string idLote)
+        public async Task<IActionResult> GetTicketsRemainingByLot([FromRoute] string idLote)
         {
             try
             {
@@ -86,7 +87,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetTicketById([FromRoute]string id)
+        public async Task<IActionResult> GetTicketById([FromRoute] string id)
         {
             try
             {
@@ -116,7 +117,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}/datauser")]
-        public async Task<IActionResult> GetTicketByIdDataUser([FromRoute]string id)
+        public async Task<IActionResult> GetTicketByIdDataUser([FromRoute] string id)
         {
             try
             {
@@ -146,7 +147,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}/dataevent")]
-        public async Task<IActionResult> GetTicketByIdDataEvent([FromRoute]string id)
+        public async Task<IActionResult> GetTicketByIdDataEvent([FromRoute] string id)
         {
             try
             {
@@ -177,7 +178,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateTicketsAsync([FromRoute]string id, [FromBody]Ticket ticket)
+        public async Task<IActionResult> UpdateTicketsAsync([FromRoute] string id, [FromBody] Ticket ticket)
         {
             try
             {
@@ -212,7 +213,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
-        public async Task<IActionResult> SaveTicketsAsync([FromBody]Ticket ticket)
+        public async Task<IActionResult> SaveTicketsAsync([FromBody] Ticket ticket)
         {
             try
             {
@@ -237,8 +238,42 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
             }
         }
-    
-    
-    
+
+        /// <summary>
+        /// Edita os dados do Ticket
+        /// </summary>
+        /// <param name="id">Id do ticket</param>
+        /// <param name="ticket">Objeto do ticket a ser alterado</param>
+        /// <returns>200 Edita os dados do Ticket</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpPost]
+        [Route("sendCourtesy")]
+        public async Task<IActionResult> SendCourtesyTickets([FromBody] GenerateCourtesyTicketDto courtesyTicketDto)
+        {
+            var _messageReturn = new MessageReturn();
+
+            try
+            {
+                var result = _ticketService.SendCourtesyTickets(courtesyTicketDto);
+                
+                _messageReturn.Data = "Enviando courtesias";
+                return Ok(_messageReturn);
+
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
+                return StatusCode(444, MessageLogErrors.NotModificateTickets);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
+                return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
+            }
+
+        }
+
+
     }
 }

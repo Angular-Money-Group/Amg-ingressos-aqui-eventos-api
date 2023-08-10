@@ -17,6 +17,8 @@ builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.Configure<EventDatabaseSettings>(
     builder.Configuration.GetSection("EventDatabase"));
+builder.Services.Configure<CieloSettings>(
+    builder.Configuration.GetSection("CieloSettings"));
 
 // injecao de dependencia
 //services
@@ -24,16 +26,23 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IVariantService, VariantService>();
 builder.Services.AddScoped<ILotService, LotService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IVariantRepository, VariantRepository<object>>();
 builder.Services.AddScoped<ILotRepository, LotRepository<object>>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository<object>>();
+builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository<object>>();
 //infra
 builder.Services.AddScoped<IDbConnection<Event>, DbConnection<Event>>();
 builder.Services.AddScoped<IDbConnection<Variant>, DbConnection<Variant>>();
 builder.Services.AddScoped<IDbConnection<Lot>, DbConnection<Lot>>();
 builder.Services.AddScoped<IDbConnection<Ticket>, DbConnection<Ticket>>();
+builder.Services.AddScoped<IDbConnection<Email>, DbConnection<Email>>();
+builder.Services.AddScoped<IDbConnection<StatusTicketsRow>, DbConnection<StatusTicketsRow>>();
+
+builder.Services.AddScoped<ICieloClient, CieloClient>();
 
 builder.Services.AddCors(options =>
 {

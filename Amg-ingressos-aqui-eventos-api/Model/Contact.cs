@@ -1,7 +1,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
-namespace Amg_ingressos_aqui_cadastro_api.Model {
+namespace Amg_ingressos_aqui_eventos_api.Model {
     public class Contact
     {
         /// <summary>
