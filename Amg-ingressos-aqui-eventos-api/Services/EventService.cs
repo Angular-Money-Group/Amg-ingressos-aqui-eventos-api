@@ -112,12 +112,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
-                for (int i = 0; i < eventSave.Variant.Count; i++)
+                eventSave.Variant.ToList().ForEach(i =>
                 {
-                    eventSave.Variant[i].IdEvent = _messageReturn.Data.ToString();
+                    i.IdEvent = _messageReturn.Data.ToString();
 
-                    _ = _variantService.EditAsync(variantId, eventSave.Variant[i]).Result;
-                }
+                    _ = _variantService.EditAsync(i.Id, i).Result;
+
+                });
             }
             catch (SaveEventException ex)
             {
