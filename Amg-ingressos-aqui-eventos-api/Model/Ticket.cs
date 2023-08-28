@@ -1,3 +1,4 @@
+using Amg_ingressos_aqui_eventos_api.Enum;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -41,6 +42,16 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonDefaultValue(false)]
         public bool isSold { get; set; }
+
+        /// <summary>
+        /// STATUS DO INGRESSO
+        /// </summary>
+        public StatusTicket? Status { get; set; }
+
+        /// <summary>
+        /// Colaborador que realizou a leitura
+        /// </summary>
+        public string? IdColab { get; set; }
         
         /// <summary>
         /// Precisa verificar os documentos?

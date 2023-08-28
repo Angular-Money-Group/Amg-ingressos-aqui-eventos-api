@@ -150,25 +150,21 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                // Cria um filtro para buscar tickets com o ID do lot especificado
                 var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
                 var update = Builders<Ticket>.Update
                     .Set("IdUser", ticket.IdUser)
                     .Set("Value", ticket.Value)
                     .Set("isSold", ticket.isSold)
                     .Set("Position", ticket.Position)
-                    .Set("QrCode", ticket.QrCode);
+                    .Set("QrCode", ticket.QrCode)
+                    .Set("Status", ticket.Status)
+                    .Set("IdColab", ticket.IdColab);
 
                 // Busca os tickets que correspondem ao filtro
                 var result = await _ticketCollection.UpdateOneAsync(filter, update);
 
-                if (result.ModifiedCount == 0)
-                {
-                    throw new NotModificateTicketsExeption("O ticket não foi atualizado");
-                }
-
                 return await _ticketCollection.Find(filter).ToListAsync();
-            }
+            }   
             catch (NotModificateTicketsExeption ex)
             {
                 throw ex;

@@ -86,7 +86,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                             }";
         public const string GetEventWithName = @"{
                                         $lookup: {
-                                        from: 'producers',
+                                        from: 'user',
                                                                             'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
                                         pipeline: [
                                                                                 {
@@ -108,7 +108,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                             }";
         public const string GetTicketByIdDataUser = @"{
                                 $lookup: {
-                                    from: 'customers',
+                                    from: 'user',
                                     let: { idUser: { $toString: '$IdUser' } },
                                     pipeline: [
                                         {
