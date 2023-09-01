@@ -8,6 +8,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> FindByIdAsync(string id);
         Task<MessageReturn> HighlightEventAsync(string id);
         Task<MessageReturn> EditEventsAsync(string id, Event eventEdit);
+        Task<MessageReturn> GetAllEventsWithTickets(string idEvent);
         Task<MessageReturn> FindEventByNameAsync(string name);
         Task<MessageReturn> FindByOrganizerAsync(string idOrganizer, Pagination paginationOptions);
         Task<MessageReturn> DeleteAsync(string id);

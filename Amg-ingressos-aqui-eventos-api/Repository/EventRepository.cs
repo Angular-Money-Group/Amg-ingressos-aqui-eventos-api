@@ -7,6 +7,7 @@ using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Querys;
+using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -57,7 +58,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var json = QuerysMongo.GetEventQuery;
 
-                //BsonDocument documentFilter = BsonDocument.Parse(@"{$addFields:{'_id': '$_id' }}");
                 BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': ObjectId('" + id.ToString() + "') }] }}");
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] {
@@ -232,7 +232,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
-
         public Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions)
         {
             try
@@ -329,5 +328,36 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
         }
+
+        public async Task<GetEventWitTickets> GetAllEventsWithTickets(string idEvent)
+        {
+            try
+            {
+                var json = QuerysMongo.GetEventWithTicketsQuery;
+                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': ObjectId('" + idEvent.ToString() + "') }] }}");
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] {
+                    documentFilter1,
+                    document
+                };
+
+                List<GetEventWitTickets> pResults = _eventCollection
+                                                .Aggregate<GetEventWitTickets>(pipeline).ToList();
+
+                if (!pResults.Any())
+                    throw new GetAllEventException("Evento não encontrado");
+                
+                return pResults.FirstOrDefault();
+            }
+            catch (GetAllEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+    
     }
 }
