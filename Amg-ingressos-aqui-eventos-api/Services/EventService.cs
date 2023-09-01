@@ -14,7 +14,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private IVariantService _variantService;
         private MessageReturn _messageReturn;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
         private HttpClient _client;
 
         public EventService(
@@ -342,6 +341,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 throw ex;
             }
+        }
+
+        public async Task<MessageReturn> GetAllEventsWithTickets(string idEvent)
+        {
+            try
+            {
+                idEvent.ValidateIdMongo();
+
+                _messageReturn.Data = await _eventRepository.GetAllEventsWithTickets(idEvent);
+
+                return _messageReturn;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (FindByIdEventException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return _messageReturn;
         }
     }
 }

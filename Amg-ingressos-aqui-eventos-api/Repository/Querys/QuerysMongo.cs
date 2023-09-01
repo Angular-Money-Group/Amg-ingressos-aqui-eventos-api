@@ -174,7 +174,62 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                         {
                                             $unwind: '$Event'
                                         }";
+        public const string GetEventWithTicketsQuery = @"{
+                                $lookup: {
+                                    from: 'variants',
+                                    'let': { eventId: '$_id' },
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $and: [
+                                                        { $eq: ['$IdEvent', '$$eventId'] }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            $lookup: {
+                                                from: 'lots',
+                                                'let': { variantId: '$_id' },
+                                                pipeline: [
+                                                    {
+                                                        $match: {
+                                                            $expr: {
+                                                                $eq: [
+                                                                    '$IdVariant',
+                                                                    '$$variantId'
+                                                                ]
+                                                            }
+                                                        }
+                                                    }, {
+                                                        $lookup: {
+                                                            from: 'tickets',
+                                                            'let': { lotId: '$_id' },
+                                                            pipeline: [
+                                                                {
+                                                                    $match: {
+                                                                        $expr: {
+                                                                            $eq: [
+                                                                                '$IdLot',
+                                                                                '$$lotId'
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ],
+                                                            as: 'ticket'
+                                                        }
+                                                    }
 
+                                                ],
+                                                as: 'Lot'
+                                            },
+                                        },
+                                    ],
+                                    as: 'Variant'
+                                }
+                            }";
     
     }
 }

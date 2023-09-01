@@ -27,6 +27,7 @@ builder.Services.AddScoped<IVariantService, VariantService>();
 builder.Services.AddScoped<ILotService, LotService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
