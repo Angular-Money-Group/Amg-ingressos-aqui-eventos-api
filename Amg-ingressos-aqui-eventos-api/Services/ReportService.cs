@@ -49,7 +49,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
-
         public async Task<MessageReturn> GetReportEventTickets(string idEvent)
         {
             try
@@ -226,7 +225,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             });
             return listLot;
         }
-
 
     }
 }
