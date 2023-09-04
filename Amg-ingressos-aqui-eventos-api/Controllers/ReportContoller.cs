@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
-    [Route("v1/report")]
+    [Route("v2/reports")]
     [Produces("application/json")]
     public class ReportController : ControllerBase
     {
