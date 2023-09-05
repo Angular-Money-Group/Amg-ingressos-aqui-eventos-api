@@ -349,7 +349,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 idEvent.ValidateIdMongo();
 
-                _messageReturn.Data = await _eventRepository.GetAllEventsWithTickets(idEvent);
+                _messageReturn.Data = await _eventRepository.GetAllEventsWithTickets(idEvent,string.Empty);
 
                 return _messageReturn;
             }

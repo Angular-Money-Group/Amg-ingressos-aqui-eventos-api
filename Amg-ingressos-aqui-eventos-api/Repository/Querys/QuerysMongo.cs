@@ -230,6 +230,42 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Querys
                                     as: 'Variant'
                                 }
                             }";
-    
+        public const string GetEventWithTransactionsQuery = @"{
+                                $lookup: {
+                                    from: 'transaction',
+                                    'let': { eventId: '$_id' },
+                                    pipeline: [
+                                        {
+                                            $match: {
+                                                $expr: {
+                                                    $and: [
+                                                        { $eq: ['$IdEvent', '$$eventId'] }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            $lookup: {
+                                                from: 'transactionIten',
+                                                'let': { transactionId: '$_id' },
+                                                pipeline: [
+                                                    {
+                                                        $match: {
+                                                            $expr: {
+                                                                $eq: [
+                                                                    '$IdTransaction',
+                                                                    '$$transactionId'
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                ],
+                                                as: 'TransactionItens'
+                                            },
+                                        },
+                                    ],
+                                    as: 'Transaction'
+                                }
+                            }";
     }
 }

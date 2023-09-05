@@ -8,6 +8,7 @@ using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
+using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -329,12 +330,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<GetEventWitTickets> GetAllEventsWithTickets(string idEvent)
+        public async Task<List<GetEventWitTickets>> GetAllEventsWithTickets(string idEvent,string idOrganizer)
         {
             try
             {
                 var json = QuerysMongo.GetEventWithTicketsQuery;
-                BsonDocument documentFilter1 = BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': ObjectId('" + idEvent.ToString() + "') }] }}");
+                    BsonDocument documentFilter1 = 
+                        !string.IsNullOrEmpty(idEvent)?
+                        BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': ObjectId('" + idEvent.ToString() + "') }] }}")
+                        : BsonDocument.Parse(@"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('" + idOrganizer.ToString() + "') }] }}");
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] {
                     documentFilter1,
@@ -347,7 +351,41 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (!pResults.Any())
                     throw new GetAllEventException("Evento não encontrado");
                 
-                return pResults.FirstOrDefault();
+                return pResults;
+            }
+            catch (GetAllEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<GetEventTransactions>> GetAllEventsWithTransactions(string idEvent,string idOrganizer)
+        {
+            try
+            {
+                var json = QuerysMongo.GetEventWithTransactionsQuery;
+                    BsonDocument documentFilter1 = 
+                        !string.IsNullOrEmpty(idEvent)?
+                        BsonDocument.Parse(@"{ $match: { '$and': [{ '_id': ObjectId('" + idEvent.ToString() + "') }] }}")
+                        : BsonDocument.Parse(@"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('" + idOrganizer.ToString() + "') }] }}");
+                
+                BsonDocument document = BsonDocument.Parse(json);
+                BsonDocument[] pipeline = new BsonDocument[] {
+                    documentFilter1,
+                    document
+                };
+
+                List<GetEventTransactions> pResults = _eventCollection
+                                                .Aggregate<GetEventTransactions>(pipeline).ToList();
+
+                if (!pResults.Any())
+                    throw new GetAllEventException("Evento não encontrado");
+                
+                return pResults;
             }
             catch (GetAllEventException ex)
             {
