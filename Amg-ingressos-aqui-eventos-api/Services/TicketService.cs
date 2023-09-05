@@ -595,14 +595,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                this._messageReturn = new MessageReturn();
+                _messageReturn = new MessageReturn();
                 id.ValidateIdMongo();
                 var ticketUserData = (GetTicketDataUser)
                     _ticketRepository.GetTicketByIdDataUser<GetTicketDataUser>(id).Result;
 
                 //var variantData = _variantRepository.FindById<List<Model.Variant>>(ticketUserData.Lot.FirstOrDefault().IdVariant).Result;
 
-                this._messageReturn.Data = new TicketUserDto()
+                _messageReturn.Data = new TicketUserDto()
                 {
                     Id = ticketUserData.Id,
                     IdLot = ticketUserData.IdLot,
