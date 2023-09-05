@@ -28,6 +28,8 @@ builder.Services.AddScoped<ILotService, LotService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IReportEventTickets, ReportEventTicketsService>();
+builder.Services.AddScoped<IReportEventTransactions,ReportEventTransactionsService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
