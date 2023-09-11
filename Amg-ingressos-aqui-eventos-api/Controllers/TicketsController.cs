@@ -2,6 +2,7 @@ using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                     _logger.LogInformation(result.Message);
                     return NoContent();
                 }
-                return Ok(result.Data as List<Ticket>);
+                return Ok(result.Data as List<GetTicketDataEvent>);
             }
             catch (Exception ex)
             {
