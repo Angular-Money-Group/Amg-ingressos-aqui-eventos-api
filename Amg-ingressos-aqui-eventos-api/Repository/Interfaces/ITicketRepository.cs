@@ -1,4 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
 {
@@ -8,6 +9,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> DeleteMany<T>(List<string> idLot);
         Task<object> DeleteByLot<T>(string idLot);
         Task<List<Ticket>> GetTickets<T>(Ticket ticket);
+        Task<List<GetTicketDataEvent>> GetTicketsByUser<T>(string idUser);
         Task<object> GetTicketByIdDataUser<T>(string id);
         Task<object> GetTicketByIdDataEvent<T>(string id);
         Task<List<string>> GetTicketsByLot<T>(string idLot);
