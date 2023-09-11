@@ -21,7 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 if (string.IsNullOrEmpty(idOrganizer))
-                    throw new SaveTicketException("Id Lote é Obrigatório.");
+                    throw new SaveTicketException("Id Organizador é Obrigatório.");
 
                 idOrganizer.ValidateIdMongo();
 
@@ -86,9 +86,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         public async Task<MessageReturn> ProcessReportEventTicketsDetail(string idEvent, string idVariant)
         {
             if (string.IsNullOrEmpty(idEvent))
-                    throw new SaveTicketException("Id Lote é Obrigatório.");
-
-                idEvent.ValidateIdMongo();
+                throw new SaveTicketException("Id Evento é Obrigatório.");
+            idEvent.ValidateIdMongo();
+            if (string.IsNullOrEmpty(idVariant))
+                throw new SaveTicketException("Id Variante é Obrigatório.");
+            idVariant.ValidateIdMongo();
 
                 List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent,string.Empty);
                 var eventDataProcess  =eventData.FirstOrDefault(i=> i._id==idEvent);

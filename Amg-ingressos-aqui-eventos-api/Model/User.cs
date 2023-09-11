@@ -89,8 +89,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Senha de acesso
         /// </summary>
-        [BsonElement("UpdatedAt")]
-        [JsonPropertyName("UpdatedAt")]
-        public DateTime? UpdatedAt { get; set; }
+        [BsonElement("UpdateAt")]
+        [JsonPropertyName("UpdateAt")]
+        public DateTime? UpdateAt { get; set; }
     }
 }
