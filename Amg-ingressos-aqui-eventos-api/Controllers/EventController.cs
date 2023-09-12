@@ -113,11 +113,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("getEvents/{idOrganizer}")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindByOrganizerAsync([FromRoute] string idOrganizer, Pagination paginationOptions)
+        public async Task<IActionResult> FindByOrganizerAsync([FromRoute] string idOrganizer, Pagination paginationOptions, FilterOptions? filter)
         {
             try
             {
-                var result = await _eventService.FindByOrganizerAsync(idOrganizer, paginationOptions);
+                var result = await _eventService.FindByOrganizerAsync(idOrganizer, paginationOptions, filter);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
