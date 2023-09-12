@@ -63,9 +63,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new SaveTicketException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
 
-                if (string.IsNullOrEmpty(idVariant))
-                    throw new SaveTicketException("Id Variante é Obrigatório.");
-                idEvent.ValidateIdMongo();
 
                 List<GetEventWitTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
                 List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(idEvent, idOrganizer);
