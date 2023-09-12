@@ -13,6 +13,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
+        [JsonProperty("id")]
         public string _Id { get; set; }
 
         /// <summary>
