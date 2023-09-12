@@ -215,14 +215,16 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         public async Task<MessageReturn> FindByOrganizerAsync(
             string idOrganizer,
-            Pagination paginationOptions
+            Pagination paginationOptions,
+            FilterOptions? filter
         )
         {
             try
             {
                 _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(
                     idOrganizer,
-                    paginationOptions
+                    paginationOptions,
+                    filter
                 );
             }
             catch (GetAllEventException ex)

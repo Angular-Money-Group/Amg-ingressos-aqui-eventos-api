@@ -8,7 +8,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> Save<T>(object eventComplet);
         Task<object> FindById<T>(object id);
         Task<Event> SetHighlightEvent<T>(string id);
-        Task<List<Event>> FindByProducer<T>(string id, Pagination paginationOptions);
+        Task<List<Event>> FindByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filter);
         Task<List<Event>> FindByName<T>(string name);
         Task<object> Delete<T>(object id);
         Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
