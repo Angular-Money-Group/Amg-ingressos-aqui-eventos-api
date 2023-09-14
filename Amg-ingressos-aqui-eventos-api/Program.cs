@@ -4,6 +4,8 @@ using Amg_ingressos_aqui_eventos_api.Repository;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,12 @@ builder.Services.Configure<EventDatabaseSettings>(
     builder.Configuration.GetSection("EventDatabase"));
 builder.Services.Configure<CieloSettings>(
     builder.Configuration.GetSection("CieloSettings"));
+
+builder.Services.Configure<MvcOptions>(options =>
+{
+    options.ModelMetadataDetailsProviders.Add(
+        new SystemTextJsonValidationMetadataProvider());
+});
 
 // injecao de dependencia
 //services
