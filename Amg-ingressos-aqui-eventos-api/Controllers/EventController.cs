@@ -48,6 +48,35 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         }
 
         /// <summary>
+        /// Busca os eventos destacados ou semanais ou todos
+        /// </summary>
+        /// <returns>200 Lista de todos eventos</returns>
+        /// <returns>204 Nenhum evento encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("getAllAdmin")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetAllAdmin()
+        {
+            try
+            {
+                var result = await _eventService.GetAllEventsAsync();
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.GetAllEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.GetAllEventMessage);
+            }
+        }
+
+        /// <summary>
         /// Busca evento pelo ID
         /// </summary>
         /// <param name="id"> id do Evento</param>
