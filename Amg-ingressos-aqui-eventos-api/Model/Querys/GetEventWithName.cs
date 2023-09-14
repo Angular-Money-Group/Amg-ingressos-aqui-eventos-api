@@ -57,12 +57,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public Enum.StatusEvent Status { get; set; }
 
         [JsonProperty("User")]
-        public List<Producer> User { get; set; }
+        public Producer User { get; set; }
     };
 
     public class Producer
     {
-        [JsonProperty("Name")]
-        public string name { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 }
