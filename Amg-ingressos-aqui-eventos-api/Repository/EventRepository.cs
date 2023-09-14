@@ -266,7 +266,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     }"
                     ),
                     BsonDocument.Parse("{ $unwind: '$User' }"),
-                    BsonDocument.Parse("{ $sort: { 'highlighted': -1, 'StartDate': 1 } }")
+                    BsonDocument.Parse("{ $sort: { 'Highlighted': -1, 'Status': 1, 'StartDate': 1 } }")
                 };
 
                 List<GetEventsWithNames> pResults = _eventCollection
