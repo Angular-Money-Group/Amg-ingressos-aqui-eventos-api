@@ -177,12 +177,35 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var json = QuerysMongo.GetEventWithName;
-                BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[]
+                List<BsonDocument> pipeline = new List<BsonDocument>
                 {
-                    document,
-                    new BsonDocument("$match", new BsonDocument("Status", 0))
+                    BsonDocument.Parse(
+                        @"
+                    {
+                        $lookup: {
+                            from: 'user',
+                            'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $eq: [{ '$toString': '$_id' },'$$idOrganizer']
+                                        }
+                                    }
+                                },
+                                                      {
+                            $project: {
+                                'Name': 1,
+                                _id: 0
+                            }
+                        }
+                            ],
+                            as: 'User'
+                        }
+                    }"
+                    ),
+                    BsonDocument.Parse("{ $unwind: '$User' }"),
+                    BsonDocument.Parse("{ $match: { 'Status': 0 } }")
                 };
 
                 List<GetEventsWithNames> pResults = _eventCollection
@@ -340,8 +363,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                             filters.Add(Builders<Event>.Filter.Eq(g => g.Type, eventType));
                         }
                     }
-
-
                 }
                 var filter = Builders<Event>.Filter.And(filters);
 
