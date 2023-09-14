@@ -234,6 +234,61 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<List<GetEventsWithNames>> GetAllEventsAdmin<T>()
+        {
+            try
+            {
+                List<BsonDocument> pipeline = new List<BsonDocument>
+                {
+                    BsonDocument.Parse(
+                        @"
+                    {
+                        $lookup: {
+                            from: 'user',
+                            'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
+                            pipeline: [
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $eq: [{ '$toString': '$_id' },'$$idOrganizer']
+                                        }
+                                    }
+                                },
+                                                      {
+                            $project: {
+                                'Name': 1,
+                                _id: 0
+                            }
+                        }
+                            ],
+                            as: 'User'
+                        }
+                    }"
+                    ),
+                    BsonDocument.Parse("{ $unwind: '$User' }"),
+                    BsonDocument.Parse("{ $sort: { 'highlighted': -1, 'StartDate': 1 } }")
+                };
+
+                List<GetEventsWithNames> pResults = _eventCollection
+                    .Aggregate<GetEventsWithNames>(pipeline)
+                    .ToList();
+
+                if (!pResults.Any())
+                    throw new GetAllEventException("Eventos não encontrados");
+
+                List<GetEventsWithNames> pagedResults = pResults.ToList();
+                return pagedResults;
+            }
+            catch (GetAllEventException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions)
         {
             try
