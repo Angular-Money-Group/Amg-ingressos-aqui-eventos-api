@@ -188,16 +188,29 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             var cortesyRemaining = eventData.Courtesy.RemainingCourtesy.Where(i => i.VariantId == x._id).ToList();
             return new CortesiasReportDto()
             {
-                Entregues = new EntreguesReportDto()
+                Entregues = cortesyRemaining.Sum(x => x.Quantity) !=0 ?
+                new EntreguesReportDto()
                 {
                     Percent = (Convert.ToDouble(cortesyHistory.Sum(x => x.Quantity) / Convert.ToDouble(cortesyRemaining.Sum(x => x.Quantity)))) * 100,
                     Quantidade = cortesyHistory.Sum(x => x.Quantity)
+                }:
+                new EntreguesReportDto()
+                {
+                    Percent = 100,
+                    Quantidade = cortesyHistory.Sum(x => x.Quantity)
                 },
-                Restantes = new RestantesDto()
+                Restantes = cortesyRemaining.Sum(x => x.Quantity) !=0 ?
+                new RestantesDto()
                 {
                     Percent = (Convert.ToDouble((cortesyRemaining.Sum(x => x.Quantity) - cortesyHistory.Sum(x => x.Quantity))) / Convert.ToDouble(cortesyRemaining.Sum(x => x.Quantity))) * 100,
                     Quantidade = (cortesyRemaining.Sum(x => x.Quantity) - cortesyHistory.Sum(x => x.Quantity))
+                } :
+                new RestantesDto()
+                {
+                    Percent = 0,
+                    Quantidade = cortesyRemaining.Sum(x => x.Quantity)
                 }
+
             };
         }
         private List<LoteReportDto> ProcessLotes(Model.Querys.GetEventwithTicket.Variant? variant)
