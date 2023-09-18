@@ -41,6 +41,28 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw ex;
             }
         }
+
+        public async Task<MessageReturn> GetReportEventTicketsDetails(string idEvent)
+        {
+            try
+            {
+                return _reporteventTickets.ProcessReportEventTicketsDetails(idEvent).Result;
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<MessageReturn> GetReportEventTickets(string idOrganizer)
         {
             try
