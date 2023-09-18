@@ -264,6 +264,41 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 var result = _ticketService.SendCourtesyTickets(courtesyTicketDto);
 
                 _messageReturn.Data = "Enviando courtesias";
+                _messageReturn.Message = null;
+                return Ok(_messageReturn);
+            }
+            catch (NotModificateTicketsExeption ex)
+            {
+                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
+                return StatusCode(444, MessageLogErrors.NotModificateTickets);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
+                return StatusCode(500, MessageLogErrors.UpdateTickets + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Edita os dados do Ticket
+        /// </summary>
+        /// <param name="id">Id do ticket</param>
+        /// <param name="ticket">Objeto do ticket a ser alterado</param>
+        /// <returns>200 Edita os dados do Ticket</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpPost]
+        [Route("reSendCourtesy")]
+        public async Task<IActionResult> ReSendCourtesyTickets(string rowTicketId, string variantId)
+        {
+            var _messageReturn = new MessageReturn();
+
+            try
+            {
+                var result = _ticketService.ReSendCourtesyTickets(rowTicketId, variantId);
+
+                _messageReturn.Data = "Enviando courtesias";
+                _messageReturn.Message = null;
                 return Ok(_messageReturn);
             }
             catch (NotModificateTicketsExeption ex)

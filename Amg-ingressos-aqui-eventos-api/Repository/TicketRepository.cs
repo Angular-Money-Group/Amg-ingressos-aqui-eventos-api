@@ -32,14 +32,12 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-
                 BsonDocument documentFilter = BsonDocument.Parse(
                     @"{$addFields:{'IdUser': { '$toString': '$IdUser' }}}"
                 );
                 BsonDocument documentFilter1 = BsonDocument.Parse(
                     @"{ $match: { '$and': [{ 'IdUser': '" + idUser.ToString() + "' }] }}"
                 );
-
 
                 BsonDocument lookupLots = BsonDocument.Parse(
                     @"{
@@ -103,7 +101,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 };
 
                 // Execute a agregação na coleção de ingressos
-                var result = await _ticketCollection.Aggregate<GetTicketDataEvent>(pipeline).ToListAsync();
+                var result = await _ticketCollection
+                    .Aggregate<GetTicketDataEvent>(pipeline)
+                    .ToListAsync();
 
                 return result;
             }
@@ -224,6 +224,29 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 var result =
                     tickets.Select(e => e.Id).ToList()
                     ?? throw new FindTicketByUserException("Ticket não encontrado");
+
+                return result;
+            }
+            catch (FindTicketByUserException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Ticket> FindById<T>(string idTicket)
+        {
+            try
+            {
+                var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(idTicket));
+
+                var tickets = await _ticketCollection.Find(filter).FirstOrDefaultAsync();
+
+                var result =
+                    tickets ?? throw new FindTicketByUserException("Ticket não encontrado");
 
                 return result;
             }
