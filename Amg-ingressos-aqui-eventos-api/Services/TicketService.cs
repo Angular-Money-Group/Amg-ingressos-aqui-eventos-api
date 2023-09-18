@@ -77,7 +77,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _ticketRowRepository.GetCourtesyStatusById<StatusTicketsRow>(id);
+                _messageReturn.Data =
+                    await _ticketRowRepository.GetCourtesyStatusById<StatusTicketsRow>(id);
             }
             catch (SaveTicketException ex)
             {
@@ -251,6 +252,85 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             await _ticketRowRepository.UpdateTicketsRowAsync<StatusTicketsRow>(rowId, ticketsRow);
         }
 
+        public async Task<MessageReturn> ReSendCourtesyTickets(string rowId, string variantId)
+        {
+            var ticketsRow = _ticketRowRepository
+                .GetCourtesyStatusById<StatusTicketsRow>(rowId)
+                .Result;
+
+            ticketsRow.TicketStatus
+                .FindAll(t => t.Status == TicketStatusEnum.Erro)
+                .ForEach(
+                    async (t) =>
+                    {
+                        var lotToGenerateTicket = await _lotRepository.GetLotByIdVariant<Model.Lot>(
+                            variantId
+                        );
+                        var variantToGenerateTicket =
+                            await _variantRepository.FindById<Model.Variant>(variantId);
+                        var eventToGenerateTicket =
+                            await _eventRepository.FindByIdVariant<Model.Event>(
+                                variantToGenerateTicket[0].IdEvent
+                            );
+
+                        if (t.TicketId != null)
+                        {
+                            var ticket = await _ticketRepository.FindById<Ticket>(t.TicketId);
+
+                            var ticketEventDataDto = CreateTicketEventDataDto(
+                                t.TicketId,
+                                lotToGenerateTicket,
+                                variantToGenerateTicket[0],
+                                eventToGenerateTicket,
+                                ticket.QrCode
+                            );
+
+                            var isEmailSend = await ProcessEmail(
+                                ticketsRow.Email,
+                                ticketEventDataDto,
+                                ticket.QrCode,
+                                rowId,
+                                ticketsRow,
+                                t.Identificate
+                            );
+                        }
+                        else
+                        {
+                            var idUser = ObjectId.GenerateNewId().ToString();
+
+                            Ticket ticketToSend = CreateTicketToSend(idUser, lotToGenerateTicket);
+                            var ticketId = await SaveTicketAsync(ticketToSend);
+
+                            var qrCodeImage = UpdateTicketRowStatusAndQRCode(
+                                ticketId,
+                                t.Identificate,
+                                rowId,
+                                ticketsRow
+                            ).Result;
+
+                            var ticketEventDataDto = CreateTicketEventDataDto(
+                                ticketId,
+                                lotToGenerateTicket,
+                                variantToGenerateTicket[0],
+                                eventToGenerateTicket,
+                                qrCodeImage
+                            );
+
+                            var isEmailSend = await ProcessEmail(
+                                ticketsRow.Email,
+                                ticketEventDataDto,
+                                qrCodeImage,
+                                rowId,
+                                ticketsRow,
+                                t.Identificate
+                            );
+                        }
+                    }
+                );
+
+            return _messageReturn;
+        }
+
         private async Task<bool> SendEmailAndUpdateStatus(
             GenerateCourtesyTicketDto courtesyTicket,
             Model.Lot lotToGenerateTicket,
@@ -278,13 +358,19 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         Ticket ticketToSend = CreateTicketToSend(idUser, lotToGenerateTicket);
                         var ticketId = await SaveTicketAsync(ticketToSend);
 
-                        var qrCodeImage = UpdateTicketRowStatusAndQRCode(ticketId, i, rowId, ticketsRow).Result;
+                        var qrCodeImage = UpdateTicketRowStatusAndQRCode(
+                            ticketId,
+                            i,
+                            rowId,
+                            ticketsRow
+                        ).Result;
 
                         var ticketEventDataDto = CreateTicketEventDataDto(
                             ticketId,
                             lotToGenerateTicket,
                             variantToGenerateTicket,
-                            eventToGenerateTicket,qrCodeImage
+                            eventToGenerateTicket,
+                            qrCodeImage
                         );
 
                         var isEmailSend = await ProcessEmail(
@@ -292,7 +378,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             ticketEventDataDto,
                             qrCodeImage,
                             rowId,
-                            ticketsRow,i
+                            ticketsRow,
+                            i
                         );
 
                         if (!isEmailSend)
@@ -490,7 +577,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idUser.ValidateIdMongo();
-                _messageReturn.Data = await _ticketRepository.GetTicketsByUser<List<GetTicketDataEvent>>(idUser);
+                _messageReturn.Data = await _ticketRepository.GetTicketsByUser<
+                    List<GetTicketDataEvent>
+                >(idUser);
             }
             catch (SaveTicketException ex)
             {
@@ -608,7 +697,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     IdUser = ticketUserData.IdUser,
                     QrCode = ticketUserData.QrCode,
                     Value = ticketUserData.Value,
-
                     User = new UserDto()
                     {
                         _id = ticketUserData.User.FirstOrDefault().Id,
@@ -739,19 +827,19 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 email.Body = email.Body.Replace("{tipo_ingresso}", "Cortesia");
                 email.Body = email.Body.Replace("{qr_code}", urlQrCode);
 
-                var savedEmailResult = await _emailService.SaveAsync(email);
+                var savedEmailResult = _emailService.SaveAsync(email).Result;
 
-                var isEmailSend = _emailService.Send(email.id, ticketsRow, index, rowId).Result;
+                MessageReturn isEmailSend = _emailService
+                    .Send(email.id, ticketsRow, index, rowId)
+                    .Result;
 
-                 if (isEmailSend.Data == "true")
+                if (isEmailSend.Message != null && isEmailSend.Message.Any())
                 {
-                    return true;
-                }
-                else
-                {
-                HandleEmailSendingFailure(index, rowId, ticketsRow);
+                    HandleEmailSendingFailure(index, rowId, ticketsRow);
                     return false;
                 }
+
+                return true;
             }
             catch (Exception ex)
             {

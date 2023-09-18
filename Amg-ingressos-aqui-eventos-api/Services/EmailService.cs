@@ -122,8 +122,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _logger.LogInformation(
                     string.Format("Init - GenerateBody: {0}", this.GetType().Name)
                 );
-                var path = (Environment.CurrentDirectory + "/Template/index.html");
-                var html = System.IO.File.ReadAllText(path);
+                var path = Environment.CurrentDirectory + "/Template/index.html";
+                var html = File.ReadAllText(path);
                 var body = html;
                 _logger.LogInformation(
                     string.Format("Finished - GenerateBody: {0}", this.GetType().Name)
