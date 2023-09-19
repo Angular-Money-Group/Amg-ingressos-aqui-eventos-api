@@ -178,7 +178,19 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         ValorTotal = variants.Sum(i => i.Ingressos.Restantes.ValorTotal)
                     }
                 },
-                Cortesias = new CortesiasReportDto()
+                Cortesias = VerifyCortesy(variants, eventData),
+                Variant = string.IsNullOrEmpty(idVariant)
+                    ? null
+                    : variants.FirstOrDefault(
+                        x =>
+                            x.Nome == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name
+                    )
+            };
+        }
+
+        private CortesiasReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData){
+            if(eventData.Courtesy.RemainingCourtesy.Count == 0) return new CortesiasReportDto();
+            return new CortesiasReportDto()
                 {
                     Entregues = new EntreguesReportDto()
                     {
@@ -200,14 +212,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             ) * 100,
                         Quantidade = variants.Sum(i => i.Cortesias.Restantes.Quantidade)
                     }
-                },
-                Variant = string.IsNullOrEmpty(idVariant)
-                    ? null
-                    : variants.FirstOrDefault(
-                        x =>
-                            x.Nome == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name
-                    )
-            };
+                };
         }
 
         private List<VariantReportDto> ProcessVariant(
