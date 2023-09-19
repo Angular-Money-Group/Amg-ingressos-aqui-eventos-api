@@ -12,6 +12,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<GetTicketDataEvent>> GetTicketsByUser<T>(string idUser);
         Task<object> GetTicketByIdDataUser<T>(string id);
         Task<object> GetTicketByIdDataEvent<T>(string id);
+        Task<Ticket> FindById<T>(string id);
         Task<List<string>> GetTicketsByLot<T>(string idLot);
         Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket);
         Task<object> SaveMany(List<Ticket> lstTicket);

@@ -60,6 +60,34 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
+        [Route("event/{idEvent}/tickets/details")]
+        public async Task<IActionResult> GetReportEventTicketsDetails([FromRoute] string idEvent)
+        {
+            try
+            {
+                var result = _reportService.GetReportEventTicketsDetails(idEvent).Result;
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
+                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Relatorio de evento com variante e tickets detalhado
+        /// </summary>
+        /// <returns>200 Lista de todos os tickets</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
         [Route("event/organizer/{idOrganizer}/tickets")]
         public async Task<IActionResult> GetReportEventTickets([FromRoute] string idOrganizer)
         {

@@ -10,6 +10,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
     {
         Task<MessageReturn> ProcessReportEventTickets(string idOrganizer);
         Task<MessageReturn> ProcessReportEventTicketsDetail(string idEvent,string idVariant);
+        Task<MessageReturn> ProcessReportEventTicketsDetails(string idEvent);
         
     }
 }
