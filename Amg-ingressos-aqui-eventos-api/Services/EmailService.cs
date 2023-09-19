@@ -13,7 +13,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
     {
         private MessageReturn _messageReturn;
         private IEmailRepository _emailRepository;
-        private ITicketRowRepository _ticketRowRepository;
         private HttpClient _HttpClient;
         private readonly ILogger<EmailService> _logger;
 
@@ -28,7 +27,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _HttpClient.Timeout = TimeSpan.FromMinutes(10);
             _logger = logger;
             _emailRepository = emailRepository;
-            _ticketRowRepository = ticketRowRepository;
             _messageReturn = new MessageReturn();
         }
 
@@ -73,42 +71,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 );
                 HttpResponseMessage response = await _HttpClient.PostAsync(url + uri, jsonBody);
 
-                if (response.IsSuccessStatusCode)
-                {
-
-                    ticketsRow.TicketStatus[index].Status = TicketStatusEnum.Enviado;
-                    _ticketRowRepository.UpdateTicketsRowAsync<Model.StatusTicketsRow>(
-                        rowId,
-                        ticketsRow
-                    );
-                }
-                else
-                {
-                    ticketsRow.TicketStatus[index].Status = TicketStatusEnum.Erro;
-                    ticketsRow.TicketStatus[index].Message = response.Content
-                        .ReadAsStringAsync()
-                        .Result;
-
-                    _ticketRowRepository.UpdateTicketsRowAsync<Model.StatusTicketsRow>(
-                        rowId,
-                        ticketsRow
-                    );
-
-                    _messageReturn.Message = "Erro ao enviar email";
-                }
-
                 _messageReturn.Data = response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                ticketsRow.TicketStatus[index].Status = TicketStatusEnum.Erro;
-                ticketsRow.TicketStatus[index].Message = ex.Message;
-
-                _ticketRowRepository.UpdateTicketsRowAsync<Model.StatusTicketsRow>(
-                    rowId,
-                    ticketsRow
-                );
-
                 _messageReturn.Message = ex.Message;
             }
 

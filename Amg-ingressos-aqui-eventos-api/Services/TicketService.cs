@@ -473,9 +473,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             var nameImage = await GenerateQrCode(idTicket: ticketId);
 
-            var qrCodeUrl = "https://api.ingressosaqui.com/imagens/" + nameImage;
+            var qrCodeUrl = (@"https://api.ingressosaqui.com/imagens/" + nameImage).Replace("\"","");
 
-            var ticketToSend = new Ticket() { Id = ticketId, QrCode = qrCodeUrl };
+            var ticketToSend = new Ticket() { Id = ticketId, QrCode = qrCodeUrl};
 
             await UpdateTicketsAsync(ticketId, ticketToSend);
 
@@ -829,12 +829,21 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 var savedEmailResult = _emailService.SaveAsync(email).Result;
 
-                MessageReturn isEmailSend = _emailService
-                    .Send(email.id, ticketsRow, index, rowId)
-                    .Result;
+                var isEmailSend = _emailService.Send(email.id, ticketsRow, index, rowId).Result;
 
-                if (isEmailSend.Message != null && isEmailSend.Message.Any())
+                 if ((bool)isEmailSend.Data)
                 {
+                    ticketsRow.TicketStatus[index].Status = TicketStatusEnum.Enviado;
+                    _ticketRowRepository.UpdateTicketsRowAsync<Model.StatusTicketsRow>(
+                        rowId,
+                        ticketsRow
+                    );
+
+                    return true;
+                }
+                else
+                {
+                    _messageReturn.Message = "Erro ao enviar email";
                     HandleEmailSendingFailure(index, rowId, ticketsRow);
                     return false;
                 }
