@@ -62,21 +62,19 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Permitir venda de restante no proximo lote
         /// </summary>
-        [BsonIgnore]
         [JsonProperty("SellTicketsInAnotherBatch")]
         public bool SellTicketsInAnotherBatch { get; set; }
         /// <summary>
         /// Vender lote antes de iniciar outro 
         /// </summary>
-        [BsonIgnore]
         [JsonProperty("SellTicketsBeforeStartAnother")]
         public bool SellTicketsBeforeStartAnother { get; set; }
+        
         /// <summary>
         /// Vender lote antes de iniciar outro 
         /// </summary>
-        [BsonIgnore]
         [JsonProperty("localeImage")]
-        public string LocaleImage { get; set; }
+        public string? LocaleImage { get; set; }
 
         /// <summary>
         /// Precisa verificar os documentos?

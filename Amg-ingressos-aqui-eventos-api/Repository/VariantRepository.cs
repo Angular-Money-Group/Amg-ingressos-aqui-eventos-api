@@ -24,6 +24,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 await _variantCollection.InsertOneAsync(variant as Variant);
+                
                 return ((Variant)variant).Id;
             }
             catch (SaveVariantException ex)
