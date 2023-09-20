@@ -6,12 +6,14 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Prime.UnitTests.Services
 {
     public class VariantServiceTest
     {
         private VariantService _variantService;
+        private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
 
@@ -19,7 +21,7 @@ namespace Prime.UnitTests.Services
         public void SetUp()
         {
             _variantRepositoryMock = new Mock<IVariantRepository>();
-            _variantService = new VariantService(_variantRepositoryMock.Object, _lotServiceMock.Object);
+            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object);
         }
 
         [Test]
