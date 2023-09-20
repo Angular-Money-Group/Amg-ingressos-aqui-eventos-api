@@ -1,3 +1,4 @@
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
@@ -5,6 +6,7 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using System.Text.RegularExpressions;
+using Event = Amg_ingressos_aqui_eventos_api.Model.Event;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -87,7 +89,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     RemainingCourtesy = new List<RemainingCourtesy>(),
                     CourtesyHistory = new List<CourtesyHistory>()
                 };
-
+                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+                
                 var variantId = "";
 
                 eventSave.Variant
@@ -111,13 +114,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
-                eventSave.Variant.ToList().ForEach(i =>
+                /*eventSave.Variant.ToList().ForEach(i =>
                 {
-                    i.IdEvent = _messageReturn.Data.ToString();
+                    _ = _variantService.EditAsync(i.Id, variantDto).Result;
 
-                    _ = _variantService.EditAsync(i.Id, i).Result;
-
-                });
+                });*/
             }
             catch (SaveEventException ex)
             {
@@ -255,16 +256,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> EditEventsAsync(string id, Event eventEdit)
+        public async Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventEditDto)
         {
             try
             {
-                if (eventEdit.Image != null)
+                var eventEdit = new Event()
+                {
+                    Address = eventEditDto.Address,
+                    _Id = eventEditDto._Id,
+                    Description = eventEditDto.Description,
+                    StartDate = eventEditDto.StartDate,
+                    EndDate = eventEditDto.EndDate,
+                    Highlighted = eventEditDto.Highlighted,
+                    IdMeansReceipt = eventEditDto.IdMeansReceipt,
+                    Image = eventEditDto.Image,
+                    Local = eventEditDto.Local,
+                    Name = eventEditDto.Name,
+                    Status = eventEditDto.Status,
+                    Type = eventEditDto.Type
+                };
+
+                if (eventEdit.Image != null && IsBase64String(eventEdit.Image))
                 {
                     IsBase64Image(eventEdit.Image!);
                     eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
                 }
-                ;
 
                 _messageReturn.Data = await _eventRepository.Edit<Event>(id, eventEdit);
             }
@@ -309,6 +325,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveEventException("Data Fim é Obrigatório.");
             if (!eventSave.Variant.Any())
                 throw new SaveEventException("Variante é Obrigatório.");
+        }
+
+        public static bool IsBase64String(string base64)
+        {
+        Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
+        return Convert.TryFromBase64String(base64, buffer , out int bytesParsed);
         }
 
         private void IsBase64Image(string base64String)
@@ -368,7 +390,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 idEvent.ValidateIdMongo();
 
-                _messageReturn.Data = await _eventRepository.GetAllEventsWithTickets(idEvent,string.Empty);
+                _messageReturn.Data = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
 
                 return _messageReturn;
             }

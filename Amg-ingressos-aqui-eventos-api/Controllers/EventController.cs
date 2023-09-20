@@ -1,4 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
@@ -169,7 +170,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
         [Route("createEvent")]
-        public async Task<IActionResult> SaveEventAsync([FromBody] Event eventObject)
+        public async Task<IActionResult> SaveEventAsync([FromBody] Model.Event eventObject)
         {
             try
             {
@@ -233,7 +234,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [Route("{id}")]
         [HttpPatch]
-        public async Task<IActionResult> EditEventAsync([FromRoute] string id, [FromBody] Event eventEdit)
+        public async Task<IActionResult> EditEventAsync([FromRoute] string id, [FromBody] EventEditDto eventEdit)
         {
             try
             {
@@ -243,13 +244,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (DeleteEventException ex)
             {
-                _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
+                _logger.LogInformation(MessageLogErrors.EditEventMessage, ex);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.deleteEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.deleteEventMessage);
+                _logger.LogError(MessageLogErrors.EditEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.EditEventMessage);
             }
         }
 

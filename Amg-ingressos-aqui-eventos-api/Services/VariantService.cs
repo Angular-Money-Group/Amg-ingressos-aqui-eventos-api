@@ -3,6 +3,7 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -18,7 +19,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _lotService = lotService;
             _messageReturn = new MessageReturn();
         }
-        public async Task<MessageReturn> SaveAsync(Variant variant)
+        public async Task<MessageReturn> SaveAsync(Model.Variant variant)
         {
             try
             {
@@ -48,11 +49,32 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> EditAsync(string id, Variant varinatEdit)
+        public async Task<MessageReturn> EditAsync(List<VariantEditDto> variantEditDto)
         {
             try
             {
-                _messageReturn.Data = await _variantRepository.Edit<object>(id, varinatEdit);
+                foreach (var item in variantEditDto)
+                {
+                    var variantEdit = new Model.Variant()
+                    {
+                        Description = item.Description,
+                        HasPositions = item.HasPositions,
+                        LocaleImage = item.LocaleImage,
+                        Name = item.Name,
+                        Positions = item.Positions,
+                        QuantityCourtesy = item.QuantityCourtesy,
+                        ReqDocs = item.ReqDocs,
+                        SellTicketsBeforeStartAnother = item.SellTicketsBeforeStartAnother,
+                        SellTicketsInAnotherBatch = item.SellTicketsInAnotherBatch,
+                        Status = item.Status,
+                        Id= item.Id,
+                        IdEvent = item.IdEvent
+                    };
+                    if(variantEdit.Id != null)
+                        _messageReturn.Data = await _variantRepository.Edit<object>(variantEdit.Id, variantEdit);
+                    else
+                        _messageReturn.Data = await _variantRepository.Save<object>(variantEdit);
+                }
             }
             catch (SaveLotException ex)
             {
@@ -73,7 +95,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 id.ValidateIdMongo();
 
-                var variant = await _variantRepository.FindById<List<Variant>>(id);
+                var variant = await _variantRepository.FindById<List<Model.Variant>>(id);
 
                 variant[0].Lot.ToList().ForEach(async i =>
                 {
@@ -122,7 +144,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        private void ValidateModelSave(Variant variant)
+        private void ValidateModelSave(Model.Variant variant)
         {
             if (variant.Name == "")
                 throw new SaveVariantException("Nome é Obrigatório.");
@@ -139,25 +161,27 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        public async Task<MessageReturn> SaveManyAsync(List<Variant> listVariant)
+        public async Task<MessageReturn> SaveManyAsync(List<Model.Variant> listVariant)
         {
             try
             {
-                listVariant.ForEach(v => {
+                listVariant.ForEach(v =>
+                {
                     ValidateModelSave(v);
                     v.Status = Enum.StatusVariant.Active;
                 });
-                _messageReturn.Data = await _variantRepository.SaveMany<Variant>(listVariant);
-                
+                _messageReturn.Data = await _variantRepository.SaveMany<Model.Variant>(listVariant);
+
                 listVariant.ForEach(async i =>
                 {
                     var IdentificateLot = 1;
-                    i.Lot.ForEach(l => {
+                    i.Lot.ForEach(l =>
+                    {
                         l.Status = IdentificateLot == 1 ? Enum.StatusLot.Open : Enum.StatusLot.Wait;
                         l.Identificate = IdentificateLot;
                         l.ReqDocs = i.ReqDocs;
                         l.IdVariant = i.Id;
-                        IdentificateLot++;   
+                        IdentificateLot++;
                     });
                     _lotService.SaveManyAsync(i.Lot);
                 });
