@@ -10,6 +10,7 @@ namespace Amg_ingressos_aqui_eventos_api.Consts
         public const string saveEventMessage = "SaveEventAsync : Erro inesperado ao salvar um evento";
         public const string highlightEventmessage = "HighlightEventAsync : Erro inesperado ao destacar um evento";
         public const string deleteEventMessage = "DeleteEventAsync : Erro inesperado ao deletar um evento";
+        public const string EditEventMessage = "EditEventAsync : Erro inesperado ao Editar um evento";
         public const string FindByIdEventMessage = "FindByIdEventAsync : Erro inesperado ao buscar um evento";
         public const string findTicketByUser = "FindByIdEventAsync : Erro inesperado ao buscar os Ingressos ";
         public const string GetAllEventMessage = "GetAllEventsAsync : Erro inesperado ao buscar eventos";

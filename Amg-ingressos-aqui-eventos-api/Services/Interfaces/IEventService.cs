@@ -1,13 +1,14 @@
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
 {
     public interface IEventService
     {
-        Task<MessageReturn> SaveAsync(Event eventSave);
+        Task<MessageReturn> SaveAsync(Model.Event eventSave);
         Task<MessageReturn> FindByIdAsync(string id);
         Task<MessageReturn> HighlightEventAsync(string id);
-        Task<MessageReturn> EditEventsAsync(string id, Event eventEdit);
+        Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventEditDto);
         Task<MessageReturn> GetAllEventsWithTickets(string idEvent);
         Task<MessageReturn> FindEventByNameAsync(string name);
         Task<MessageReturn> FindByOrganizerAsync(string idOrganizer, Pagination paginationOptions, FilterOptions? filter);
