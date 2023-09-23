@@ -696,6 +696,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     Id = ticketUserData.Id,
                     IdLot = ticketUserData.IdLot,
                     IdUser = ticketUserData.IdUser,
+                    IsSold = ticketUserData.isSold,
                     QrCode = ticketUserData.QrCode,
                     Value = ticketUserData.Value,
                     User = new UserDto()
