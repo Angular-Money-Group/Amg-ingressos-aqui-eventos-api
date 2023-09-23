@@ -132,16 +132,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                var json = QuerysMongo.GetLotsByVariant;
-
-                BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument documentFilter = BsonDocument.Parse(
-                    @"{ $match: { '_id': '" + id.ToString() + "' }}"
-                );
-                BsonDocument[] pipeline = new BsonDocument[] { document, documentFilter, };
-
-                var pResults = _variantCollection.Aggregate<Variant>(pipeline).ToList();
-
                 var filter = Builders<Variant>.Filter.Eq(l => l.Id, id.ToString());
 
                 var pResult = _variantCollection.Find<Variant>(filter).ToList();

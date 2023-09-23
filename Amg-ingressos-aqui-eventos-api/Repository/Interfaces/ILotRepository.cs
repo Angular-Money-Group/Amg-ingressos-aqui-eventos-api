@@ -8,6 +8,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> SaveMany<T>(List<Lot> listLot);
         Task<Lot> Edit<T>(string id, Lot lotObj);
         Task<object> Delete<T>(object id);
+        Task<object> DeleteByVariant<T>(object idVariant);
         Task<Lot> GetLotByIdVariant<T>(string id);
         Task<object> DeleteMany<T>(List<string> lot);
     }

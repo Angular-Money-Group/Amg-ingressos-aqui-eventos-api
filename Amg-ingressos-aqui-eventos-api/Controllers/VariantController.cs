@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v1/variant")]
+    [Produces("application/json")]
     public class VariantController : ControllerBase
     {
         private readonly ILogger<VariantController> _logger;
@@ -65,13 +66,41 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (DeleteEventException ex)
             {
-                _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
+                _logger.LogInformation(MessageLogErrors.saveVariantMessage, ex);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.deleteEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.deleteEventMessage);
+                _logger.LogError(MessageLogErrors.saveVariantMessage, ex);
+                return StatusCode(500, MessageLogErrors.saveVariantMessage);
+            }
+        }
+
+        /// <summary>
+        /// Editar Variant 
+        /// </summary>
+        /// <param name="id">Id Variant</param>
+        /// <returns>200 Variant Editado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteVariantAsync([FromRoute] string id)
+        {
+            try
+            {
+                var result = await _variantService.DeleteAsync(id);
+
+                return Ok(result.Data);
+            }
+            catch (DeleteEventException ex)
+            {
+                _logger.LogInformation(MessageLogErrors.saveVariantMessage, ex);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.saveVariantMessage, ex);
+                return StatusCode(500, MessageLogErrors.saveVariantMessage);
             }
         }
     }

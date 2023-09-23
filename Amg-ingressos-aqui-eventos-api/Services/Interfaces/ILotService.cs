@@ -8,6 +8,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> SaveManyAsync(List<Lot> lot);
         Task<MessageReturn> EditAsync(string id, Lot lot);
         Task<MessageReturn> DeleteAsync(string id);
+        Task<MessageReturn> DeleteByVariantAsync(string idVariant);
         Task<MessageReturn> DeleteManyAsync(List<string> Lot);
         Task<MessageReturn> GetLotByIdVariant(string idVariant);
     }
