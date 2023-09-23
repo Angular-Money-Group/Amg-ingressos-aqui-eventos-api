@@ -104,7 +104,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         [JsonProperty("HasPositions")]
         public bool HasPositions { get; set; }
         [JsonProperty("QuantityCourtesy")]
-        public bool QuantityCourtesy { get; set; }
+        public int QuantityCourtesy { get; set; }
 
         [JsonProperty("Status")]
         public long Status { get; set; }
