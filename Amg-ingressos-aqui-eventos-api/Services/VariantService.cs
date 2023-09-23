@@ -180,7 +180,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 listVariant.ForEach(v =>
                 {
                     ValidateModelSave(v);
-                    if(v.LocaleImage != string.Empty){
+                    if(!string.IsNullOrEmpty(v.LocaleImage)){
                         v.LocaleImage = StoreImageAndGenerateLinkToAccess(v.LocaleImage!);
                     }
 
