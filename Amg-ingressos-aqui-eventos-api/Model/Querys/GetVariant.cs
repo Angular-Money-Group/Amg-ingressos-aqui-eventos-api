@@ -15,7 +15,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         public string Description { get; set; }
         public bool HasPositions { get; set; }
         public int Status { get; set; }
-          public int QuantityCourtesy { get; set; }
+        public int QuantityCourtesy { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdEvent { get; set; }

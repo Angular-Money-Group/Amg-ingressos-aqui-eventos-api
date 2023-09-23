@@ -106,5 +106,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket
         public bool ReqDocs { get; set; }
         public object Positions { get; set; }
         public List<Lot> Lot { get; set; }
+        public string? LocaleImage { get; set; }
     }
 }
