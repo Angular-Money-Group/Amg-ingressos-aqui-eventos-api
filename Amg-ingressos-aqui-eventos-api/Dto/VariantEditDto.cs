@@ -59,12 +59,6 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         public int QuantityCourtesy { get; set; }
         
         /// <summary>
-        /// Lista de lotes
-        /// </summary>
-        [BsonIgnore]
-        [JsonProperty("Lot")]
-        public List<Model.Lot> Lot { get; set; }
-        /// <summary>
         /// Permitir venda de restante no proximo lote
         /// </summary>
         [BsonIgnore]

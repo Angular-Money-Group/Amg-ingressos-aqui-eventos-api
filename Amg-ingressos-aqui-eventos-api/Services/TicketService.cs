@@ -577,9 +577,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idUser.ValidateIdMongo();
-                _messageReturn.Data = await _ticketRepository.GetTicketsByUser<
+                var list = await _ticketRepository.GetTicketsByUser<
                     List<GetTicketDataEvent>
                 >(idUser);
+                _messageReturn.Data = list.Where(x=> x.isSold);
             }
             catch (SaveTicketException ex)
             {

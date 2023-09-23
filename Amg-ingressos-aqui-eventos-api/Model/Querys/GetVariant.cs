@@ -20,7 +20,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdEvent { get; set; }
         public bool ReqDocs { get; set; }
-        public IList<object> Positions { get; set; }
+        public object Positions { get; set; }
         public string? LocaleImage { get; set; }
     
     }
