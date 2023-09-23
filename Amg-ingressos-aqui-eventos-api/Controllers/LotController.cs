@@ -45,5 +45,33 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 return StatusCode(500, MessageLogErrors.saveEventMessage);
             }
         }
+        
+        /// <summary>
+        /// Editar Lot 
+        /// </summary>
+        /// <param name="id">Id Lot</param>
+        /// <returns>200 Lot Editado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteLotAsync([FromRoute] string id)
+        {
+            try
+            {
+                var result = await _LotService.DeleteAsync(id);
+
+                return Ok(result.Data);
+            }
+            catch (DeleteEventException ex)
+            {
+                _logger.LogInformation(MessageLogErrors.saveEventMessage, ex);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.saveEventMessage, ex);
+                return StatusCode(500, MessageLogErrors.saveEventMessage);
+            }
+        }
     }
 }

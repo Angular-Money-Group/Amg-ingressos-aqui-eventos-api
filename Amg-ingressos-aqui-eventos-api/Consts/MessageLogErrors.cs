@@ -16,5 +16,7 @@ namespace Amg_ingressos_aqui_eventos_api.Consts
         public const string GetAllEventMessage = "GetAllEventsAsync : Erro inesperado ao buscar eventos";
         public const string UpdateTickets = "UpdateTickets : Não foi possivel alterar o ingresso ";
         public const string NotModificateTickets = "NotModificateTickets : O ticket não foi atualizado. ";
+        public const string saveVariantMessage = "SaveVariantAsync : Erro inesperado ao salvar uma variante";
+        public const string deleteVariantMessage = "DeleteVariantAsync : Erro inesperado ao deletar uma variante";
     }
 }

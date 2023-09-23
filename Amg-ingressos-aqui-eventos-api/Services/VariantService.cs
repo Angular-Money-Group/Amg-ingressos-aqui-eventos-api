@@ -104,16 +104,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-
-                var variant = await _variantRepository.FindById<List<Model.Variant>>(id);
-
-                variant[0].Lot
-                    .ToList()
-                    .ForEach(async i =>
-                    {
-                        _lotService.DeleteAsync(i.Id);
-                    });
-
+                await _lotService.DeleteByVariantAsync(id);
                 _messageReturn.Data = await _variantRepository.Delete<object>(id);
             }
             catch (SaveLotException ex)

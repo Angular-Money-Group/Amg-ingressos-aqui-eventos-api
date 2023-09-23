@@ -39,6 +39,27 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
+        public async Task<object> DeleteByVariant<T1>(object idVariant)
+        {
+            try
+            {
+                var filter = Builders<Lot>.Filter.Eq(l => l.IdVariant, idVariant.ToString());
+                var deleteResult = await _lotCollection.DeleteManyAsync(filter);
+                if (deleteResult.DeletedCount >= 1)
+                    return "Lote deletado";
+                else
+                    throw new SaveLotException("algo deu errado ao deletar");
+            }
+            catch (SaveLotException ex)
+            {
+                throw ex;
+            }
+            catch (System.Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<Lot> Edit<T>(string id, Lot lotObj)
         {
             try

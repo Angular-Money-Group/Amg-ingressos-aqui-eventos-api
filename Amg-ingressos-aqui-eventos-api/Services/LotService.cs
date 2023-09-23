@@ -104,6 +104,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
+                await _ticketService.DeleteTicketsByLot(id);
                 _messageReturn.Data = await _lotRepository.Delete<object>(id);
             }
             catch (SaveLotException ex)
@@ -114,6 +115,25 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             catch (Exception ex)
             {
                 DeleteAsync(id);
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> DeleteByVariantAsync(string idVariant)
+        {
+            try
+            {
+                idVariant.ValidateIdMongo();
+                _messageReturn.Data = await _lotRepository.DeleteByVariant<object>(idVariant);
+            }
+            catch (SaveLotException ex)
+            {
+                _messageReturn.Message = ex.Message;
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
 
