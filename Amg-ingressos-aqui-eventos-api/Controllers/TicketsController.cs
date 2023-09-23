@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                     _logger.LogInformation(result.Message);
                     return NoContent();
                 }
-                return Ok(result.Data as List<GetTicketDataEvent>);
+                return Ok(result.Data);
             }
             catch (Exception ex)
             {
