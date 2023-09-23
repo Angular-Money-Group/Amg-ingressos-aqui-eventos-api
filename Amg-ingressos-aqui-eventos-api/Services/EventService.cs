@@ -97,6 +97,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     .ToList()
                     .ForEach(i =>
                     {
+                        i.IdEvent = _messageReturn.Data.ToString();
                         variantId = _variantService.SaveAsync(i).Result.Data.ToString();
 
                         if (i.QuantityCourtesy > 0)
@@ -112,7 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         }
                     });
 
-                _messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+                //_messageReturn.Data = await _eventRepository.Save<object>(eventSave);
 
                 /*eventSave.Variant.ToList().ForEach(i =>
                 {
