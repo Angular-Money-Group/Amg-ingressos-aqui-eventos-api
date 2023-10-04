@@ -471,7 +471,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 foreach (var property in typeof(Event).GetProperties())
                 {
-                    if (property.GetValue(eventObj) != null && property.Name != "_Id")
+                    if (property.GetValue(eventObj) != null && property.Name != "_Id" && property.Name != "Variant")
                     {
                         update = update.Set(property.Name, property.GetValue(eventObj));
                     }
