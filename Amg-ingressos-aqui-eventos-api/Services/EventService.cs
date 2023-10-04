@@ -113,7 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         }
                     });
 
-                //_messageReturn.Data = await _eventRepository.Save<object>(eventSave);
+                _messageReturn.Data = await _eventRepository.Edit<object>(eventSave._Id,eventSave);
 
                 /*eventSave.Variant.ToList().ForEach(i =>
                 {
