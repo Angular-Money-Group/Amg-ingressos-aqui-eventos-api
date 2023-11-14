@@ -179,40 +179,37 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     }
                 },
                 Cortesias = VerifyCortesy(variants, eventData),
-                Variant = string.IsNullOrEmpty(idVariant)
-                    ? null
-                    : variants.FirstOrDefault(
-                        x =>
-                            x.Nome == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name
-                    )
+                Variant = string.IsNullOrEmpty(idVariant) ? null
+                    : variants.FirstOrDefault(x => x.Nome == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name) ?? new VariantReportDto()
             };
         }
 
-        private CortesiasReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData){
-            if(eventData.Courtesy.RemainingCourtesy.Count == 0) return new CortesiasReportDto();
+        private CortesiasReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData)
+        {
+            if (eventData.Courtesy.RemainingCourtesy.Count == 0) return new CortesiasReportDto();
             return new CortesiasReportDto()
+            {
+                Entregues = new EntreguesReportDto()
                 {
-                    Entregues = new EntreguesReportDto()
-                    {
-                        Percent =
+                    Percent =
                             (
                                 Convert.ToDouble(
                                     variants.Sum(i => i.Cortesias.Entregues.Quantidade)
                                 ) / Convert.ToDouble(variants.Sum(i => i.Cortesias.Restantes.Quantidade))
                             ) * 100,
-                        Quantidade = variants.Sum(i => i.Cortesias.Entregues.Quantidade)
-                    },
-                    Restantes = new RestantesDto()
-                    {
-                        Percent =
+                    Quantidade = variants.Sum(i => i.Cortesias.Entregues.Quantidade)
+                },
+                Restantes = new RestantesDto()
+                {
+                    Percent =
                             (
                                 Convert.ToDouble(
                                     variants.Sum(i => i.Cortesias.Entregues.Quantidade)
                                 ) / Convert.ToDouble(variants.Sum(i => i.Cortesias.Restantes.Quantidade))
                             ) * 100,
-                        Quantidade = variants.Sum(i => i.Cortesias.Restantes.Quantidade)
-                    }
-                };
+                    Quantidade = variants.Sum(i => i.Cortesias.Restantes.Quantidade)
+                }
+            };
         }
 
         private List<VariantReportDto> ProcessVariant(

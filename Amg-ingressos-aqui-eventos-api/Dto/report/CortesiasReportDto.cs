@@ -13,5 +13,10 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
 
         [JsonPropertyName("Restantes")]
         public RestantesDto Restantes { get; set; }
+
+        public CortesiasReportDto(){
+            Entregues = new EntreguesReportDto();
+            Restantes = new RestantesDto();
+        }
     }
 }
