@@ -62,5 +62,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// QrCode
         /// </summary>
         public string QrCode { get; set; }
+        /// <summary>
+        /// Indica se o ticket é cortesia
+        /// </summary>
+        public Boolean ticketCortesia { get; set; }
     }
 }

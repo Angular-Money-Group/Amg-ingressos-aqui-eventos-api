@@ -4,7 +4,7 @@ namespace Amg_ingressos_aqui_eventos_api.Enum
     {
     VENDIDO = 0,
     DISPONIVEL = 1,
-    USADO = 1,
+    USADO = 7,
     CORTESIA = 2,
     RESERVADO = 3,
     EXPIRADO = 4,

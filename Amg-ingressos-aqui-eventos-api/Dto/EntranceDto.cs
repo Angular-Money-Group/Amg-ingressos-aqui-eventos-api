@@ -6,7 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
 {
     public class EntranceDto
     {
-        public string IdUser { get; set; }
+        public string IdColab { get; set; }
         public string IdEvent { get; set; }
         public string IdTicket { get; set; }
     }

@@ -18,13 +18,20 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public string Id { get; set; }
 
         /// <summary>
-        /// Id user do ticket
+        /// Id do evento
         /// </summary>
         [BsonRepresentation(BsonType.ObjectId)]
-        public string idUser { get; set; }
+        public string idEvent { get; set; }
+
+        /// <summary>
+        /// Id do colaborador que leu o ticket
+        /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string idColab { get; set; }
         /// <summary>
         /// Id do ticket (qrcode)
         /// </summary>
+        
         [BsonRepresentation(BsonType.ObjectId)]
         public string idTicket { get; set; }
 

@@ -57,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 var filter = Builders<EventQrReads>.Filter.And(
                     Builders<EventQrReads>.Filter.Where(eventQr => eventQr.idColab.Contains(idUser)),
                     Builders<EventQrReads>.Filter.Where(eventQr => eventQr.idEvent.Contains(idEvent)),
-                    Builders<EventQrReads>.Filter.Gte(eventQr => eventQr.initialDate, new DateTime(initialDate.Year,initialDate.Month,initialDate.Day,0,0,0)),
+                    Builders<EventQrReads>.Filter.Gte(eventQr => eventQr.initialDate, initialDate.Date),
                     Builders<EventQrReads>.Filter.Lt(eventQr => eventQr.initialDate, initialDate.Date.AddDays(1).AddSeconds(-1))
                     );
 
@@ -115,8 +115,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.totalSuccess, eventLocal.totalSuccess));
                 updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.totalFail, eventLocal.totalFail));
                 updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.lastRead, eventLocal.lastRead));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.loginHistory, eventLocal.loginHistory));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.readHistory, eventLocal.readHistory));
+                //updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.loginHistory, eventLocal.loginHistory));
+                //updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.readHistory, eventLocal.readHistory));
 
                 if (eventLocal.status != null)
                 {
@@ -124,7 +124,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 }
 
                 //Where do update
-                var filter = Builders<EventQrReads>.Filter.Eq("_id", eventLocal.Id);
+                var filter = Builders<EventQrReads>.Filter.Eq("_id", ObjectId.Parse(eventLocal.Id));
 
                 //Prepara o objeto para atualização
                 var combinedUpdate = Builders<EventQrReads>.Update.Combine(updateDefination);

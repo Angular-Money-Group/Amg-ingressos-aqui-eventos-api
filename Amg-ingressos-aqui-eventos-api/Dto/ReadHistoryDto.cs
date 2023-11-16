@@ -12,9 +12,14 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         public string Id { get; set; }
 
         /// <summary>
-        /// Id user do ticket
+        /// Id do evento
         /// </summary>
-        public string idUser { get; set; }
+        public string idEvent { get; set; }
+
+        /// <summary>
+        /// Id Colab que leu o ticket
+        /// </summary>
+        public string idColab { get; set; }
         /// <summary>
         /// Id do ticket (qrcode)
         /// </summary>

@@ -452,6 +452,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 Value = lotToGenerateTicket.ValueTotal,
                 isSold = true,
                 ReqDocs = false,
+                ticketCortesia = true
             };
         }
 

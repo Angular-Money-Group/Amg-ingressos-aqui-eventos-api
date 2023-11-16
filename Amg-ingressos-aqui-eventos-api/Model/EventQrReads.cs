@@ -51,10 +51,10 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// 
         /// </summary>
-        public List<string> loginHistory { get; set; }
+        //public List<string>? loginHistory { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public List<string> readHistory { get; set; }
+        //public List<string> readTicket { get; set; }
     }
 }

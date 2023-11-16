@@ -42,7 +42,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                         return StatusCode(404, "Ticket não foi informado");
                     }
 
-                    if (string.IsNullOrEmpty(entrance.IdUser))
+                    if (string.IsNullOrEmpty(entrance.IdColab))
                     {
                         return StatusCode(404, "Colaborador não foi informado");
                     }
@@ -56,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                     return StatusCode( Convert.ToInt32(result.Data), result.Message);
                 }
 
-                return Ok(result.Message);
+                return Ok(result.Data);
             }
             //catch (NotModificateTicketsExeption ex)
             //{

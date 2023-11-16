@@ -9,6 +9,7 @@ using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
+
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
@@ -432,6 +433,26 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw ex;
             }
             return "Ok";
+        }
+
+        public async Task<object> burnTicketsAsync<T>(string id, int status)
+        {
+            try
+            {
+                //Where do update
+                var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
+
+                //Set do update
+                var update = Builders<Ticket>.Update.Set("Status", status);
+
+                //Executa o comando
+                await _ticketCollection.UpdateOneAsync(filter, update);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return new object();
         }
     }
 }
