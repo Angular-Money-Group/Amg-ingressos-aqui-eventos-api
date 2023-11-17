@@ -215,10 +215,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         private EventQrReads saveEventQrReads<T>(Boolean successQrRead, EntranceDto entranceDTO)
         {
+            EventQrReads eventQrReads = new EventQrReads();
             try
             {
                 //2- Consulta se o colaborador já leu algum qrCode (ticket) no evento e na data de hoje
-                var eventQrReads = _entranceRepository.getEventQrReads<EventQrReads>(entranceDTO.IdEvent, entranceDTO.IdColab, DateTime.Now).GetAwaiter().GetResult();
+                eventQrReads = _entranceRepository.getEventQrReads<EventQrReads>(entranceDTO.IdEvent, entranceDTO.IdColab, DateTime.Now).GetAwaiter().GetResult();
 
                 //Se o objeto estiver null, é o primeiro QrCode lido do evento no dia
                 if (eventQrReads == null)
@@ -255,7 +256,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw;
             }
 
-            return new EventQrReads();
+            return eventQrReads;
         }
 
 
