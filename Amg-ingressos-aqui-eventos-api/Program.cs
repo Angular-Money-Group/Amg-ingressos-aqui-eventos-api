@@ -38,6 +38,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IReportEventTickets, ReportEventTicketsService>();
 builder.Services.AddScoped<IReportEventTransactions,ReportEventTransactionsService>();
+builder.Services.AddScoped<IEntranceService, EntranceService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
@@ -45,6 +46,7 @@ builder.Services.AddScoped<IVariantRepository, VariantRepository<object>>();
 builder.Services.AddScoped<ILotRepository, LotRepository<object>>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository<object>>();
 builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository<object>>();
+builder.Services.AddScoped<IEntranceRepository, EntranceRepository<object>>();
 //infra
 builder.Services.AddScoped<IDbConnection<Event>, DbConnection<Event>>();
 builder.Services.AddScoped<IDbConnection<Variant>, DbConnection<Variant>>();
@@ -52,6 +54,9 @@ builder.Services.AddScoped<IDbConnection<Lot>, DbConnection<Lot>>();
 builder.Services.AddScoped<IDbConnection<Ticket>, DbConnection<Ticket>>();
 builder.Services.AddScoped<IDbConnection<Email>, DbConnection<Email>>();
 builder.Services.AddScoped<IDbConnection<StatusTicketsRow>, DbConnection<StatusTicketsRow>>();
+builder.Services.AddScoped<IDbConnection<User>, DbConnection<User>>();
+builder.Services.AddScoped<IDbConnection<ReadHistory>, DbConnection<ReadHistory>>();
+builder.Services.AddScoped<IDbConnection<EventQrReads>, DbConnection<EventQrReads>>();
 
 builder.Services.AddScoped<ICieloClient, CieloClient>();
 

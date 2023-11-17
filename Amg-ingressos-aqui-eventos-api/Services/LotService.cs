@@ -35,7 +35,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     {
                         ReqDocs = lot.ReqDocs,
                         IdLot = _messageReturn.Data.ToString(),
-                        Value = lot.ValueTotal
+                        Value = lot.ValueTotal,
+                        ticketCortesia = false
                     });
                 }
 

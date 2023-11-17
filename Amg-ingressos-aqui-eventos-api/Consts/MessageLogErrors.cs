@@ -18,5 +18,7 @@ namespace Amg_ingressos_aqui_eventos_api.Consts
         public const string NotModificateTickets = "NotModificateTickets : O ticket não foi atualizado. ";
         public const string saveVariantMessage = "SaveVariantAsync : Erro inesperado ao salvar uma variante";
         public const string deleteVariantMessage = "DeleteVariantAsync : Erro inesperado ao deletar uma variante";
+        public const string entranceTicket = "entranceAsync: Erro inesperado ao ler o ticket";
+        public const string objectInvalid = "Objeto inválido ou nulo";
     }
 }

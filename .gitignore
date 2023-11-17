@@ -4,3 +4,14 @@ Amg-ingressos-aqui-eventos-api/obj/
 Amg-ingressos-aqui-eventos-tests/bin/
 Amg-ingressos-aqui-eventos-tests/obj/
 Amg-ingressos-aqui-eventos-api/images/
+
+# User-specific files
+*.suo
+*.vsidx
+*.dtbcache.v2
+
+# Config files
+applicationhost*.config
+
+# Lock files
+read*.lock
