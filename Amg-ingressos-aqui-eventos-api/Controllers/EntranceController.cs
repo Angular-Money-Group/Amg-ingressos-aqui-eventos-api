@@ -27,7 +27,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
-        public async Task<IActionResult> entranceAsync([FromBody] EntranceDto entrance)
+        public async Task<IActionResult> EntranceAsync([FromBody] EntranceDto entrance)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                     }
                 }
 
-                var result = await _entranceService.entranceTicket(entrance);
+                var result = await _entranceService.EntranceTicket(entrance);
 
                 if (result.Message != null && result.Message.Any())
                 {

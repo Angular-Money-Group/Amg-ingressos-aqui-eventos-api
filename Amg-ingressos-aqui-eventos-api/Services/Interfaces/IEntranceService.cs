@@ -5,6 +5,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
 {
     public interface IEntranceService
     {
-        Task<MessageReturn> entranceTicket(EntranceDto entranceDTO);
+        Task<MessageReturn> EntranceTicket(EntranceDto entranceDTO);
     }
 }

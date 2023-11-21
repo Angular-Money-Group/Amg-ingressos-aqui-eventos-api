@@ -5,7 +5,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
 {
     public interface IEntranceRepository
     {
-        Task<User> getUserColabData<T>(string idUser);
+        Task<User> GetUserColabData<T>(string idUser);
         Task<object> saveReadyHistories<T>(object ticket);
         Task<EventQrReads> getEventQrReads<T>(string idEvent, string idUser, DateTime initialDate);
         Task<EventQrReads> saveEventQrReads<T>(object eventQr);

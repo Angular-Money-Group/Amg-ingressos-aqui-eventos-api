@@ -1,12 +1,8 @@
 ﻿using Amg_ingressos_aqui_eventos_api.Dto;
-using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
-using Amg_ingressos_aqui_eventos_api.Repository;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
-using Amg_ingressos_aqui_eventos_api.Utils;
-using System.Net.Http;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -26,7 +22,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _ticketRepository = ticketRepository;
         }
 
-        public async Task<MessageReturn> entranceTicket(EntranceDto entranceDTO)
+        public async Task<MessageReturn> EntranceTicket(EntranceDto entranceDTO)
         {
             MessageReturn _messageReturn = new MessageReturn();
             User colab = new User();
@@ -40,7 +36,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //Validações dos dados do request
                 #region Validações dos dados do request
                 //Consulta os dados do colaborador
-                colab = await _entranceRepository.getUserColabData<User>(entranceDTO.IdColab);
+                colab = await _entranceRepository.GetUserColabData<User>(entranceDTO.IdColab);
                 if (colab == null)
                 {
                     _messageReturn.Data = "404";
@@ -98,7 +94,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = saveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
 
                     return _messageReturn;
                 }
@@ -119,7 +115,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = saveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
 
                     return _messageReturn;
                 }
@@ -140,7 +136,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = saveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
 
                     return _messageReturn;
                 }
@@ -161,7 +157,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = saveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
 
                     return _messageReturn;
                 }
@@ -184,14 +180,27 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 });
 
                 //2- Salva a leitura com sucesso do qrCode
-                eventQrReads = saveEventQrReads<EventQrReads>(true, entranceDTO);
+                eventQrReads = SaveEventQrReads<EventQrReads>(true, entranceDTO);
+                EventQrReadsDto eventQrReadsDto = new  EventQrReadsDto(){
+                        Id = eventQrReads.Id,
+                        idColab= eventQrReads.idColab,
+                        idEvent = eventQrReads.idEvent,
+                        initialDate= eventQrReads.initialDate,
+                        lastRead= eventQrReads.lastRead,
+                        totalFail= eventQrReads.totalFail,
+                        totalReads= eventQrReads.totalReads,
+                        totalSuccess= eventQrReads.totalSuccess,
+                        DocumentId = colab.DocumentId,
+                        NameUser = colab.Name,
+                        NameVariant= evento.Variant.Name
+                    };
 
                 //3- Da baixa (queima) no qrcode (ticket), colocando ele como utilizado
-                await _ticketRepository.burnTicketsAsync<Ticket>(entranceDTO.IdTicket, (int)Enum.StatusTicket.USADO);
+                await _ticketRepository.BurnTicketsAsync<Ticket>(entranceDTO.IdTicket, (int)Enum.StatusTicket.USADO);
                 #endregion
 
                 _messageReturn.Message = "";
-                _messageReturn.Data = eventQrReads;
+                _messageReturn.Data = eventQrReadsDto;
             }
             catch (Exception ex)
             {
@@ -213,7 +222,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private EventQrReads saveEventQrReads<T>(Boolean successQrRead, EntranceDto entranceDTO)
+        private EventQrReads SaveEventQrReads<T>(Boolean successQrRead, EntranceDto entranceDTO)
         {
             EventQrReads eventQrReads = new EventQrReads();
             try
