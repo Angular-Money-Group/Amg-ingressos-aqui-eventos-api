@@ -435,7 +435,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return "Ok";
         }
 
-        public async Task<object> burnTicketsAsync<T>(string id, int status)
+        public async Task<object> BurnTicketsAsync<T>(string id, int status)
         {
             try
             {

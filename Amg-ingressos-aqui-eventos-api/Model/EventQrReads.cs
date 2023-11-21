@@ -1,7 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using System.Text.Json.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
@@ -43,7 +42,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Data ultima leitura
         /// </summary>
-        public DateTime? lastRead { get; set; }
+        public DateTime lastRead { get; set; }
         /// <summary>
         /// Status da leitura
         /// </summary>

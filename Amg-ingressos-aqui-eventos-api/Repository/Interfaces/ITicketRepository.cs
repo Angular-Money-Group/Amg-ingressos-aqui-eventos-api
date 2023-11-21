@@ -16,6 +16,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<string>> GetTicketsByLot<T>(string idLot);
         Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket);
         Task<object> SaveMany(List<Ticket> lstTicket);
-        Task<object> burnTicketsAsync<T>(string id, int status);
+        Task<object> BurnTicketsAsync<T>(string id, int status);
     }
 }

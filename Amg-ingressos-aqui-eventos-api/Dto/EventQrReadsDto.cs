@@ -50,6 +50,18 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         /// 
         /// </summary>
         public List<string> readHistory { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string NameUser { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string DocumentId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string NameVariant { get; set; }
 
     }
 }

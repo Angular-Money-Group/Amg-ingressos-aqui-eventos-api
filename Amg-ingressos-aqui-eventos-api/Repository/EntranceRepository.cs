@@ -27,7 +27,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _eventQrCollection = dbEventQrReads.GetConnection("eventqrreads");
         }
 
-        public async Task<User> getUserColabData<T>(string idUser)
+        public async Task<User> GetUserColabData<T>(string idUser)
         {
             User user = new User();
 
