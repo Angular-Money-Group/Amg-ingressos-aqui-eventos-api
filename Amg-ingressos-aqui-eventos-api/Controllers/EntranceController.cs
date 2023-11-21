@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
-    [Route("api/entrance")]
+    [Route("v1/entrance")]
     [Produces("application/json")]
     public class EntranceController : ControllerBase
     {
