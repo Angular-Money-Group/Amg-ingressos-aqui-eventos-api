@@ -48,6 +48,33 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
             }
         }
+        /// <summary>
+        /// Busca todos os ingressos do usuário por evento
+        /// </summary>
+        /// <returns>200 Lista de todos os tickets</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("user/{idUser}/event/{idEvent}")]
+        public async Task<IActionResult> GetTicketByUser([FromRoute] string idUser,[FromRoute] string idEvent)
+        {
+            try
+            {
+                var result = await _ticketService.GetTicketByUserEvent(idUser,idEvent);
+
+                if (result.Message != null && result.Message.Any())
+                {
+                    _logger.LogInformation(result.Message);
+                    return NoContent();
+                }
+                return Ok(result.Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
+                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+            }
+        }
 
         /// <summary>
         /// Busca todos os ingressos do usuário

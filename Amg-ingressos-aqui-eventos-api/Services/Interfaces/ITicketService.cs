@@ -7,6 +7,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
     {
         Task<MessageReturn> SaveAsync(Ticket ticket);
         Task<MessageReturn> GetTicketByUser(string idUser);
+        Task<MessageReturn> GetTicketByUserEvent(string idUser,string idEvent);
         Task<MessageReturn> GetTicketsByLot(string idLot);
         Task<MessageReturn> GetTicketsRemainingByLot(string idLot);
         Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticketObject);
