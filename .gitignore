@@ -15,3 +15,4 @@ applicationhost*.config
 
 # Lock files
 read*.lock
+.vs/
