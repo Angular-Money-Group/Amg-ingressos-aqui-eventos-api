@@ -113,7 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         }
                     });
 
-                _messageReturn.Data = await _eventRepository.Edit<object>(eventSave._Id,eventSave);
+                _messageReturn.Data = await _eventRepository.Edit<object>(eventSave.Id,eventSave);
 
                 /*eventSave.Variant.ToList().ForEach(i =>
                 {
@@ -264,7 +264,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var eventEdit = new Event()
                 {
                     Address = eventEditDto.Address,
-                    _Id = eventEditDto._Id,
+                    Id = eventEditDto.Id,
                     Description = eventEditDto.Description,
                     StartDate = eventEditDto.StartDate,
                     EndDate = eventEditDto.EndDate,

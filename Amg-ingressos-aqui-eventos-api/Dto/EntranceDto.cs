@@ -2,17 +2,15 @@
 {
     public class EntranceDto
     {
-        public string IdColab { get; set; } = string.Empty;
-        public string IdEvent { get; set; } = string.Empty;
-        public string IdTicket { get; set; } = string.Empty;
-    }
+        public EntranceDto()
+        {
+            IdColab = string.Empty;
+            IdEvent = string.Empty;
+            IdTicket = string.Empty;
+        }
 
-    public class ResponseEntranceDTO
-    {
-        public Boolean reqDocs { get; set; }
-        public string userName { get; set; } = string.Empty;
-        public string userDoc { get; set; } = string.Empty;
-        public string userEmail { get; set; } = string.Empty;
-        public string variantName { get; set; } = string.Empty;
+        public string IdColab { get; set; }
+        public string IdEvent { get; set; }
+        public string IdTicket { get; set; }
     }
 }

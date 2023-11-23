@@ -170,7 +170,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var ticketsRow = new StatusTicketsRow()
                 {
                     Email = CourtesyTicket.Email,
-                    TotalTickets = CourtesyTicket.quantity,
+                    TotalTickets = CourtesyTicket.Quantity,
                     TicketStatus = new List<TicketStatusResult>(),
                 };
 
@@ -197,7 +197,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                await UpdateTicketStatusAsync(courtesyTicket.quantity, ticketsRow, rowId);
+                await UpdateTicketStatusAsync(courtesyTicket.Quantity, ticketsRow, rowId);
 
                 var lotToGenerateTicket = await _lotRepository.GetLotByIdVariant<Model.Lot>(
                     courtesyTicket.IdVariant
@@ -351,7 +351,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     rowId
                 );
 
-                for (var i = 0; i < courtesyTicket.quantity; i++)
+                for (var i = 0; i < courtesyTicket.Quantity; i++)
                 {
                     try
                     {
@@ -410,7 +410,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 x => x.VariantId == courtesyTicket.IdVariant
             );
 
-            return remainingCourtesy.Quantity >= courtesyTicket.quantity;
+            return remainingCourtesy.Quantity >= courtesyTicket.Quantity;
         }
 
         private void UpdateEventCourtesyAndRemainingQuantity(
@@ -428,7 +428,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     Email = CourtesyTicket.Email,
                     Date = DateTime.Now,
                     Variant = variantToGenerateTicket.Name,
-                    Quantity = CourtesyTicket.quantity,
+                    Quantity = CourtesyTicket.Quantity,
                     IdStatusEmail = rowId
                 }
             );
@@ -437,9 +437,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 x => x.VariantId == CourtesyTicket.IdVariant
             );
 
-            remainingCourtesy.Quantity -= CourtesyTicket.quantity;
+            remainingCourtesy.Quantity -= CourtesyTicket.Quantity;
 
-            _eventRepository.Edit<Model.Event>(eventToGenerateTicket._Id, editEvent);
+            _eventRepository.Edit<Model.Event>(eventToGenerateTicket.Id, editEvent);
         }
 
         private Ticket CreateTicketToSend(string idUser, Model.Lot lotToGenerateTicket)
@@ -493,67 +493,67 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             var eventLocal = eventToGenerateTicket.Local;
 
-            var @event = new Dto.Event()
+            var @event = new Model.Event()
             {
-                _id = eventToGenerateTicket._Id,
-                name = eventToGenerateTicket.Name,
-                local = eventLocal,
-                type = eventToGenerateTicket.Type,
-                image = eventToGenerateTicket.Image,
-                description = eventToGenerateTicket.Description!,
-                startDate = eventToGenerateTicket.StartDate,
-                endDate = eventToGenerateTicket.EndDate,
-                status = eventToGenerateTicket.Status,
-                address = new Dto.Address()
+                Id = eventToGenerateTicket.Id,
+                Name = eventToGenerateTicket.Name,
+                Local = eventLocal,
+                Type = eventToGenerateTicket.Type,
+                Image = eventToGenerateTicket.Image,
+                Description = eventToGenerateTicket.Description!,
+                StartDate = eventToGenerateTicket.StartDate,
+                EndDate = eventToGenerateTicket.EndDate,
+                Status = eventToGenerateTicket.Status,
+                Address = new Model.Address()
                 {
-                    cep = eventToGenerateTicket.Address!.Cep,
-                    addressDescription = eventToGenerateTicket.Address.AddressDescription,
-                    number = eventToGenerateTicket.Address.Number,
-                    neighborhood = eventToGenerateTicket.Address.Neighborhood,
-                    complement = eventToGenerateTicket.Address.Complement,
-                    referencePoint = eventToGenerateTicket.Address.ReferencePoint,
-                    city = eventToGenerateTicket.Address.City,
-                    state = eventToGenerateTicket.Address.State
+                    Cep = eventToGenerateTicket.Address!.Cep,
+                    AddressDescription = eventToGenerateTicket.Address.AddressDescription,
+                    Number = eventToGenerateTicket.Address.Number,
+                    Neighborhood = eventToGenerateTicket.Address.Neighborhood,
+                    Complement = eventToGenerateTicket.Address.Complement,
+                    ReferencePoint = eventToGenerateTicket.Address.ReferencePoint,
+                    City = eventToGenerateTicket.Address.City,
+                    State = eventToGenerateTicket.Address.State
                 },
-                idMeansReceipt = eventToGenerateTicket.IdMeansReceipt,
-                idOrganizer = eventToGenerateTicket.IdOrganizer,
-                highlighted = eventToGenerateTicket.Highlighted
+                IdMeansReceipt = eventToGenerateTicket.IdMeansReceipt,
+                IdOrganizer = eventToGenerateTicket.IdOrganizer,
+                Highlighted = eventToGenerateTicket.Highlighted
             };
 
             return new TicketEventDataDto()
             {
-                lot = new Dto.Lot()
+                Lot = new Model.Lot()
                 {
-                    _id = lotToGenerateTicket.Id!,
-                    identificate = lotToGenerateTicket.Identificate,
-                    totalTickets = lotToGenerateTicket.TotalTickets,
-                    valueTotal = lotToGenerateTicket.ValueTotal,
-                    startDateSales = lotToGenerateTicket.StartDateSales,
-                    endDateSales = lotToGenerateTicket.EndDateSales,
-                    status = lotToGenerateTicket.Status,
-                    reqDocs = lotToGenerateTicket.ReqDocs,
-                    idVariant = lotToGenerateTicket.IdVariant
+                    Id = lotToGenerateTicket.Id!,
+                    Identificate = lotToGenerateTicket.Identificate,
+                    TotalTickets = lotToGenerateTicket.TotalTickets,
+                    ValueTotal = lotToGenerateTicket.ValueTotal,
+                    StartDateSales = lotToGenerateTicket.StartDateSales,
+                    EndDateSales = lotToGenerateTicket.EndDateSales,
+                    Status = lotToGenerateTicket.Status,
+                    ReqDocs = lotToGenerateTicket.ReqDocs,
+                    IdVariant = lotToGenerateTicket.IdVariant
                 },
-                variant = new Dto.Variant()
+                Variant = new Model.Variant()
                 {
-                    _id = variantToGenerateTicket.Id,
-                    name = variantToGenerateTicket.Name,
-                    description = variantToGenerateTicket.Description,
-                    hasPositions = variantToGenerateTicket.HasPositions,
-                    status = variantToGenerateTicket.Status,
-                    idEvent = variantToGenerateTicket.IdEvent,
-                    reqDocs = variantToGenerateTicket.ReqDocs,
-                    positions = variantToGenerateTicket.Positions
+                    Id = variantToGenerateTicket.Id,
+                    Name = variantToGenerateTicket.Name,
+                    Description = variantToGenerateTicket.Description,
+                    HasPositions = variantToGenerateTicket.HasPositions,
+                    Status = variantToGenerateTicket.Status,
+                    IdEvent = variantToGenerateTicket.IdEvent,
+                    ReqDocs = variantToGenerateTicket.ReqDocs,
+                    Positions = variantToGenerateTicket.Positions
                 },
-                @event = @event,
-                id = variantToGenerateTicket.Id,
-                idLot = lotToGenerateTicket.Id!,
-                idUser = ticketId,
-                position = null,
-                value = lotToGenerateTicket.ValueTotal,
-                isSold = true,
-                reqDocs = false,
-                qrCode = "https://api.ingressosaqui.com/imagens/" + nameImagem
+                Event = @event,
+                Id = variantToGenerateTicket.Id,
+                IdLot = lotToGenerateTicket.Id!,
+                IdUser = ticketId,
+                Position = null,
+                Value = lotToGenerateTicket.ValueTotal,
+                IsSold = true,
+                ReqDocs = false,
+                QrCode = "https://api.ingressosaqui.com/imagens/" + nameImagem
             };
         }
 
@@ -728,10 +728,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     Value = ticketUserData.Value,
                     User = new UserDto()
                     {
-                        _id = ticketUserData.User.FirstOrDefault().Id,
-                        cpf = ticketUserData.User.FirstOrDefault().DocumentId,
-                        email = ticketUserData.User.FirstOrDefault().Contact.Email,
-                        name = ticketUserData.User.FirstOrDefault().Name
+                        Id = ticketUserData.User.FirstOrDefault().Id,
+                        Cpf = ticketUserData.User.FirstOrDefault().DocumentId,
+                        Email = ticketUserData.User.FirstOrDefault().Contact.Email,
+                        Name = ticketUserData.User.FirstOrDefault().Name
                     },
                 };
             }
@@ -842,17 +842,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 };
 
                 email.Body = email.Body.Replace("{nome_usuario}", " ");
-                email.Body = email.Body.Replace("{nome_evento}", ticketEventDto.@event.name);
+                email.Body = email.Body.Replace("{nome_evento}", ticketEventDto.Event.Name);
                 email.Body = email.Body.Replace(
                     "{data_evento}",
-                    $"{ticketEventDto.@event.startDate} as {ticketEventDto.@event.endDate}"
+                    $"{ticketEventDto.Event.StartDate} as {ticketEventDto.Event.EndDate}"
                 );
-                email.Body = email.Body.Replace("{local_evento}", ticketEventDto.@event.local);
+                email.Body = email.Body.Replace("{local_evento}", ticketEventDto.Event.Local);
                 email.Body = email.Body.Replace(
                     "{endereco_evento}",
-                    $"{ticketEventDto.@event.address.addressDescription} - {ticketEventDto.@event.address.number} - {ticketEventDto.@event.address.neighborhood} - {ticketEventDto.@event.address.city} - {ticketEventDto.@event.address.state}"
+                    $"{ticketEventDto.Event.Address.AddressDescription} - {ticketEventDto.Event.Address.Number} - {ticketEventDto.Event.Address.Neighborhood} - {ticketEventDto.Event.Address.City} - {ticketEventDto.Event.Address.State}"
                 );
-                email.Body = email.Body.Replace("{area_evento}", ticketEventDto.variant.name);
+                email.Body = email.Body.Replace("{area_evento}", ticketEventDto.Variant.Name);
                 email.Body = email.Body.Replace("{tipo_ingresso}", "Cortesia");
                 email.Body = email.Body.Replace("{qr_code}", urlQrCode);
 

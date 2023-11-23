@@ -2,8 +2,13 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
 {
     public class GenerateCourtesyTicketDto
     {
+        public GenerateCourtesyTicketDto(){
+            Email = string.Empty;
+            IdVariant = string.Empty;
+        }
+
         public string Email { get; set; }
         public string IdVariant { get; set; }
-        public int quantity { get; set; }
+        public int Quantity { get; set; }
     }
 }
