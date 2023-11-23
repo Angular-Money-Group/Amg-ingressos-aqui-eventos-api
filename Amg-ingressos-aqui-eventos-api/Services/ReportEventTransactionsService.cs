@@ -140,7 +140,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private static List<Transaction> GerenateJoinLists(List<GetEventWitTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
         {
             //get tickets de lotes do evento e variante de filtro
-            List<Ticket> listTickets = new();
+            List<Model.Ticket> listTickets = new();
             if(!string.IsNullOrEmpty(idVariant)){
                 var listLotes = eventDataTickets.FirstOrDefault().Variant.FirstOrDefault(i => i._id == idVariant).Lot;
                 listLotes.ForEach(i => { listTickets.AddRange(i.ticket); });
@@ -172,7 +172,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             });
             //relacionamento entre ticket e transacoes
             var listTransactionTicktes = from transactionTickets in listTransactionItens
-                                      join tickets in listTickets on transactionTickets.IdTicket equals tickets._id
+                                      join tickets in listTickets on transactionTickets.IdTicket equals tickets.Id
                                       select transactionTickets;
             //lista de transacao para report
             var listTransaction = from transactionJoin in listTransactionTicktes
