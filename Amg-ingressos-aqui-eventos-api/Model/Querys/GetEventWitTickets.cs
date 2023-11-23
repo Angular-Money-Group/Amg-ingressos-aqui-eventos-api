@@ -57,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket
         public bool ReqDocs { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdVariant { get; set; }
-        public List<Ticket> ticket { get; set; }
+        public List<Model.Ticket> ticket { get; set; }
     }
 
     public class RemainingCourtesy
