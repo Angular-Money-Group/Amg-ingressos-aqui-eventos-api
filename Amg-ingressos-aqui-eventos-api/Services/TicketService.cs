@@ -600,6 +600,32 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             return _messageReturn;
         }
+        public async Task<MessageReturn> GetTicketByUserEvent(string idUser, string idEvent)
+        {
+            try
+            {
+                idUser.ValidateIdMongo();
+                var list = await _ticketRepository.GetTicketsByUser<
+                    List<GetTicketDataEvent>>(idUser);
+                _messageReturn.Data = list.Where(x=> x.isSold && x.Event._id==idEvent);
+            }
+            catch (SaveTicketException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (IdMongoException ex)
+            {
+                _messageReturn.Message = ex.Message;
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return _messageReturn;
+        }
 
         public async Task<MessageReturn> GetTicketsByLot(string idLot)
         {
@@ -908,5 +934,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        
     }
 }

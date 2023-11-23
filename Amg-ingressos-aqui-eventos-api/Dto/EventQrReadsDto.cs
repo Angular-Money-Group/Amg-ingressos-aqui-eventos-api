@@ -1,8 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System.Text.Json.Serialization;
-
-namespace Amg_ingressos_aqui_eventos_api.Dto
+﻿namespace Amg_ingressos_aqui_eventos_api.Dto
 {
     public class EventQrReadsDto
     {
@@ -61,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         /// <summary>
         /// 
         /// </summary>
-        public string NameVariant { get; set; }
+        public string NameVariant { get; set; } 
 
     }
 }

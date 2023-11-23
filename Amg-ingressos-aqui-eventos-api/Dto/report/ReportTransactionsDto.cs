@@ -1,30 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Amg_ingressos_aqui_eventos_api.Dto.report
 {
     public class ReportTransactionsDto
     {
-        public ReportTransactionsDto(){
-            Credito = new TransactionsDto();
-            Debito = new TransactionsDto();
+        public ReportTransactionsDto()
+        {
+            Credit = new TransactionsDto();
+            Debit = new TransactionsDto();
             Pix = new TransactionsDto();
             Total = new TransactionsDto();
         }
-        public TransactionsDto Credito { get; set; }
-        public TransactionsDto Debito { get; set; }
-        public TransactionsDto Pix { get; set; }
-        public TransactionsDto Total { get; set; }
-    }
-    public class TransactionsDto
-    {
-        public int Quantidade { get; set; }
-        public double ValorTotal { get; set; }
-        public double ValorTaxas { get; set; }
-        public double ValorEvento { get; set; }
-        public double ValorLiquido { get; set; }
 
+        [JsonPropertyName("Credito")]
+        public TransactionsDto Credit { get; set; }
+
+        [JsonPropertyName("Debito")]
+        public TransactionsDto Debit { get; set; }
+
+        [JsonPropertyName("Pix")]
+        public TransactionsDto Pix { get; set; }
+
+        [JsonPropertyName("Total")]
+        public TransactionsDto Total { get; set; }
     }
 }

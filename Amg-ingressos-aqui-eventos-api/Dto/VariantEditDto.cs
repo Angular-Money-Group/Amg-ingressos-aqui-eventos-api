@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Model;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;

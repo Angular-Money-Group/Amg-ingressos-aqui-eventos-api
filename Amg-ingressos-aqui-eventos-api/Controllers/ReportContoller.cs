@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Consts;
-using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {

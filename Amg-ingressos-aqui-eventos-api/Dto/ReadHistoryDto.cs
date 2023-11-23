@@ -1,8 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System.ComponentModel.DataAnnotations;
-
-namespace Amg_ingressos_aqui_eventos_api.Dto
+﻿namespace Amg_ingressos_aqui_eventos_api.Dto
 {
     public class ReadHistoryDto
     {
