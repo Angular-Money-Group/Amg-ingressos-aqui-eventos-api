@@ -8,6 +8,16 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
 {
     public class VariantEditDto
     {
+        public VariantEditDto()
+        {
+            Id = string.Empty;
+            Name = string.Empty;
+            Description = string.Empty;
+            IdEvent = string.Empty;
+            LocaleImage = string.Empty;
+            Positions = new Positions();
+        }
+
         /// <summary>
         /// Id mongo
         /// </summary>
@@ -53,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         [Required]
         [JsonProperty("quantityCourtesy")]
         public int QuantityCourtesy { get; set; }
-        
+
         /// <summary>
         /// Permitir venda de restante no proximo lote
         /// </summary>
@@ -82,7 +92,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         /// <summary>
         /// Posicoes/cadeiras
         /// </summary>
-         [JsonProperty("Positions")]
+        [JsonProperty("Positions")]
         public Positions Positions { get; set; }
     }
 }

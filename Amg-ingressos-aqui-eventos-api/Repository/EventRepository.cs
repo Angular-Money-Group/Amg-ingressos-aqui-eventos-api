@@ -449,7 +449,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 eventComplet = eventComplet as Event;
                 await _eventCollection.InsertOneAsync(eventComplet as Event);
-                return (eventComplet as Event)!._Id!;
+                return (eventComplet as Event)!.Id!;
             }
             catch (SaveEventException ex)
             {
