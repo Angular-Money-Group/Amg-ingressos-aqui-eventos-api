@@ -39,50 +39,50 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = new ReportEventOrganizerDto()
                 {
-                    QuantidadeIngressos = reports.Sum(x => x.QuantidadeIngressos),
-                    Cortesias = new CortesiasReportDto()
+                    AmountTicket = reports.Sum(x => x.AmountTicket),
+                    Cortesys = new CourtesyReportDto()
                     {
                         Entregues = new()
                         {
-                            Percent = reports.Sum(i => i.Cortesias.Entregues.Percent),
-                            Quantidade = reports.Sum(i => i.Cortesias.Entregues.Quantidade),
+                            Percent = reports.Sum(i => i.Cortesy.Entregues.Percent),
+                            Amount = reports.Sum(i => i.Cortesy.Entregues.Amount),
                         },
                         Restantes = new()
                         {
-                            Percent = reports.Sum(i => i.Cortesias.Restantes.Percent),
-                            Quantidade = reports.Sum(i => i.Cortesias.Restantes.Quantidade),
-                            Taxa = 15,
-                            ValorReceber = reports.Sum(i => i.Cortesias.Restantes.ValorReceber),
-                            ValorTotal = reports.Sum(i => i.Cortesias.Restantes.ValorTotal)
+                            Percent = reports.Sum(i => i.Cortesy.Restantes.Percent),
+                            Amount = reports.Sum(i => i.Cortesy.Restantes.Amount),
+                            Tax = 15,
+                            ReceiveValue = reports.Sum(i => i.Cortesy.Restantes.ReceiveValue),
+                            TotalValue = reports.Sum(i => i.Cortesy.Restantes.TotalValue)
                         }
                     },
-                    Ingressos = new IngressosReportDto()
+                    Tickets = new TicketsReportDto()
                     {
-                        Restantes = new()
+                        Remaining = new()
                         {
                             Percent =
                                 (
                                     Convert.ToDouble(
-                                        reports.Sum(i => i.Ingressos.Restantes.Quantidade)
-                                    ) / Convert.ToDouble(reports.Sum(x => x.QuantidadeIngressos))
+                                        reports.Sum(i => i.Tickets.Remaining.Amount)
+                                    ) / Convert.ToDouble(reports.Sum(x => x.AmountTicket))
                                 ) * 100,
-                            Quantidade = reports.Sum(i => i.Ingressos.Restantes.Quantidade),
-                            Taxa = reports.Sum(i => i.Ingressos.Restantes.Taxa),
-                            ValorReceber = reports.Sum(i => i.Ingressos.Restantes.ValorReceber),
-                            ValorTotal = reports.Sum(i => i.Ingressos.Restantes.ValorTotal)
+                            Amount = reports.Sum(i => i.Tickets.Remaining.Amount),
+                            Tax = reports.Sum(i => i.Tickets.Remaining.Tax),
+                            ReceiveValue = reports.Sum(i => i.Tickets.Remaining.ReceiveValue),
+                            TotalValue = reports.Sum(i => i.Tickets.Remaining.TotalValue)
                         },
-                        Vendidos = new()
+                        Sold = new()
                         {
                             Percent =
                                 (
                                     Convert.ToDouble(
-                                        reports.Sum(i => i.Ingressos.Vendidos.Quantidade)
-                                    ) / Convert.ToDouble(reports.Sum(x => x.QuantidadeIngressos))
+                                        reports.Sum(i => i.Tickets.Sold.Amount)
+                                    ) / Convert.ToDouble(reports.Sum(x => x.AmountTicket))
                                 ) * 100,
-                            Quantidade = reports.Sum(i => i.Ingressos.Vendidos.Quantidade),
-                            Taxa = reports.Sum(i => i.Ingressos.Vendidos.Taxa),
-                            ValorReceber = reports.Sum(i => i.Ingressos.Vendidos.ValorReceber),
-                            ValorTotal = reports.Sum(i => i.Ingressos.Vendidos.ValorTotal)
+                            Amount = reports.Sum(i => i.Tickets.Sold.Amount),
+                            Tax = reports.Sum(i => i.Tickets.Sold.Tax),
+                            ReceiveValue = reports.Sum(i => i.Tickets.Sold.ReceiveValue),
+                            TotalValue = reports.Sum(i => i.Tickets.Sold.TotalValue)
                         }
                     }
                 };
@@ -148,66 +148,66 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             var variants = ProcessVariant(eventData, string.Empty);
             return new ReportEventOrganizerDetailDto()
             {
-                Nome = eventData.Name,
-                QuantidadeIngressos = variants.Sum(i => i.QuantidadeIngressos),
-                Ingressos = new IngressosReportDto()
+                Name = eventData.Name,
+                AmountTicket = variants.Sum(i => i.AmountTickets),
+                Tickets = new TicketsReportDto()
                 {
-                    Vendidos = new VendidosDto()
+                    Sold = new SoldDto()
                     {
                         Percent =
                             (
-                                Convert.ToDouble(variants.Sum(i => i.Ingressos.Vendidos.Quantidade))
-                                / Convert.ToDouble(variants.Sum(i => i.QuantidadeIngressos))
+                                Convert.ToDouble(variants.Sum(i => i.Tickets.Sold.Amount))
+                                / Convert.ToDouble(variants.Sum(i => i.AmountTickets))
                             ) * 100,
-                        Quantidade = variants.Sum(i => i.Ingressos.Vendidos.Quantidade),
-                        Taxa = 15,
-                        ValorReceber = variants.Sum(i => i.Ingressos.Vendidos.ValorReceber),
-                        ValorTotal = variants.Sum(i => i.Ingressos.Vendidos.ValorTotal)
+                        Amount = variants.Sum(i => i.Tickets.Sold.Amount),
+                        Tax = 15,
+                        ReceiveValue = variants.Sum(i => i.Tickets.Sold.ReceiveValue),
+                        TotalValue = variants.Sum(i => i.Tickets.Sold.TotalValue)
                     },
-                    Restantes = new RestantesDto()
+                    Remaining = new RemainingDto()
                     {
                         Percent =
                             (
                                 Convert.ToDouble(
-                                    variants.Sum(i => i.Ingressos.Restantes.Quantidade)
-                                ) / Convert.ToDouble(variants.Sum(i => i.QuantidadeIngressos))
+                                    variants.Sum(i => i.Tickets.Remaining.Amount)
+                                ) / Convert.ToDouble(variants.Sum(i => i.AmountTickets))
                             ) * 100,
-                        Quantidade = variants.Sum(i => i.Ingressos.Restantes.Quantidade),
-                        Taxa = 15,
-                        ValorReceber = variants.Sum(i => i.Ingressos.Restantes.ValorReceber),
-                        ValorTotal = variants.Sum(i => i.Ingressos.Restantes.ValorTotal)
+                        Amount = variants.Sum(i => i.Tickets.Remaining.Amount),
+                        Tax = 15,
+                        ReceiveValue = variants.Sum(i => i.Tickets.Remaining.ReceiveValue),
+                        TotalValue = variants.Sum(i => i.Tickets.Remaining.TotalValue)
                     }
                 },
-                Cortesias = VerifyCortesy(variants, eventData),
+                Cortesy = VerifyCortesy(variants, eventData),
                 Variant = string.IsNullOrEmpty(idVariant) ? null
-                    : variants.FirstOrDefault(x => x.Nome == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name) ?? new VariantReportDto()
+                    : variants.FirstOrDefault(x => x.Name == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name) ?? new VariantReportDto()
             };
         }
 
-        private CortesiasReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData)
+        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData)
         {
-            if (eventData.Courtesy.RemainingCourtesy.Count == 0) return new CortesiasReportDto();
-            return new CortesiasReportDto()
+            if (eventData.Courtesy.RemainingCourtesy.Count == 0) return new CourtesyReportDto();
+            return new CourtesyReportDto()
             {
-                Entregues = new EntreguesReportDto()
+                Entregues = new DeliveredReportDto()
                 {
                     Percent =
                             (
                                 Convert.ToDouble(
-                                    variants.Sum(i => i.Cortesias.Entregues.Quantidade)
-                                ) / Convert.ToDouble(variants.Sum(i => i.Cortesias.Restantes.Quantidade))
+                                    variants.Sum(i => i.Cortesys.Entregues.Amount)
+                                ) / Convert.ToDouble(variants.Sum(i => i.Cortesys.Restantes.Amount))
                             ) * 100,
-                    Quantidade = variants.Sum(i => i.Cortesias.Entregues.Quantidade)
+                    Amount = variants.Sum(i => i.Cortesys.Entregues.Amount)
                 },
-                Restantes = new RestantesDto()
+                Restantes = new RemainingDto()
                 {
                     Percent =
                             (
                                 Convert.ToDouble(
-                                    variants.Sum(i => i.Cortesias.Entregues.Quantidade)
-                                ) / Convert.ToDouble(variants.Sum(i => i.Cortesias.Restantes.Quantidade))
+                                    variants.Sum(i => i.Cortesys.Entregues.Amount)
+                                ) / Convert.ToDouble(variants.Sum(i => i.Cortesys.Restantes.Amount))
                             ) * 100,
-                    Quantidade = variants.Sum(i => i.Cortesias.Restantes.Quantidade)
+                    Amount = variants.Sum(i => i.Cortesys.Restantes.Amount)
                 }
             };
         }
@@ -226,45 +226,45 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var lots = ProcessLotes(x);
                 var variantDto = new VariantReportDto()
                 {
-                    Nome = x.Name,
-                    QuantidadeIngressos = lots.Sum(i => i.QuantidadeIngressos),
-                    Ingressos = new IngressosReportDto()
+                    Name = x.Name,
+                    AmountTickets = lots.Sum(i => i.AmountTicket),
+                    Tickets = new TicketsReportDto()
                     {
-                        Vendidos = new VendidosDto()
+                        Sold = new SoldDto()
                         {
                             Percent =
                                 (
-                                    Convert.ToDouble(lots.Sum(i => i.Ingressos.Vendidos.Quantidade))
-                                    / Convert.ToDouble(lots.Sum(i => i.QuantidadeIngressos))
+                                    Convert.ToDouble(lots.Sum(i => i.Tickets.Sold.Amount))
+                                    / Convert.ToDouble(lots.Sum(i => i.AmountTicket))
                                 ) * 100,
-                            Quantidade = lots.Sum(i => i.Ingressos.Vendidos.Quantidade),
-                            Taxa = 15,
-                            ValorReceber = lots.Sum(i => i.Ingressos.Vendidos.ValorReceber),
-                            ValorTotal = lots.Sum(i => i.Ingressos.Vendidos.ValorTotal)
+                            Amount = lots.Sum(i => i.Tickets.Sold.Amount),
+                            Tax = 15,
+                            ReceiveValue = lots.Sum(i => i.Tickets.Sold.ReceiveValue),
+                            TotalValue = lots.Sum(i => i.Tickets.Sold.TotalValue)
                         },
-                        Restantes = new RestantesDto()
+                        Remaining = new RemainingDto()
                         {
                             Percent =
                                 (
                                     Convert.ToDouble(
-                                        lots.Sum(i => i.Ingressos.Restantes.Quantidade)
-                                    ) / Convert.ToDouble(lots.Sum(i => i.QuantidadeIngressos))
+                                        lots.Sum(i => i.Tickets.Remaining.Amount)
+                                    ) / Convert.ToDouble(lots.Sum(i => i.AmountTicket))
                                 ) * 100,
-                            Quantidade = lots.Sum(i => i.Ingressos.Restantes.Quantidade),
-                            Taxa = 15,
-                            ValorReceber = lots.Sum(i => i.Ingressos.Restantes.ValorReceber),
-                            ValorTotal = lots.Sum(i => i.Ingressos.Restantes.ValorTotal)
+                            Amount = lots.Sum(i => i.Tickets.Remaining.Amount),
+                            Tax = 15,
+                            ReceiveValue = lots.Sum(i => i.Tickets.Remaining.ReceiveValue),
+                            TotalValue = lots.Sum(i => i.Tickets.Remaining.TotalValue)
                         }
                     },
-                    Cortesias = ProcessCortesy(eventData, x),
-                    Lotes = lots
+                    Cortesys = ProcessCortesy(eventData, x),
+                    Lots = lots
                 };
                 variantList.Add(variantDto);
             });
             return variantList;
         }
 
-        private CortesiasReportDto ProcessCortesy(
+        private CourtesyReportDto ProcessCortesy(
             GetEventWitTickets eventData,
             Model.Querys.GetEventwithTicket.Variant x
         )
@@ -275,11 +275,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             var cortesyRemaining = eventData.Courtesy.RemainingCourtesy
                 .Where(i => i.VariantId == x._id)
                 .ToList();
-            return new CortesiasReportDto()
+            return new CourtesyReportDto()
             {
                 Entregues =
                     cortesyRemaining.Sum(x => x.Quantity) != 0
-                        ? new EntreguesReportDto()
+                        ? new DeliveredReportDto()
                         {
                             Percent =
                                 (
@@ -290,16 +290,16 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                             )
                                     )
                                 ) * 100,
-                            Quantidade = cortesyHistory.Sum(x => x.Quantity)
+                            Amount = cortesyHistory.Sum(x => x.Quantity)
                         }
-                        : new EntreguesReportDto()
+                        : new DeliveredReportDto()
                         {
                             Percent = 100,
-                            Quantidade = cortesyHistory.Sum(x => x.Quantity)
+                            Amount = cortesyHistory.Sum(x => x.Quantity)
                         },
                 Restantes =
                     cortesyRemaining.Sum(x => x.Quantity) != 0
-                        ? new RestantesDto()
+                        ? new RemainingDto()
                         {
                             Percent =
                                 (
@@ -310,55 +310,55 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                         )
                                     ) / Convert.ToDouble(cortesyRemaining.Sum(x => x.Quantity))
                                 ) * 100,
-                            Quantidade = (
+                            Amount = (
                                 cortesyRemaining.Sum(x => x.Quantity)
                                 - cortesyHistory.Sum(x => x.Quantity)
                             )
                         }
-                        : new RestantesDto()
+                        : new RemainingDto()
                         {
                             Percent = 0,
-                            Quantidade = cortesyRemaining.Sum(x => x.Quantity)
+                            Amount = cortesyRemaining.Sum(x => x.Quantity)
                         }
             };
         }
 
-        private List<LoteReportDto> ProcessLotes(Model.Querys.GetEventwithTicket.Variant? variant)
+        private List<LotReportDto> ProcessLotes(Model.Querys.GetEventwithTicket.Variant? variant)
         {
-            var listLot = new List<LoteReportDto>();
+            var listLot = new List<LotReportDto>();
             variant?.Lot.ForEach(i =>
             {
                 listLot.Add(
-                    new LoteReportDto()
+                    new LotReportDto()
                     {
-                        Nome = i.Identificate.ToString(),
-                        QuantidadeIngressos = i.ticket.Count(),
-                        Ingressos = new IngressosReportDto()
+                        Name = i.Identificate.ToString(),
+                        AmountTicket = i.ticket.Count(),
+                        Tickets = new TicketsReportDto()
                         {
-                            Vendidos = new VendidosDto()
+                            Sold = new SoldDto()
                             {
                                 Percent =
                                     (
                                         Convert.ToDouble(i.ticket.Count(x => x.isSold))
                                         / Convert.ToDouble(i.ticket.Count())
                                     ) * 100,
-                                Quantidade = i.ticket.Count(x => x.isSold),
-                                Taxa = 15,
-                                ValorReceber =
+                                Amount = i.ticket.Count(x => x.isSold),
+                                Tax = 15,
+                                ReceiveValue =
                                     i.ticket.Where(x => x.isSold).Sum(i => i.Value)
                                     - (
                                         (15 * i.ticket.Where(x => x.isSold).Sum(i => i.Value)) / 100
                                     ),
-                                ValorTotal = i.ticket.Where(x => x.isSold).Sum(i => i.Value)
+                                TotalValue = i.ticket.Where(x => x.isSold).Sum(i => i.Value)
                             },
-                            Restantes = new RestantesDto()
+                            Remaining = new RemainingDto()
                             {
                                 Percent =
                                     (
                                         Convert.ToDouble(i.ticket.Count(x => !x.isSold))
                                         / Convert.ToDouble(i.ticket.Count())
                                     ) * 100,
-                                Quantidade = i.ticket.Count(x => !x.isSold)
+                                Amount = i.ticket.Count(x => !x.isSold)
                             }
                         },
                     }

@@ -2,14 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace Amg_ingressos_aqui_eventos_api.Dto.report
 {
-    public class ReportEventOrganizerDto
+    public class LotReportDto
     {
-        public ReportEventOrganizerDto()
+        public LotReportDto()
         {
             Name = string.Empty;
             AmountTicket = 0;
             Tickets = new TicketsReportDto();
-            Cortesys = new CourtesyReportDto();
         }
 
         [JsonPropertyName("Nome")]
@@ -20,8 +19,5 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
 
         [JsonPropertyName("Ingressos")]
         public TicketsReportDto Tickets { get; set; }
-
-        [JsonPropertyName("Cortesias")]
-        public CourtesyReportDto Cortesys { get; set; }
     }
 }

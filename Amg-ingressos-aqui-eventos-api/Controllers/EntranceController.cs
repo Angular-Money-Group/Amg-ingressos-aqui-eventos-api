@@ -58,14 +58,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Data);
             }
-            //catch (NotModificateTicketsExeption ex)
-            //{
-            //    _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
-            //    return StatusCode(444, MessageLogErrors.NotModificateTickets);
-            //}
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.entranceTicket, ex.Message);
+                _logger.LogError( MessageLogErrors.entranceTicket ?? string.Empty, ex.Message, "teste");
                 return StatusCode(500, MessageLogErrors.entranceTicket + ex.Message);
             }
         }

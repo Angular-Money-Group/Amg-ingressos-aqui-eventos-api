@@ -101,38 +101,38 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             ReportTransactionsDto report = new ReportTransactionsDto()
             {
-                Credito = new TransactionsDto()
+                Credit = new TransactionsDto()
                 {
-                    Quantidade = listCredit.Count(),
-                    ValorEvento = listCredit.Sum(x => x.TotalValue),
-                    ValorLiquido = listCredit.Sum(x => x.TotalValue) - ((listCredit.Sum(x => x.TotalValue) * 15) / 100),
-                    ValorTaxas = (listCredit.Sum(x => x.TotalValue) * 15) / 100,
-                    ValorTotal = listCredit.Sum(x => x.TotalValue)
+                    Amount = listCredit.Count(),
+                    EventValue = listCredit.Sum(x => x.TotalValue),
+                    LiquidValue = listCredit.Sum(x => x.TotalValue) - ((listCredit.Sum(x => x.TotalValue) * 15) / 100),
+                    TaxValue = (listCredit.Sum(x => x.TotalValue) * 15) / 100,
+                    TotalValue = listCredit.Sum(x => x.TotalValue)
                 },
-                Debito = new TransactionsDto()
+                Debit = new TransactionsDto()
                 {
-                    Quantidade = listDebit.Count(),
-                    ValorEvento = listDebit.Sum(x => x.TotalValue),
-                    ValorLiquido = listDebit.Sum(x => x.TotalValue) - ((listDebit.Sum(x => x.TotalValue) * 15) / 100),
-                    ValorTaxas = (listDebit.Sum(x => x.TotalValue) * 15) / 100,
-                    ValorTotal = listDebit.Sum(x => x.TotalValue)
+                    Amount = listDebit.Count(),
+                    EventValue = listDebit.Sum(x => x.TotalValue),
+                    LiquidValue = listDebit.Sum(x => x.TotalValue) - ((listDebit.Sum(x => x.TotalValue) * 15) / 100),
+                    TaxValue = (listDebit.Sum(x => x.TotalValue) * 15) / 100,
+                    TotalValue = listDebit.Sum(x => x.TotalValue)
                 },
                 Pix = new TransactionsDto()
                 {
-                    Quantidade = listPix.Count(),
-                    ValorEvento = listPix.Sum(x => x.TotalValue),
-                    ValorLiquido = listPix.Sum(x => x.TotalValue) - ((listPix.Sum(x => x.TotalValue) * 15) / 100),
-                    ValorTaxas = (listPix.Sum(x => x.TotalValue) * 15) / 100,
-                    ValorTotal = listPix.Sum(x => x.TotalValue)
+                    Amount = listPix.Count(),
+                    EventValue = listPix.Sum(x => x.TotalValue),
+                    LiquidValue = listPix.Sum(x => x.TotalValue) - ((listPix.Sum(x => x.TotalValue) * 15) / 100),
+                    TaxValue = (listPix.Sum(x => x.TotalValue) * 15) / 100,
+                    TotalValue = listPix.Sum(x => x.TotalValue)
                 }
             };
             report.Total = new TransactionsDto()
             {
-                Quantidade = report.Credito.Quantidade + report.Debito.Quantidade + report.Pix.Quantidade,
-                ValorEvento = report.Credito.ValorEvento + report.Debito.ValorEvento + report.Pix.ValorEvento,
-                ValorLiquido = report.Credito.ValorLiquido + report.Debito.ValorLiquido + report.Pix.ValorLiquido,
-                ValorTaxas = report.Credito.ValorTaxas + report.Debito.ValorTaxas + report.Pix.ValorTaxas,
-                ValorTotal = report.Credito.ValorTotal + report.Debito.ValorTotal + report.Pix.ValorTotal
+                Amount = report.Credit.Amount + report.Debit.Amount + report.Pix.Amount,
+                EventValue = report.Credit.EventValue + report.Debit.EventValue + report.Pix.EventValue,
+                LiquidValue = report.Credit.LiquidValue + report.Debit.LiquidValue + report.Pix.LiquidValue,
+                TaxValue = report.Credit.TaxValue + report.Debit.TaxValue + report.Pix.TaxValue,
+                TotalValue = report.Credit.TotalValue + report.Debit.TotalValue + report.Pix.TotalValue
             };
             return report;
         }
