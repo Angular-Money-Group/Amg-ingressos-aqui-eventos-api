@@ -269,7 +269,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 var update = Builders<Ticket>.Update
                     .Set("IdUser", ticket.IdUser)
                     .Set("Value", ticket.Value)
-                    .Set("isSold", ticket.isSold)
+                    .Set("isSold", ticket.IsSold)
                     .Set("Position", ticket.Position)
                     .Set("QrCode", ticket.QrCode)
                     .Set("Status", ticket.Status)

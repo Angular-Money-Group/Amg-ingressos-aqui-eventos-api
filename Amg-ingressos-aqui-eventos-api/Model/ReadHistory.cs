@@ -1,14 +1,21 @@
-﻿using Amg_ingressos_aqui_eventos_api.Enum;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class ReadHistory
     {
+        public ReadHistory()
+        {
+            Id = string.Empty;
+            IdEvent = string.Empty;
+            IdColab = string.Empty;
+            IdTicket = string.Empty;
+            Reason = string.Empty;
+        }
+
         /// <summary>
         /// Id mongo
         /// </summary>
@@ -21,32 +28,32 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Id do evento
         /// </summary>
         [BsonRepresentation(BsonType.ObjectId)]
-        public string idEvent { get; set; }
+        public string IdEvent { get; set; }
 
         /// <summary>
         /// Id do colaborador que leu o ticket
         /// </summary>
         [BsonRepresentation(BsonType.ObjectId)]
-        public string idColab { get; set; }
+        public string IdColab { get; set; }
         /// <summary>
         /// Id do ticket (qrcode)
         /// </summary>
-        
+
         [BsonRepresentation(BsonType.ObjectId)]
-        public string idTicket { get; set; }
+        public string IdTicket { get; set; }
 
         /// <summary>
         /// Data leitura
         /// </summary>
         [Required]
-        public DateTime date { get; set; }
+        public DateTime Date { get; set; }
         /// <summary>
         /// Status do ticket
         /// </summary>
-        public int status { get; set; }
+        public int Status { get; set; }
         /// <summary>
         /// Observação leitura
         /// </summary>
-        public string reason { get; set; }
+        public string Reason { get; set; }
     }
 }

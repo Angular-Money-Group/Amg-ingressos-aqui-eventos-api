@@ -7,7 +7,6 @@ using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Querys;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
 using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
@@ -491,7 +490,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<GetEventWitTickets>> GetAllEventsWithTickets(
+        public async Task<List<Model.Querys.GetEventwithTicket.GetEventWitTickets>> GetAllEventsWithTickets(
             string idEvent,
             string idOrganizer
         )
@@ -513,8 +512,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
 
-                List<GetEventWitTickets> pResults = _eventCollection
-                    .Aggregate<GetEventWitTickets>(pipeline)
+                List<Model.Querys.GetEventwithTicket.GetEventWitTickets> pResults = _eventCollection
+                    .Aggregate<Model.Querys.GetEventwithTicket.GetEventWitTickets>(pipeline)
                     .ToList();
 
                 if (!pResults.Any())

@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Amg_ingressos_aqui_eventos_api.Model;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -9,6 +8,18 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Event
     {
+        public Event()
+        {
+            Id = string.Empty;
+            Name = string.Empty;
+            Local = string.Empty;
+            Type = string.Empty;
+            Image = string.Empty;
+            Variant = new List<Variant>();
+            IdMeansReceipt = string.Empty;
+            IdOrganizer = string.Empty;
+        }
+
         /// <summary>
         /// Id mongo
         /// </summary>
@@ -66,7 +77,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public Address? Address { get; set; }
-        
+
         /// <summary>
         /// Lista de Variants
         /// </summary>
@@ -74,25 +85,25 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [JsonProperty("Variant")]
         public List<Variant> Variant { get; set; }
-        
+
         /// <summary>
         /// Lista de Variants
         /// </summary>
         [JsonProperty("courtesy")]
         public Courtesy? Courtesy { get; set; }
-        
+
         /// <summary>
         /// Id mongo Meio de Recebimento
         /// </summary>
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdMeansReceipt { get; set; }
-        
+
         /// <summary>
         /// Id mongo organizador do evento
         /// </summary>
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdOrganizer { get; set; }
-        
+
         /// <summary>
         /// Se o evento está em destaque
         /// </summary>

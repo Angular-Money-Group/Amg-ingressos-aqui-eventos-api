@@ -55,7 +55,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     return _messageReturn;
                 }
                 //Valida se o ingresso é do evento 
-                else if (evento.Event._id != entranceDTO.IdEvent)
+                else if (evento.Event.Id != entranceDTO.IdEvent)
                 {
                     _messageReturn.Data = "400";
                     _messageReturn.Message = "Ingresso não pertencente ao evento";
@@ -85,12 +85,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
                     {
-                        idEvent = entranceDTO.IdEvent,
-                        idTicket = entranceDTO.IdTicket,
-                        idColab = entranceDTO.IdColab,
-                        reason = _messageReturn.Message,
-                        status = (int)Enum.StatusTicket.USADO,
-                        date = DateTime.Now
+                        IdEvent = entranceDTO.IdEvent,
+                        IdTicket = entranceDTO.IdTicket,
+                        IdColab = entranceDTO.IdColab,
+                        Reason = _messageReturn.Message,
+                        Status = (int)Enum.StatusTicket.USADO,
+                        Date = DateTime.Now
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
@@ -106,12 +106,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
                     {
-                        idEvent = entranceDTO.IdEvent,
-                        idTicket = entranceDTO.IdTicket,
-                        idColab = entranceDTO.IdColab,
-                        reason = _messageReturn.Message,
-                        status = (int)Enum.StatusTicket.NAO_DISPONIVEL,
-                        date = DateTime.Now
+                        IdEvent = entranceDTO.IdEvent,
+                        IdTicket = entranceDTO.IdTicket,
+                        IdColab = entranceDTO.IdColab,
+                        Reason = _messageReturn.Message,
+                        Status = (int)Enum.StatusTicket.NAO_DISPONIVEL,
+                        Date = DateTime.Now
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
@@ -127,12 +127,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
                     {
-                        idEvent = entranceDTO.IdEvent,
-                        idTicket = entranceDTO.IdTicket,
-                        idColab = entranceDTO.IdColab,
-                        reason = _messageReturn.Message,
-                        status = (int)Enum.StatusTicket.NAO_VENDIDO,
-                        date = DateTime.Now
+                        IdEvent = entranceDTO.IdEvent,
+                        IdTicket = entranceDTO.IdTicket,
+                        IdColab = entranceDTO.IdColab,
+                        Reason = _messageReturn.Message,
+                        Status = (int)Enum.StatusTicket.NAO_VENDIDO,
+                        Date = DateTime.Now
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
@@ -148,12 +148,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
                     {
-                        idEvent = entranceDTO.IdEvent,
-                        idTicket = entranceDTO.IdTicket,
-                        idColab = entranceDTO.IdColab,
-                        reason = _messageReturn.Message,
-                        status = (int)Enum.StatusTicket.EXPIRADO,
-                        date = DateTime.Now
+                        IdEvent = entranceDTO.IdEvent,
+                        IdTicket = entranceDTO.IdTicket,
+                        IdColab = entranceDTO.IdColab,
+                        Reason = _messageReturn.Message,
+                        Status = (int)Enum.StatusTicket.EXPIRADO,
+                        Date = DateTime.Now
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
@@ -171,25 +171,25 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //1- Insere tabela de historico de leituras de qrcode (ticket)
                 SaveReadyHistories(new ReadHistory()
                 {
-                    idTicket = entranceDTO.IdTicket,
-                    idColab = entranceDTO.IdColab,
-                    idEvent = entranceDTO.IdEvent,
-                    reason = "Ingresso lido com sucesso",
-                    status = (int)Enum.StatusTicket.DISPONIVEL,
-                    date = DateTime.Now
+                    IdTicket = entranceDTO.IdTicket,
+                    IdColab = entranceDTO.IdColab,
+                    IdEvent = entranceDTO.IdEvent,
+                    Reason = "Ingresso lido com sucesso",
+                    Status = (int)Enum.StatusTicket.DISPONIVEL,
+                    Date = DateTime.Now
                 });
 
                 //2- Salva a leitura com sucesso do qrCode
                 eventQrReads = SaveEventQrReads<EventQrReads>(true, entranceDTO);
                 EventQrReadsDto eventQrReadsDto = new  EventQrReadsDto(){
                         Id = eventQrReads.Id,
-                        IdColab= eventQrReads.idColab,
-                        IdEvent = eventQrReads.idEvent,
-                        InitialDate= eventQrReads.initialDate,
-                        LastRead= eventQrReads.lastRead,
-                        TotalFail= eventQrReads.totalFail,
-                        TotalReads= eventQrReads.totalReads,
-                        TotalSuccess= eventQrReads.totalSuccess,
+                        IdColab= eventQrReads.IdColab,
+                        IdEvent = eventQrReads.IdEvent,
+                        InitialDate= eventQrReads.InitialDate,
+                        LastRead= eventQrReads.LastRead,
+                        TotalFail= eventQrReads.TotalFail,
+                        TotalReads= eventQrReads.TotalReads,
+                        TotalSuccess= eventQrReads.TotalSuccess,
                         DocumentId = colab.DocumentId,
                         NameUser = colab.Name,
                         NameVariant= evento.Variant.Name
@@ -236,22 +236,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     //Registra o qrCode lido do evento na data de hoje
                     eventQrReads = _entranceRepository.saveEventQrReads<EventQrReads>(new EventQrReads()
                     {
-                        idColab = entranceDTO.IdColab,
-                        idEvent = entranceDTO.IdEvent,
-                        initialDate = DateTime.Now,
-                        status = (int)Enum.EventQrReadsEnum.INICIADO,
-                        totalFail = successQrRead ? 0 : 1,
-                        totalReads = 1,
-                        totalSuccess = successQrRead ? 1 : 0
+                        IdColab = entranceDTO.IdColab,
+                        IdEvent = entranceDTO.IdEvent,
+                        InitialDate = DateTime.Now,
+                        Status = (int)Enum.EventQrReadsEnum.INICIADO,
+                        TotalFail = successQrRead ? 0 : 1,
+                        TotalReads = 1,
+                        TotalSuccess = successQrRead ? 1 : 0
                         //readTicket = new List<string>() { entranceDTO.IdTicket }
                     }).GetAwaiter().GetResult();
                 }
                 else
                 {
-                    eventQrReads.lastRead = DateTime.Now;
-                    eventQrReads.totalReads++;
-                    eventQrReads.totalSuccess = successQrRead ? (eventQrReads.totalSuccess + 1) : eventQrReads.totalSuccess;
-                    eventQrReads.totalFail = successQrRead ? eventQrReads.totalFail : (eventQrReads.totalFail + 1);
+                    eventQrReads.LastRead = DateTime.Now;
+                    eventQrReads.TotalReads++;
+                    eventQrReads.TotalSuccess = successQrRead ? (eventQrReads.TotalSuccess + 1) : eventQrReads.TotalSuccess;
+                    eventQrReads.TotalFail = successQrRead ? eventQrReads.TotalFail : (eventQrReads.TotalFail + 1);
                     //eventQrReads.loginHistory.Add(entranceDTO.IdTicket);
                     //eventQrReads.readHistory.Add(entranceDTO.IdTicket);
 

@@ -1,11 +1,6 @@
-using Amg_ingressos_aqui_eventos_api.Dto.report;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
-using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
-using Amg_ingressos_aqui_eventos_api.Utils;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {

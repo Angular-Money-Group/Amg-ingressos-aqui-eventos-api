@@ -121,7 +121,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> DeleteManyAsync(List<Model.Querys.Variant> Variant)
+        public async Task<MessageReturn> DeleteManyAsync(List<Variant> Variant)
         {
             try
             {

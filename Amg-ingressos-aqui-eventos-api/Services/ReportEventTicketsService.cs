@@ -339,26 +339,26 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             {
                                 Percent =
                                     (
-                                        Convert.ToDouble(i.ticket.Count(x => x.isSold))
+                                        Convert.ToDouble(i.ticket.Count(x => x.IsSold))
                                         / Convert.ToDouble(i.ticket.Count())
                                     ) * 100,
-                                Amount = i.ticket.Count(x => x.isSold),
+                                Amount = i.ticket.Count(x => x.IsSold),
                                 Tax = 15,
                                 ReceiveValue =
-                                    i.ticket.Where(x => x.isSold).Sum(i => i.Value)
+                                    i.ticket.Where(x => x.IsSold).Sum(i => i.Value)
                                     - (
-                                        (15 * i.ticket.Where(x => x.isSold).Sum(i => i.Value)) / 100
+                                        (15 * i.ticket.Where(x => x.IsSold).Sum(i => i.Value)) / 100
                                     ),
-                                TotalValue = i.ticket.Where(x => x.isSold).Sum(i => i.Value)
+                                TotalValue = i.ticket.Where(x => x.IsSold).Sum(i => i.Value)
                             },
                             Remaining = new RemainingDto()
                             {
                                 Percent =
                                     (
-                                        Convert.ToDouble(i.ticket.Count(x => !x.isSold))
+                                        Convert.ToDouble(i.ticket.Count(x => !x.IsSold))
                                         / Convert.ToDouble(i.ticket.Count())
                                     ) * 100,
-                                Amount = i.ticket.Count(x => !x.isSold)
+                                Amount = i.ticket.Count(x => !x.IsSold)
                             }
                         },
                     }

@@ -7,6 +7,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Lot
     {
+        public Lot()
+        {
+            Id = string.Empty;
+            IdVariant = string.Empty;
+        }
+
         /// <summary>
         /// Id mongo
         /// </summary>

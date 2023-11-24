@@ -9,6 +9,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> SaveManyAsync(List<Model.Variant> listVariant);
         Task<MessageReturn> EditAsync(List<VariantEditDto> variantEditDto);
         Task<MessageReturn> DeleteAsync(string Idvariant);
-        Task<MessageReturn> DeleteManyAsync(List<Model.Querys.Variant> Variants);
+        Task<MessageReturn> DeleteManyAsync(List<Variant> Variants);
     }
 }

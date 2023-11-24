@@ -7,6 +7,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Entrance
     {
+        public Entrance()
+        {
+            IdUser = string.Empty;
+            IdEvent = string.Empty;
+            IdTicket = string.Empty;
+        }
+
         /// <summary>
         /// Id mongo Usuário
         /// </summary>

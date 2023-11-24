@@ -4,25 +4,8 @@ using MongoDB.Bson;
 
 namespace Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions
 {
-    public class GetEventTransactions
+    public class GetEventTransactions : Event
     {
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
-        public string Name { get; set; }
-        public string Local { get; set; }
-        public string Type { get; set; }
-        public string Image { get; set; }
-        public string Description { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int Status { get; set; }
-        public Address Address { get; set; }
-        public Courtesy Courtesy { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string IdMeansReceipt { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string IdOrganizer { get; set; }
-        public bool Highlighted { get; set; }
         public List<Transaction> Transaction { get; set; }
     }
 
