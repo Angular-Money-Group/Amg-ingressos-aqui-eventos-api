@@ -1,7 +1,6 @@
 ﻿using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -69,10 +68,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 //Monta lista de campos para find na collection
                 var filter = Builders<EventQrReads>.Filter.And(
-                    Builders<EventQrReads>.Filter.Where(eventQr => eventQr.idColab.Contains(idUser)),
-                    Builders<EventQrReads>.Filter.Where(eventQr => eventQr.idEvent.Contains(idEvent)),
-                    Builders<EventQrReads>.Filter.Gte(eventQr => eventQr.initialDate, initialDate.Date),
-                    Builders<EventQrReads>.Filter.Lt(eventQr => eventQr.initialDate, initialDate.Date.AddDays(1).AddSeconds(-1))
+                    Builders<EventQrReads>.Filter.Where(eventQr => eventQr.IdColab.Contains(idUser)),
+                    Builders<EventQrReads>.Filter.Where(eventQr => eventQr.IdEvent.Contains(idEvent)),
+                    Builders<EventQrReads>.Filter.Gte(eventQr => eventQr.InitialDate, initialDate.Date),
+                    Builders<EventQrReads>.Filter.Lt(eventQr => eventQr.InitialDate, initialDate.Date.AddDays(1).AddSeconds(-1))
                     );
 
                 eventQrs = await _eventQrCollection.Find(filter).FirstOrDefaultAsync();
@@ -109,18 +108,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 //Monta lista de campos, que serão atualizado - Set do update
                 var updateDefination = new List<UpdateDefinition<EventQrReads>>();
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.idColab, eventLocal.idColab));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.idEvent, eventLocal.idEvent));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.totalReads, eventLocal.totalReads));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.totalSuccess, eventLocal.totalSuccess));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.totalFail, eventLocal.totalFail));
-                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.lastRead, eventLocal.lastRead));
+                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.IdColab, eventLocal.IdColab));
+                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.IdEvent, eventLocal.IdEvent));
+                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.TotalReads, eventLocal.TotalReads));
+                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.TotalSuccess, eventLocal.TotalSuccess));
+                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.TotalFail, eventLocal.TotalFail));
+                updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.LastRead, eventLocal.LastRead));
                 //updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.loginHistory, eventLocal.loginHistory));
                 //updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.readHistory, eventLocal.readHistory));
 
-                if (eventLocal.status != null)
+                if (eventLocal.Status != null)
                 {
-                    updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.status, eventLocal.status));
+                    updateDefination.Add(Builders<EventQrReads>.Update.Set(eventQr => eventQr.Status, eventLocal.Status));
                 }
 
                 //Where do update

@@ -75,11 +75,11 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Description = "Lorem Ipsum is simply dummy text of the printing" +
                 "and typesetting industry. Lorem Ipsum has been the industry's" +
                  "standard dummy text ever since the 1500s,",
-                Address = new Amg_ingressos_aqui_eventos_api.Model.Querys.Address()
+                Address = new Address()
                 {
                     AddressDescription = "Parque Sabiázinho",
-                    Cep = 38400000,
-                    Number = 123,
+                    Cep = "38400000",
+                    Number = "123",
                     Neighborhood = "teste",
                     Complement = "N/A",
                     ReferencePoint = "n/a",

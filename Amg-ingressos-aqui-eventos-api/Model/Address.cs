@@ -1,13 +1,21 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Address
     {
+        public Address()
+        {
+            Cep = string.Empty;
+            AddressDescription = string.Empty;
+            Number = string.Empty;
+            Neighborhood = string.Empty;
+            Complement = string.Empty;
+            ReferencePoint = string.Empty;
+            City = string.Empty;
+            State = string.Empty;
+        }
+
         /// <summary>
         /// CEP
         /// </summary>
@@ -48,6 +56,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public string State { get; set; }
-        
+
     }
 }

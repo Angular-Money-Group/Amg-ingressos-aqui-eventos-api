@@ -7,6 +7,17 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Variant
     {
+        public Variant()
+        {
+            Id = string.Empty;
+            Name = string.Empty;
+            Description = string.Empty;
+            IdEvent = string.Empty;
+            Lot = new List<Lot>();
+            Positions = new Positions();
+            LocaleImage = string.Empty;
+        }
+
         /// <summary>
         /// Id mongo
         /// </summary>
@@ -52,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [JsonProperty("quantityCourtesy")]
         public int QuantityCourtesy { get; set; }
-        
+
         /// <summary>
         /// Lista de lotes
         /// </summary>
@@ -71,12 +82,12 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonIgnore]
         [JsonProperty("SellTicketsBeforeStartAnother")]
         public bool SellTicketsBeforeStartAnother { get; set; }
-        
+
         /// <summary>
         /// Vender lote antes de iniciar outro 
         /// </summary>
         [JsonProperty("localeImage")]
-        public string? LocaleImage { get; set; }
+        public string LocaleImage { get; set; }
 
         /// <summary>
         /// Precisa verificar os documentos?
@@ -87,8 +98,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Posicoes/cadeiras
         /// </summary>
-         [JsonProperty("Positions")]
+        [JsonProperty("Positions")]
         public Positions Positions { get; set; }
-        
     }
 }

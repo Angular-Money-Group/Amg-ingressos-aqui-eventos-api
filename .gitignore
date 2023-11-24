@@ -16,3 +16,4 @@ applicationhost*.config
 # Lock files
 read*.lock
 .vs/
+Amg-ingressos-aqui-eventos-api/out/
