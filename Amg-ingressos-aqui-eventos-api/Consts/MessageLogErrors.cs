@@ -7,6 +7,8 @@ namespace Amg_ingressos_aqui_eventos_api.Consts
 {
     public static class MessageLogErrors
     {
+        public const string SaveMessage = "{0} : Erro inesperado ao salvar um(a) {1}";
+        public const string DeleteMessage = "{0} : Erro inesperado ao deletar um(a) {1}";
         public const string saveEventMessage = "SaveEventAsync : Erro inesperado ao salvar um evento";
         public const string highlightEventmessage = "HighlightEventAsync : Erro inesperado ao destacar um evento";
         public const string deleteEventMessage = "DeleteEventAsync : Erro inesperado ao deletar um evento";

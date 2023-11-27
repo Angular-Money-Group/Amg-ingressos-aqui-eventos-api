@@ -8,6 +8,7 @@ using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amg_ingressos_aqui_eventos_api.Consts;
 
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
@@ -29,7 +30,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _ticketStatusCollection = dbConnectionCourtesy.GetConnection("statusCourtesyTickets");
         }
 
-        public async Task<List<GetTicketDataEvent>> GetTicketsByUser<T>(string idUser)
+        public async Task<List<GetTicketDataEvent>> GetTicketsByUser<T1>(string idUser)
         {
             try
             {
@@ -103,39 +104,35 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 // Execute a agregação na coleção de ingressos
                 var result = await _ticketCollection
-                    .Aggregate<GetTicketDataEvent>(pipeline)
+                    .AggregateAsync<GetTicketDataEvent>(pipeline)
+                    .Result
                     .ToListAsync();
 
                 return result;
             }
-            catch (SaveTicketException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> Save<T>(object ticket)
+        public async Task<object> SaveAsync<T1>(object ticket)
         {
             try
             {
-                await _ticketCollection.InsertOneAsync(ticket as Ticket);
-                return ((Ticket)ticket).Id;
+                var data = ticket as Ticket ??
+                    throw new SaveException(string.Format(MessageLogErrors.SaveMessage,this.GetType().Name,"ticket"));
+
+                await _ticketCollection.InsertOneAsync(data);
+                return data.Id;
             }
-            catch (SaveTicketException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> DeleteMany<T>(List<string> tickets)
+        public async Task<object> DeleteMany<T1>(List<string> tickets)
         {
             try
             {
@@ -145,42 +142,33 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (result.DeletedCount >= 1)
                     return "Ingressos Deletado";
                 else
-                    throw new DeleteEventException("Evento não encontrado");
+                    throw new DeleteException(string.Format(MessageLogErrors.DeleteMessage,this.GetType().Name,"Ticket"));
             }
-            catch (SaveTicketException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> DeleteByLot<T>(string idLot)
+        public async Task<object> DeleteByLot<T1>(string idLot)
         {
             try
             {
                 var filtro = Builders<Ticket>.Filter.Eq("IdLot", idLot);
-
                 var result = await _ticketCollection.DeleteManyAsync(filtro);
 
                 if (result.DeletedCount >= 1)
                     return "Ingressos Deletado";
                 else
-                    throw new DeleteEventException("Ingressos não encontrados");
+                    throw new DeleteException(string.Format(MessageLogErrors.DeleteMessage,this.GetType().Name,"Ticket"));
             }
-            catch (SaveTicketException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<Ticket>> GetTickets<T>(Ticket ticket)
+        public async Task<List<Ticket>> GetTickets<T1>(Ticket ticket)
         {
             try
             {
@@ -197,71 +185,55 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (!string.IsNullOrEmpty(ticket.IdUser))
                     filter &= builder.Eq(x => x.IdUser, null);
 
-                var result = await _ticketCollection.Find(filter).ToListAsync();
-
-                if (result == null)
-                    throw new FindTicketByUserException("Ticket não encontrado");
+                var result = await _ticketCollection.FindAsync(filter).Result.ToListAsync()
+                ?? throw new GetException("Ticket não encontrado");
 
                 return result;
             }
-            catch (FindTicketByUserException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<string>> GetTicketsByLot<T>(string idLot)
+        public async Task<List<string>> GetTicketsByLot<T1>(string idLot)
         {
             try
             {
                 var filter = Builders<Ticket>.Filter.Eq("IdLot", idLot);
-
                 var tickets = await _ticketCollection.Find(filter).ToListAsync();
 
                 var result =
                     tickets.Select(e => e.Id).ToList()
-                    ?? throw new FindTicketByUserException("Ticket não encontrado");
+                    ?? throw new GetException("Ticket não encontrado");
 
                 return result;
             }
-            catch (FindTicketByUserException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<Ticket> FindById<T>(string idTicket)
+        public async Task<Ticket> GetById<T1>(string idTicket)
         {
             try
             {
                 var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(idTicket));
-
                 var tickets = await _ticketCollection.Find(filter).FirstOrDefaultAsync();
 
                 var result =
-                    tickets ?? throw new FindTicketByUserException("Ticket não encontrado");
+                    tickets ?? throw new GetException("Ticket não encontrado");
 
                 return result;
             }
-            catch (FindTicketByUserException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> UpdateTicketsAsync<T>(string id, Ticket ticket)
+        public async Task<object> UpdateTicketsAsync<T1>(string id, Ticket ticket)
         {
             try
             {
@@ -280,17 +252,13 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 return await _ticketCollection.Find(filter).ToListAsync();
             }
-            catch (NotModificateTicketsExeption ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> GetTicketByIdDataUser<T>(string id)
+        public async Task<object> GetTicketByIdDataUser<T1>(string id)
         {
             try
             {
@@ -314,28 +282,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 };
                 GetTicketDataUser pResults =
                     await _ticketCollection
-                        .Aggregate<GetTicketDataUser>(pipeline)
+                        .AggregateAsync<GetTicketDataUser>(pipeline)
+                        .Result
                         .FirstOrDefaultAsync()
-                    ?? throw new FindByIdEventException("Evento não encontrado");
+                    ?? throw new GetException("Evento não encontrado");
                 return pResults;
             }
-            catch (FindByIdEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> GetTicketByIdDataEvent<T>(string id)
+        public async Task<object> GetTicketByIdDataEvent<T1>(string id)
         {
             try
             {
-                //var json = QuerysMongo.GetTicketByIdDataEvent;
-                //BsonDocument document = BsonDocument.Parse(@json);
-
                 BsonDocument documentFilter = BsonDocument.Parse(
                     @"{$addFields:{'_id': { '$toString': '$_id' }}}"
                 );
@@ -403,18 +365,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 };
                 GetTicketDataEvent pResults =
                     await _ticketCollection
-                        .Aggregate<GetTicketDataEvent>(pipeline)
+                        .AggregateAsync<GetTicketDataEvent>(pipeline)
+                        .Result
                         .FirstOrDefaultAsync()
-                    ?? throw new FindByIdEventException("Evento não encontrado");
+                    ?? throw new GetException("Ticket não encontrado");
                 return pResults;
             }
-            catch (FindByIdEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
@@ -422,20 +381,16 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             try
             {
-                _ticketCollection.InsertMany(lstTicket);
+                await _ticketCollection.InsertManyAsync(lstTicket);
+                return "Ok";
             }
-            catch (SaveTicketException ex)
+            catch
             {
-                throw ex;
+                throw;
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return "Ok";
         }
 
-        public async Task<object> BurnTicketsAsync<T>(string id, int status)
+        public async Task<object> BurnTicketsAsync<T1>(string id, int status)
         {
             try
             {
@@ -447,12 +402,12 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 //Executa o comando
                 await _ticketCollection.UpdateOneAsync(filter, update);
+                return new object();
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
-            return new object();
         }
     }
 }

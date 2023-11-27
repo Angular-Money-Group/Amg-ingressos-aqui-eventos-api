@@ -6,10 +6,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     public interface IEventRepository 
     {
         Task<object> Save<T>(object eventComplet);
-        Task<object> FindById<T>(object id);
+        Task<object> GetById<T>(object id);
         Task<Event> SetHighlightEvent<T>(string id);
-        Task<List<Event>> FindByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filter);
-        Task<List<Event>> FindByName<T>(string name);
+        Task<List<Event>> GetByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filter);
+        Task<List<Event>> GetByName<T>(string name);
         Task<object> Delete<T>(object id);
         Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
         Task<List<GetEventsWithNames>> GetAllEventsAdmin<T>();
@@ -18,6 +18,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions);
         Task<Event> Edit<T>(string id, Event eventEdit);
-        Task<Event> FindByIdVariant<T>(string id);
+        Task<Event> GetByIdVariant<T>(string id);
     }
 }

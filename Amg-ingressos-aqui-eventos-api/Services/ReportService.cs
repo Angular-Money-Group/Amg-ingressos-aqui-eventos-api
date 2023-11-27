@@ -21,7 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTickets.ProcessReportEventTicketsDetail(idEvent, idVariant).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -43,7 +43,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTickets.ProcessReportEventTicketsDetails(idEvent).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -64,7 +64,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTickets.ProcessReportEventTickets(idOrganizer).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -85,7 +85,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTransactions.ProcessReportEventTransactionsDetail(idEvent,idVariant,idOrganizer).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -106,7 +106,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTransactions.ProcessReportEventTransactions(idOrganizer).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;

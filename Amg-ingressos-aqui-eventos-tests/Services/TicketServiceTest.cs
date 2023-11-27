@@ -49,7 +49,7 @@ namespace Prime.UnitTests.Services
             var ticketComplet = FactoryTicket.SimpleTicket();
             var messageReturn = "OK";
             _ticketRepositoryMock
-                .Setup(x => x.Save<object>(ticketComplet))
+                .Setup(x => x.SaveAsync<object>(ticketComplet))
                 .Returns(Task.FromResult(messageReturn as object));
 
             //Act
@@ -98,7 +98,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var ticket = FactoryTicket.SimpleTicket();
             _ticketRepositoryMock
-                .Setup(x => x.Save<object>(ticket))
+                .Setup(x => x.SaveAsync<object>(ticket))
                 .Throws(new Exception("Erro ao conectar a base de dados"));
 
             //Act

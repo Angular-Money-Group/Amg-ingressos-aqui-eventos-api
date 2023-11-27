@@ -10,7 +10,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> GetTicketByUserEvent(string idUser,string idEvent);
         Task<MessageReturn> GetTicketsByLot(string idLot);
         Task<MessageReturn> GetTicketsRemainingByLot(string idLot);
-        Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticketObject);
+        Task<MessageReturn> EditTicketsAsync(string id, Ticket ticketObject);
         Task<MessageReturn> GetTicketById(string id);
         Task<MessageReturn> GetCourtesyStatus(string id);
         Task<MessageReturn> GetTicketByIdDataUser(string id);

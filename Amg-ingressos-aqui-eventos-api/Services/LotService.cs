@@ -42,12 +42,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _ticketService.SaveManyAsync(listTicket);
             }
-            catch (SaveTicketException ex)
-            {
-                DeleteAsync(lot.Id);
-                _messageReturn.Message = ex.Message;
-            }
-            catch (SaveLotException ex)
+            catch (SaveException ex)
             {
                 DeleteAsync(lot.Id);
                 _messageReturn.Message = ex.Message;
@@ -84,11 +79,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     _ticketService.SaveManyAsync(listTicket);
                 });
             }
-            catch (SaveTicketException ex)
-            {
-                _messageReturn.Message = ex.Message;
-            }
-            catch (SaveLotException ex)
+            catch (SaveException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -108,7 +99,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 await _ticketService.DeleteTicketsByLot(id);
                 _messageReturn.Data = await _lotRepository.Delete<object>(id);
             }
-            catch (SaveLotException ex)
+            catch (DeleteException ex)
             {
                 DeleteAsync(id);
                 _messageReturn.Message = ex.Message;
@@ -129,7 +120,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idVariant.ValidateIdMongo();
                 _messageReturn.Data = await _lotRepository.DeleteByVariant<object>(idVariant);
             }
-            catch (SaveLotException ex)
+            catch (DeleteException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -159,7 +150,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
 
             }
-            catch (SaveLotException ex)
+            catch (EditException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -183,7 +174,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = await _lotRepository.DeleteMany<object>(Lot);
 
             }
-            catch (SaveLotException ex)
+            catch (DeleteException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -202,7 +193,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = await _lotRepository.GetLotByIdVariant<Lot>(idVariant);
 
             }
-            catch (NotModificateTicketsExeption ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -218,11 +209,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private void ValidateModelSave(Lot lot)
         {
             if (lot.Identificate == 0)
-                throw new SaveLotException("Identificaror é Obrigatório.");
+                throw new SaveException("Identificaror é Obrigatório.");
             else if (lot.StartDateSales == DateTime.MinValue || lot.StartDateSales == DateTime.MaxValue)
-                throw new SaveLotException("Data Inicio de venda é Obrigatório.");
+                throw new SaveException("Data Inicio de venda é Obrigatório.");
             else if (lot.EndDateSales == DateTime.MinValue || lot.EndDateSales == DateTime.MaxValue)
-                throw new SaveLotException("Data final de venda é Obrigatório.");
+                throw new SaveException("Data final de venda é Obrigatório.");
         }
     }
 }

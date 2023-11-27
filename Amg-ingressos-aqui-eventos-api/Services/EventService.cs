@@ -32,13 +32,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _messageReturn = new MessageReturn();
         }
 
-        public async Task<MessageReturn> FindByIdAsync(string id)
+        public async Task<MessageReturn> GetByIdAsync(string id)
         {
             try
             {
                 id.ValidateIdMongo();
 
-                _messageReturn.Data = await _eventRepository.FindById<Event>(id);
+                _messageReturn.Data = await _eventRepository.GetById<Event>(id);
 
                 return _messageReturn;
             }
@@ -46,7 +46,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
-            catch (FindByIdEventException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -61,11 +61,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.FindByName<List<Event>>(name);
+                _messageReturn.Data = await _eventRepository.GetByName<List<Event>>(name);
 
                 return _messageReturn;
             }
-            catch (FindByDescriptionException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -121,7 +121,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 });*/
             }
-            catch (SaveEventException ex)
+            catch (SaveException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -132,7 +132,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> HighlightEventAsync(string id)
+        public async Task<MessageReturn> GetHighlightEventAsync(string id)
         {
             try
             {
@@ -140,11 +140,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 return _messageReturn;
             }
-            catch (FindByDescriptionException ex)
-            {
-                _messageReturn.Message = ex.Message;
-            }
-            catch (MaxHighlightedEvents ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -204,7 +200,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     _messageReturn.Data = allEvents;
                 }
             }
-            catch (GetAllEventException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -221,7 +217,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _eventRepository.GetAllEventsAdmin<List<GetEventsWithNames>>();
             }
-            catch (GetAllEventException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -232,7 +228,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> FindByOrganizerAsync(
+        public async Task<MessageReturn> GetByOrganizerAsync(
             string idOrganizer,
             Pagination paginationOptions,
             FilterOptions? filter
@@ -240,13 +236,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.FindByProducer<List<Event>>(
+                _messageReturn.Data = await _eventRepository.GetByProducer<List<Event>>(
                     idOrganizer,
                     paginationOptions,
                     filter
                 );
             }
-            catch (GetAllEventException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -285,7 +281,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = await _eventRepository.Edit<Event>(id, eventEdit);
             }
-            catch (GetAllEventException ex)
+            catch (EditException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -299,33 +295,33 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private void ValidateModelSave(Event eventSave)
         {
             if (eventSave.Name == "")
-                throw new SaveEventException("Nome é Obrigatório.");
+                throw new SaveException("Nome é Obrigatório.");
             if (eventSave.Local == "")
-                throw new SaveEventException("Local é Obrigatório.");
+                throw new SaveException("Local é Obrigatório.");
             if (eventSave.Type == "")
-                throw new SaveEventException("Tipo é Obrigatório.");
+                throw new SaveException("Tipo é Obrigatório.");
             if (eventSave.Image == "")
-                throw new SaveEventException("Imagem é Obrigatório.");
+                throw new SaveException("Imagem é Obrigatório.");
             if (eventSave.Description == "")
-                throw new SaveEventException("Descrição é Obrigatório.");
+                throw new SaveException("Descrição é Obrigatório.");
             if (eventSave.Address == null)
-                throw new SaveEventException("Endereço é Obrigatório.");
+                throw new SaveException("Endereço é Obrigatório.");
             if (eventSave.Address.Cep == "")
-                throw new SaveEventException("CEP é Obrigatório.");
+                throw new SaveException("CEP é Obrigatório.");
             if (eventSave.Address.Number == string.Empty)
-                throw new SaveEventException("Número Endereço é Obrigatório.");
+                throw new SaveException("Número Endereço é Obrigatório.");
             if (eventSave.Address.Neighborhood == "")
-                throw new SaveEventException("Vizinhança é Obrigatório.");
+                throw new SaveException("Vizinhança é Obrigatório.");
             if (eventSave.Address.City == "")
-                throw new SaveEventException("Cidade é Obrigatório.");
+                throw new SaveException("Cidade é Obrigatório.");
             if (eventSave.Address.State == "")
-                throw new SaveEventException("Estado é Obrigatório.");
+                throw new SaveException("Estado é Obrigatório.");
             if (eventSave.StartDate == DateTime.MinValue)
-                throw new SaveEventException("Data Inicio é Obrigatório.");
+                throw new SaveException("Data Inicio é Obrigatório.");
             if (eventSave.EndDate == DateTime.MinValue)
-                throw new SaveEventException("Data Fim é Obrigatório.");
+                throw new SaveException("Data Fim é Obrigatório.");
             if (!eventSave.Variant.Any())
-                throw new SaveEventException("Variante é Obrigatório.");
+                throw new SaveException("Variante é Obrigatório.");
         }
 
         public static bool IsBase64String(string base64)
@@ -337,7 +333,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private void IsBase64Image(string base64String)
         {
             if (string.IsNullOrEmpty(base64String))
-                throw new SaveEventException("Imagem é obrigatório");
+                throw new SaveException("Imagem é obrigatório");
 
             var base64Data = Regex
                 .Match(base64String, @"data:image/(?<type>.+?),(?<data>.+)")
@@ -349,7 +345,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (FormatException)
             {
-                throw new SaveEventException("Essa imagem não está em base64");
+                throw new SaveException("Essa imagem não está em base64");
             }
         }
 
@@ -399,7 +395,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Message = ex.Message;
             }
-            catch (FindByIdEventException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
             }

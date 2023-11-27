@@ -271,10 +271,10 @@ namespace Prime.UnitTests.Services
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).Returns(Task.FromResult(eventComplet as object));
+            _eventRepositoryMock.Setup(x => x.GetById<Event>(id)).Returns(Task.FromResult(eventComplet as object));
 
             //Act
-            var result = _eventService.FindByIdAsync(id);
+            var result = _eventService.GetByIdAsync(id);
 
             //Assert
             Assert.AreEqual(eventComplet, result.Result.Data);
@@ -303,7 +303,7 @@ namespace Prime.UnitTests.Services
             var messageExpected = "Id é obrigatório e está menor que 24 digitos";
 
             //Act
-            var result = _eventService.FindByIdAsync("3b241101-e2bb-4255-8caf");
+            var result = _eventService.GetByIdAsync("3b241101-e2bb-4255-8caf");
 
             //Assert
             Assert.AreEqual(messageExpected, result.Result.Message);
@@ -317,7 +317,7 @@ namespace Prime.UnitTests.Services
             var messageExpected = "Id é obrigatório";
 
             //Act
-            var result = _eventService.FindByIdAsync("");
+            var result = _eventService.GetByIdAsync("");
 
             //Assert
             Assert.AreEqual(messageExpected, result.Result.Message);

@@ -34,7 +34,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Data);
             }
-            catch (DeleteEventException ex)
+            catch (DeleteException ex)
             {
                 _logger.LogInformation(MessageLogErrors.saveEventMessage, ex);
                 return NoContent();
@@ -62,7 +62,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Data);
             }
-            catch (DeleteEventException ex)
+            catch (DeleteException ex)
             {
                 _logger.LogInformation(MessageLogErrors.saveEventMessage, ex);
                 return NoContent();

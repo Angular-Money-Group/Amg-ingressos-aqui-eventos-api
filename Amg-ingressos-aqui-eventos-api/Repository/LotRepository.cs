@@ -2,7 +2,6 @@ using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
-using System.Data;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
@@ -27,13 +26,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (deleteResult.DeletedCount == 1)
                     return "Lote deletado";
                 else
-                    throw new SaveLotException("algo deu errado ao deletar");
+                    throw new DeleteException("algo deu errado ao deletar");
             }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
+            catch
             {
                 throw;
             }
@@ -48,49 +43,38 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (deleteResult.DeletedCount >= 1)
                     return "Lote deletado";
                 else
-                    throw new SaveLotException("algo deu errado ao deletar");
+                    throw new DeleteException("algo deu errado ao deletar");
             }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
+            catch
             {
                 throw;
             }
         }
 
-        public async Task<Lot> Edit<T>(string id, Lot lotObj)
+        public async Task<Lot> Edit<T1>(string id, Lot lotObj)
         {
             try
             {
                 var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
-
                 var update = Builders<Lot>.Update.Combine();
 
                 foreach (var property in typeof(Lot).GetProperties())
                 {
                     if (property.GetValue(lotObj) != null && property.Name != "_Id")
-                    {
                         update = update.Set(property.Name, property.GetValue(lotObj));
-                    }
+
                 }
 
                 object value = await _lotCollection.UpdateOneAsync(filtro, update);
-
-                return (value as Lot)!;
+                return value as Lot ?? throw new EditException("Algo deu errado ao editar Lote");
             }
-            catch (SaveEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> DeleteMany<T>(List<string> Lot)
+        public async Task<object> DeleteMany<T1>(List<string> Lot)
         {
             try
             {
@@ -100,66 +84,51 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (deleteResult.DeletedCount == 1)
                     return "Lote deletado";
                 else
-                    throw new SaveLotException("algo deu errado ao deletar");
+                    throw new DeleteException("Algo deu errado ao deletar");
             }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
+            catch
             {
                 throw;
             }
         }
 
-        public async Task<Lot> GetLotByIdVariant<T>(string idVariant)
+        public async Task<Lot> GetLotByIdVariant<T1>(string idVariant)
         {
             try
             {
                 var filtro = Builders<Lot>.Filter.Eq("IdVariant", ObjectId.Parse(idVariant));
+                var pResult = await _lotCollection.FindAsync(filtro);
 
-                var pResult = _lotCollection.Find(filtro).ToList();
-                
-                return pResult.FirstOrDefault() ?? throw new FindByIdEventException("Lote não encontrado");
+                return pResult.FirstOrDefault() ?? throw new GetException("Lote não encontrado");
             }
-            catch (FindByIdEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
+            catch
             {
                 throw;
             }
         }
 
-        public async Task<object> Save<T>(object Lot)
+        public async Task<object> Save<T1>(object Lot)
         {
             try
             {
-                await _lotCollection.InsertOneAsync(Lot as Lot);
-                return ((Lot)Lot).Id;
+                var data = Lot as Lot ?? throw new SaveException("Lote não pode ser null");
+                await _lotCollection.InsertOneAsync(data);
+                return data.Id ?? throw new SaveException("Erro ao salvar Lote");
             }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (Exception)
+            catch
             {
                 throw;
             }
         }
-        public async Task<object> SaveMany<T>(List<Lot> Lot)
+
+        public async Task<object> SaveMany<T1>(List<Lot> Lot)
         {
             try
             {
                 await _lotCollection.InsertManyAsync(Lot);
                 return Lot;
             }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (Exception)
+            catch
             {
                 throw;
             }

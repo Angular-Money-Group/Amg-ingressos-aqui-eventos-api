@@ -26,7 +26,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 if (string.IsNullOrEmpty(idOrganizer))
-                    throw new SaveTicketException("Id Lote é Obrigatório.");
+                    throw new ReportException("Id Lote é Obrigatório.");
 
                 idOrganizer.ValidateIdMongo();
 
@@ -39,7 +39,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -60,7 +60,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 if (string.IsNullOrEmpty(idEvent))
-                    throw new SaveTicketException("Id Evento é Obrigatório.");
+                    throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
 
 
@@ -72,7 +72,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;

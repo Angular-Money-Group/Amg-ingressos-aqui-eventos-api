@@ -212,7 +212,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _ticketService.UpdateTicketsAsync(id, ticket);
+                var result = await _ticketService.EditTicketsAsync(id, ticket);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -221,11 +221,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 }
 
                 return Ok(result.Data);
-            }
-            catch (NotModificateTicketsExeption ex)
-            {
-                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
-                return StatusCode(444, MessageLogErrors.NotModificateTickets);
             }
             catch (Exception ex)
             {
@@ -257,11 +252,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Message);
             }
-            catch (NotModificateTicketsExeption ex)
-            {
-                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
-                return StatusCode(444, MessageLogErrors.NotModificateTickets);
-            }
             catch (Exception ex)
             {
                 _logger.LogError(MessageLogErrors.UpdateTickets, ex.Message);
@@ -290,13 +280,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 var result = _ticketService.SendCourtesyTickets(courtesyTicketDto);
 
                 _messageReturn.Data = "Enviando courtesias";
-                _messageReturn.Message = null;
                 return Ok(_messageReturn);
-            }
-            catch (NotModificateTicketsExeption ex)
-            {
-                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
-                return StatusCode(444, MessageLogErrors.NotModificateTickets);
             }
             catch (Exception ex)
             {
@@ -326,11 +310,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 _messageReturn.Data = "Enviando courtesias";
                 _messageReturn.Message = null;
                 return Ok(_messageReturn);
-            }
-            catch (NotModificateTicketsExeption ex)
-            {
-                _logger.LogError(MessageLogErrors.NotModificateTickets, ex);
-                return StatusCode(444, MessageLogErrors.NotModificateTickets);
             }
             catch (Exception ex)
             {

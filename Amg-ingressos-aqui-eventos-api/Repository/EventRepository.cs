@@ -21,7 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _eventCollection = dbconnection.GetConnection("events");
         }
 
-        public async Task<object> Delete<T>(object id)
+        public async Task<object> Delete<T1>(object id)
         {
             try
             {
@@ -33,27 +33,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 if (action.MatchedCount == 0)
                 {
-                    throw new DeleteEventException("Evento não encontrado");
+                    throw new DeleteException("Evento não encontrado");
                 }
                 else if (action.ModifiedCount == 0)
                 {
-                    throw new DeleteEventException("Evento já excluido");
+                    throw new DeleteException("Evento já excluido");
                 }
 
-                var value = "Evento deletado com sucesso";
-                return value;
+                return "Evento deletado com sucesso";
             }
-            catch (DeleteEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> FindById<T>(object id)
+        public async Task<object> GetById<T1>(object id)
         {
             try
             {
@@ -65,47 +60,38 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[]
                 {
-                    //documentFilter,
                     documentFilter1,
                     document
                 };
                 List<GetEvents> pResults =
-                    _eventCollection.Aggregate<GetEvents>(pipeline).ToList()
-                    ?? throw new FindByIdEventException("Evento não encontrado");
+                    (List<GetEvents>)(await _eventCollection.AggregateAsync<GetEvents>(pipeline)
+                    ?? throw new GetException("Evento não encontrado"));
                 return pResults;
             }
-            catch (FindByIdEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<Event> FindByIdVariant<T>(string id)
+        public async Task<Event> GetByIdVariant<T1>(string id)
         {
             try
             {
                 var filter = Builders<Event>.Filter.Eq("_Id", ObjectId.Parse(id));
 
-                var pResult = _eventCollection.Find(filter).ToList();
+                var pResult = await _eventCollection.FindAsync(filter);
 
                 return pResult.FirstOrDefault()
-                    ?? throw new FindByIdEventException("Evento não encontrado");
+                    ?? throw new GetException("Evento não encontrado");
             }
-            catch (FindByIdEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<Event>> FindByName<T>(string nome)
+        public async Task<List<Event>> GetByName<T1>(string nome)
         {
             try
             {
@@ -116,21 +102,17 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 List<Event> pResults = await _eventCollection.Find(filter).ToListAsync();
                 if (!pResults.Any())
-                    throw new FindByDescriptionException("Eventos não encontrados");
+                    throw new GetException("Eventos não encontrados");
 
                 return pResults;
             }
-            catch (FindByDescriptionException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<Event> SetHighlightEvent<T>(string id)
+        public async Task<Event> SetHighlightEvent<T1>(string id)
         {
             try
             {
@@ -139,14 +121,14 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .ToList();
 
                 if (pHighlightedEvents.Count >= 9)
-                    throw new MaxHighlightedEvents("Maximo de Eventos destacados atingido");
+                    throw new GetException("Maximo de Eventos destacados atingido");
 
                 var filter = Builders<Event>.Filter.Eq("_Id", id);
 
-                Event eventDoc = _eventCollection.Find(filter).FirstOrDefault();
+                Event eventDoc = (Event)await _eventCollection.FindAsync(filter);
 
                 if (eventDoc == null)
-                    throw new FindByDescriptionException("Evento não encontrado");
+                    throw new GetException("Evento não encontrado");
 
                 var isHighlighted = eventDoc.Highlighted;
                 var newValue = !isHighlighted;
@@ -158,21 +140,13 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 eventDoc.Highlighted = !eventDoc.Highlighted;
                 return eventDoc;
             }
-            catch (FindByDescriptionException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (MaxHighlightedEvents ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions)
+        public async Task<List<GetEventsWithNames>> GetAllEvents<T1>(Pagination paginationOptions)
         {
             try
             {
@@ -207,12 +181,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     BsonDocument.Parse("{ $match: { 'Status': 0 } }")
                 };
 
-                List<GetEventsWithNames> pResults = _eventCollection
-                    .Aggregate<GetEventsWithNames>(pipeline)
-                    .ToList();
+                List<GetEventsWithNames> pResults = (List<GetEventsWithNames>)await _eventCollection
+                    .AggregateAsync<GetEventsWithNames>(pipeline);
 
                 if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+                    throw new GetException("Eventos não encontrados");
 
                 pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
 
@@ -221,19 +194,16 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Skip(startIndex)
                     .Take(paginationOptions.pageSize)
                     .ToList();
+
                 return pagedResults;
             }
-            catch (GetAllEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<GetEventsWithNames>> GetAllEventsAdmin<T>()
+        public async Task<List<GetEventsWithNames>> GetAllEventsAdmin<T1>()
         {
             try
             {
@@ -268,27 +238,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     BsonDocument.Parse("{ $sort: { 'Highlighted': -1, 'Status': 1, 'StartDate': 1 } }")
                 };
 
-                List<GetEventsWithNames> pResults = _eventCollection
-                    .Aggregate<GetEventsWithNames>(pipeline)
-                    .ToList();
+                List<GetEventsWithNames> pResults = await _eventCollection
+                    .AggregateAsync<GetEventsWithNames>(pipeline).Result.ToListAsync();
 
                 if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+                    throw new GetException("Eventos não encontrados");
 
                 List<GetEventsWithNames> pagedResults = pResults.ToList();
                 return pagedResults;
             }
-            catch (GetAllEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions)
+        public async Task<List<Event>> GetWeeklyEvents<T1>(Pagination paginationOptions)
         {
             try
             {
@@ -303,28 +268,26 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
                 );
 
-                List<Event> pResults = _eventCollection
-                    .Find(filter)
-                    .ToList()
+                List<Event> pResults = await _eventCollection
+                    .FindAsync(filter).Result.ToListAsync();
+                var listResult =
+                    pResults
                     .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
                     .Take(paginationOptions.pageSize)
                     .ToList();
-                if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
 
-                return Task.FromResult(pResults);
+                if (!listResult.Any())
+                    throw new GetException("Eventos não encontrados");
+
+                return listResult;
             }
-            catch (GetAllEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions)
+        public async Task<List<Event>> GetHighlightedEvents<T1>(Pagination paginationOptions)
         {
             try
             {
@@ -333,28 +296,26 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
                 );
 
-                List<Event> pResults = _eventCollection
-                    .Find(filter)
-                    .ToList()
-                    .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
-                    .Take(paginationOptions.pageSize)
-                    .ToList();
-                if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+                List<Event> pResults = await _eventCollection
+                    .FindAsync(filter).Result.ToListAsync();
 
-                return Task.FromResult(pResults);
+                var listResult =
+                pResults
+                .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                .Take(paginationOptions.pageSize)
+                .ToList();
+                if (!listResult.Any())
+                    throw new GetException("Eventos não encontrados");
+
+                return listResult;
             }
-            catch (GetAllEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<List<Event>> FindByProducer<T>(
+        public async Task<List<Event>> GetByProducer<T1>(
             string id,
             Pagination paginationOptions,
             FilterOptions? filterOptions
@@ -420,52 +381,50 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 }
                 var filter = Builders<Event>.Filter.And(filters);
 
-                SortDefinition<Event> sort = Builders<Event>.Sort.Descending(e => e.StartDate);
-
-                var pResults = _eventCollection
-                    .Find(filter)
-                    .Sort(sort)
-                    .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
-                    .Limit(paginationOptions.pageSize)
-                    .ToList();
+                List<Event> pResults = await _eventCollection
+                    .FindAsync(filter).Result
+                    .ToListAsync();
 
                 if (pResults.Count == 0)
                 {
-                    throw new GetAllEventException("Eventos não encontrados");
+                    throw new GetException("Eventos não encontrados");
                 }
+
+                SortDefinition<Event> sort = Builders<Event>.Sort.Descending(e => e.StartDate);
+                var listResult =
+                pResults.OrderByDescending(e => e.StartDate)
+                .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
+                .Take(paginationOptions.pageSize)
+                .ToList();
 
                 return pResults;
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<object> Save<T>(object eventComplet)
+        public async Task<object> Save<T1>(object eventComplet)
         {
             try
             {
-                eventComplet = eventComplet as Event;
-                await _eventCollection.InsertOneAsync(eventComplet as Event);
-                return (eventComplet as Event)!.Id!;
+                var data = eventComplet as Event ??
+                    throw new SaveException("Algo deu errado ao salvar evento");
+                await _eventCollection.InsertOneAsync(data);
+                return data.Id;
             }
-            catch (SaveEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task<Event> Edit<T>(string id, Event eventObj)
+        public async Task<Event> Edit<T1>(string id, Event eventObj)
         {
             try
             {
                 var filtro = Builders<Event>.Filter.Eq("_id", ObjectId.Parse(id));
-
                 var update = Builders<Event>.Update.Combine();
 
                 foreach (var property in typeof(Event).GetProperties())
@@ -478,15 +437,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
                 object value = await _eventCollection.UpdateOneAsync(filtro, update);
 
-                return (eventObj as Event)!;
+                return eventObj;
             }
-            catch (SaveEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
@@ -512,22 +467,19 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
 
-                List<Model.Querys.GetEventwithTicket.GetEventWitTickets> pResults = _eventCollection
-                    .Aggregate<Model.Querys.GetEventwithTicket.GetEventWitTickets>(pipeline)
-                    .ToList();
+                List<Model.Querys.GetEventwithTicket.GetEventWitTickets> pResults = await _eventCollection
+                    .AggregateAsync<Model.Querys.GetEventwithTicket.GetEventWitTickets>(pipeline)
+                    .Result
+                    .ToListAsync();
 
                 if (!pResults.Any())
-                    throw new GetAllEventException("Evento não encontrado");
+                    throw new GetException("Evento não encontrado");
 
                 return pResults;
             }
-            catch (GetAllEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
 
@@ -554,22 +506,19 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
 
-                List<GetEventTransactions> pResults = _eventCollection
-                    .Aggregate<GetEventTransactions>(pipeline)
-                    .ToList();
+                List<GetEventTransactions> pResults = await _eventCollection
+                    .AggregateAsync<GetEventTransactions>(pipeline)
+                    .Result
+                    .ToListAsync();
 
                 if (!pResults.Any())
-                    throw new GetAllEventException("Evento não encontrado");
+                    throw new GetException("Evento não encontrado");
 
                 return pResults;
             }
-            catch (GetAllEventException ex)
+            catch
             {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
+                throw;
             }
         }
     }

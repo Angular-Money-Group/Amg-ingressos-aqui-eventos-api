@@ -6,7 +6,6 @@ using Amg_ingressos_aqui_eventos_api.Utils;
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Infra;
-using System.Text.Json;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Enum;
 
@@ -48,15 +47,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 if (ticket.IdLot == null)
-                    throw new SaveTicketException("Id Lote é Obrigatório.");
+                    throw new SaveException("Id Lote é Obrigatório.");
                 if (ticket?.Value == 0)
-                    throw new SaveTicketException("Valor do Ingresso é Obrigatório.");
+                    throw new SaveException("Valor do Ingresso é Obrigatório.");
 
                 ticket?.IdLot?.ValidateIdMongo();
 
-                _messageReturn.Data = await _ticketRepository.Save<object>(ticket!);
+                _messageReturn.Data = await _ticketRepository.SaveAsync<object>(ticket!);
             }
-            catch (SaveTicketException ex)
+            catch (SaveException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -81,7 +80,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data =
                     await _ticketRowRepository.GetCourtesyStatusById<StatusTicketsRow>(id);
             }
-            catch (SaveTicketException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -105,7 +104,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _ticketRepository.SaveMany(lstTicket);
             }
-            catch (SaveTicketException ex)
+            catch (SaveException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -129,7 +128,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _ticketRepository.DeleteMany<object>(tickets);
             }
-            catch (SaveTicketException ex)
+            catch (DeleteException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -148,7 +147,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _ticketRepository.DeleteByLot<object>(lotId);
             }
-            catch (SaveTicketException ex)
+            catch (DeleteException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -206,7 +205,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var variantToGenerateTicket = await _variantRepository.FindById<Model.Variant>(
                     courtesyTicket.IdVariant
                 );
-                var eventToGenerateTicket = await _eventRepository.FindByIdVariant<Model.Event>(
+                var eventToGenerateTicket = await _eventRepository.GetByIdVariant<Model.Event>(
                     variantToGenerateTicket[0].IdEvent
                 );
 
@@ -226,7 +225,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                throw new SaveEventException(
+                throw new Exception(
                     "An error occurred while processing email sending",
                     ex
                 );
@@ -270,13 +269,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         var variantToGenerateTicket =
                             await _variantRepository.FindById<Model.Variant>(variantId);
                         var eventToGenerateTicket =
-                            await _eventRepository.FindByIdVariant<Model.Event>(
+                            await _eventRepository.GetByIdVariant<Model.Event>(
                                 variantToGenerateTicket[0].IdEvent
                             );
 
                         if (t.TicketId != null)
                         {
-                            var ticket = await _ticketRepository.FindById<Ticket>(t.TicketId);
+                            var ticket = await _ticketRepository.GetById<Ticket>(t.TicketId);
 
                             var ticketEventDataDto = CreateTicketEventDataDto(
                                 t.TicketId,
@@ -398,7 +397,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             else
             {
-                throw new SaveTicketException("Insufficient courtesy quantity");
+                throw new Exception("Insufficient courtesy quantity");
             }
         }
 
@@ -479,7 +478,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             var ticketToSend = new Ticket() { Id = ticketId, QrCode = qrCodeUrl};
 
-            await UpdateTicketsAsync(ticketId, ticketToSend);
+            await EditTicketsAsync(ticketId, ticketToSend);
 
             return qrCodeUrl;
         }
@@ -584,7 +583,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 >(idUser);
                 _messageReturn.Data = list.Where(x=> x.IsSold);
             }
-            catch (SaveTicketException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -610,7 +609,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     List<GetTicketDataEvent>>(idUser);
                 _messageReturn.Data = list.Where(x=> x.IsSold && x.Event.Id==idEvent);
             }
-            catch (SaveTicketException ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -636,7 +635,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var ticket = new Ticket() { IdLot = idLot };
                 _messageReturn.Data = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
             }
-            catch (GetRemeaningTicketsExepition ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -663,7 +662,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var result = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
                 _messageReturn.Data = result.Where(i => i.IdUser == null).ToList();
             }
-            catch (GetRemeaningTicketsExepition ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -690,7 +689,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = (Ticket)
                     _ticketRepository.GetTickets<List<Ticket>>(ticket).Result.FirstOrDefault();
             }
-            catch (GetRemeaningTicketsExepition ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -736,7 +735,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     },
                 };
             }
-            catch (GetRemeaningTicketsExepition ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -763,7 +762,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     _ticketRepository.GetTicketByIdDataEvent<GetTicketDataEvent>(id).Result;
                 _messageReturn.Data = ticket;
             }
-            catch (GetRemeaningTicketsExepition ex)
+            catch (GetException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;
@@ -781,7 +780,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> UpdateTicketsAsync(string id, Ticket ticket)
+        public async Task<MessageReturn> EditTicketsAsync(string id, Ticket ticket)
         {
             try
             {
@@ -792,7 +791,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     ticket
                 );
             }
-            catch (NotModificateTicketsExeption ex)
+            catch (EditException ex)
             {
                 _messageReturn.Message = ex.Message;
                 throw ex;

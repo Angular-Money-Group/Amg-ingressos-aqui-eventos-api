@@ -90,7 +90,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _eventService.FindByIdAsync(id);
+                var result = await _eventService.GetByIdAsync(id);
                 if (result.Message != null && result.Message.Any())
                 {
                     return NotFound(result.Message);
@@ -147,7 +147,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _eventService.FindByOrganizerAsync(idOrganizer, paginationOptions, filter);
+                var result = await _eventService.GetByOrganizerAsync(idOrganizer, paginationOptions, filter);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -203,7 +203,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _eventService.HighlightEventAsync(id);
+                var result = await _eventService.GetHighlightEventAsync(id);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -242,7 +242,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Data);
             }
-            catch (DeleteEventException ex)
+            catch (EditException ex)
             {
                 _logger.LogInformation(MessageLogErrors.EditEventMessage, ex);
                 return NoContent();
@@ -269,7 +269,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
 
                 return Ok(result.Data); 
             }
-            catch (DeleteEventException ex)
+            catch (DeleteException ex)
             {
                 _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
                 return NotFound();

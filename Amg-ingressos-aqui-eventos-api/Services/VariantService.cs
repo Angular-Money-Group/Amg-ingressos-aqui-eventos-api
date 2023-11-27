@@ -48,7 +48,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdentificateLot++;
                     });
             }
-            catch (SaveVariantException ex)
+            catch (SaveException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -87,7 +87,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         _messageReturn.Data = await _variantRepository.Save<object>(variantEdit);
                 }
             }
-            catch (SaveLotException ex)
+            catch (EditException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -107,7 +107,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 await _lotService.DeleteByVariantAsync(id);
                 _messageReturn.Data = await _variantRepository.Delete<object>(id);
             }
-            catch (SaveLotException ex)
+            catch (DeleteException ex)
             {
                 DeleteAsync(id);
                 _messageReturn.Message = ex.Message;
@@ -135,7 +135,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 List<string> variantId = Variant.Select(v => v.Id).ToList();
                 _messageReturn.Data = await _variantRepository.DeleteMany<object>(variantId);
             }
-            catch (SaveLotException ex)
+            catch (DeleteException ex)
             {
                 _messageReturn.Message = ex.Message;
             }
@@ -150,17 +150,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private void ValidateModelSave(Model.Variant variant)
         {
             if (variant.Name == "")
-                throw new SaveVariantException("Nome é Obrigatório.");
+                throw new SaveException("Nome é Obrigatório.");
             if (!variant.Lot.Any())
-                throw new SaveVariantException("Lote é Obrigatório.");
+                throw new SaveException("Lote é Obrigatório.");
             if (variant.HasPositions)
             {
                 if (variant.LocaleImage == string.Empty)
-                    throw new SaveVariantException("Imagem Variante é Obrigatório.");
+                    throw new SaveException("Imagem Variante é Obrigatório.");
                 if (variant.Positions.PeoplePerPositions == 0)
-                    throw new SaveVariantException("Pessoas por posição é Obrigatório.");
+                    throw new SaveException("Pessoas por posição é Obrigatório.");
                 if (variant.Positions.TotalPositions == 0)
-                    throw new SaveVariantException("Total de posições é Obrigatório.");
+                    throw new SaveException("Total de posições é Obrigatório.");
             }
         }
 
@@ -194,7 +194,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     _lotService.SaveManyAsync(i.Lot);
                 });
             }
-            catch (SaveVariantException ex)
+            catch (SaveException ex)
             {
                 _messageReturn.Message = ex.Message;
             }

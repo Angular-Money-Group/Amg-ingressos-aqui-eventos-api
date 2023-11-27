@@ -84,7 +84,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var expectedMessage = "Maximo de Eventos destacados atingido";
 
             var id = "6462946db12323abeff9253f";
-            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).ThrowsAsync(new MaxHighlightedEvents("Maximo de Eventos destacados atingido"));
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).ThrowsAsync(new GetException("Maximo de Eventos destacados atingido"));
 
             // Act
             var result = (await _eventController.HighlightEventAsync(id) as ObjectResult);
@@ -122,7 +122,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             weekly = false;
 
             var expectedMessage = "Eventos não encontrados";
-            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetAllEventException(expectedMessage));
+            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetException(expectedMessage));
 
             // Act
             var result = await _eventController.GetEventsAsync(highlights, weekly, pagination) as NoContentResult;
@@ -138,7 +138,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var name = "CBLOL";
 
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.FindByName<List<Event>>(name)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.GetByName<List<Event>>(name)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
             var result = await _eventController.FindEventByNameAsync(name) as OkObjectResult;
@@ -154,7 +154,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var messageReturn = FactoryEvent.ListSimpleEvent();
             var expectedMessage = MessageLogErrors.FindByIdEventMessage;
-            _eventRepositoryMock.Setup(x => x.FindByName<List<Event>>(name)).Throws(new System.Exception("error coxcnection database"));
+            _eventRepositoryMock.Setup(x => x.GetByName<List<Event>>(name)).Throws(new System.Exception("error coxcnection database"));
 
             // Act
             var result = (await _eventController.FindEventByNameAsync(name) as ObjectResult);
@@ -171,7 +171,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var name = "3b241101-e2bb-4255-8caf-4136c566a962";
 
             var expectedMessage = "Lista vazia";
-            _eventRepositoryMock.Setup(x => x.FindByName<List<Event>>(name)).Throws(new FindByDescriptionException(expectedMessage));
+            _eventRepositoryMock.Setup(x => x.GetByName<List<Event>>(name)).Throws(new GetException(expectedMessage));
 
             // Act
             var result = await _eventController.FindEventByNameAsync(name) as NoContentResult;
@@ -241,7 +241,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var messageReturn = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).
+            _eventRepositoryMock.Setup(x => x.GetById<Event>(id)).
                 Returns(Task.FromResult(messageReturn as object));
 
             // Act
@@ -257,7 +257,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
             var espectedReturn = MessageLogErrors.FindByIdEventMessage;
-            _eventRepositoryMock.Setup(x => x.FindById<object>(id)).
+            _eventRepositoryMock.Setup(x => x.GetById<object>(id)).
                 Throws(new Exception("error conection database"));
 
             // Act
@@ -274,8 +274,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var expectedMessage = "Sem registros";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<object>(id)).
-                Throws(new FindByIdEventException(expectedMessage));
+            _eventRepositoryMock.Setup(x => x.GetById<object>(id)).
+                Throws(new GetException(expectedMessage));
 
             // Act
             var result = await _eventController.FindByIdEventAsync(id) as NotFoundObjectResult;
