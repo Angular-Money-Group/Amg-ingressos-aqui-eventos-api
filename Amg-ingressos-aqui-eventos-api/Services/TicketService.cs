@@ -23,6 +23,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private MessageReturn _messageReturn;
         private ILogger<TicketService> _logger;
 
+        public TicketService(){}
+
         public TicketService(
             ITicketRepository ticketRepository,
             ITicketRowRepository ticketRowRepository,

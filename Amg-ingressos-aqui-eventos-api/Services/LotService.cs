@@ -14,6 +14,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private MessageReturn _messageReturn;
         private ILogger<LotService> _logger;
 
+        public LotService(){}
+
         public LotService(
             ILotRepository lotRepository, 
             ITicketService ticketService, 

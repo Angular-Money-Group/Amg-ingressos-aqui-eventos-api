@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Enum;
 using Amg_ingressos_aqui_eventos_api.Model;
 
@@ -18,6 +14,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 Lot = FactoryLot.ListSimpleLot().ToList()
             };
         }
+
         internal static IEnumerable<Variant> ListSimpleVariant()
         {
             return new List<Variant>()
@@ -42,7 +39,9 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 },
             };
         }
-        internal static IEnumerable<Variant> ListSimpleVariantWithPosition(){
+
+        internal static IEnumerable<Variant> ListSimpleVariantWithPosition()
+        {
             return new List<Variant>()
             {
                 new Variant(){
@@ -65,6 +64,5 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 },
             };
         }
-    
     }
 }

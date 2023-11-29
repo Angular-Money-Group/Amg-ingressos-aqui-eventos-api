@@ -18,6 +18,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private ILogger<VariantService> _logger;
         private MessageReturn _messageReturn;
 
+        public VariantService(){}
+
         public VariantService(
             IVariantRepository variantRepository,
             IWebHostEnvironment webHostEnvironment,

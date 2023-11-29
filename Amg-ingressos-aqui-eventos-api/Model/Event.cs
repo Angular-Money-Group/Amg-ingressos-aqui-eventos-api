@@ -15,6 +15,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model
             Local = string.Empty;
             Type = string.Empty;
             Image = string.Empty;
+            Description = string.Empty;
+            Address = new Address();
+            Courtesy = new Courtesy();
             Variant = new List<Variant>();
             IdMeansReceipt = string.Empty;
             IdOrganizer = string.Empty;
@@ -54,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Descrição
         /// </summary>
         [Required]
-        public string? Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// Data Inicio
         /// </summary>
@@ -76,7 +79,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Endereço
         /// </summary>
         [Required]
-        public Address? Address { get; set; }
+        public Address Address { get; set; }
 
         /// <summary>
         /// Lista de Variants
@@ -90,7 +93,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Lista de Variants
         /// </summary>
         [JsonProperty("courtesy")]
-        public Courtesy? Courtesy { get; set; }
+        public Courtesy Courtesy { get; set; }
 
         /// <summary>
         /// Id mongo Meio de Recebimento

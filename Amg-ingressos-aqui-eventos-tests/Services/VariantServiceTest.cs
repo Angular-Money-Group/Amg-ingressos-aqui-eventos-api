@@ -12,11 +12,11 @@ namespace Prime.UnitTests.Services
 {
     public class VariantServiceTest
     {
-        private VariantService _variantService;
-        private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+        private VariantService _variantService = new VariantService();
+        private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
-        private Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
-        private Mock<ILogger<VariantService>> _loggerMock = new Mock<ILogger<VariantService>>();
+        private readonly Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
+        private readonly Mock<ILogger<VariantService>> _loggerMock = new Mock<ILogger<VariantService>>();
 
         [SetUp]
         public void SetUp()
@@ -76,7 +76,7 @@ namespace Prime.UnitTests.Services
         public void Given_variant_with_position_without_Image_When_save_Then_return_message_miss_Image()
         {
             //Arrange
-            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
+            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().First();
             variantComplet.LocaleImage = string.Empty;
             
             var expectedMessage = new MessageReturn() { Message = "Imagem Variante é Obrigatório." };
@@ -92,7 +92,7 @@ namespace Prime.UnitTests.Services
         public void Given_variant_with_position_without_PeoplePerPositions_When_save_Then_return_message_miss_PeoplePerPositions()
         {
             //Arrange
-            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
+            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().First();
             variantComplet.Positions.PeoplePerPositions = 0;
             
             var expectedMessage = new MessageReturn() { Message = "Pessoas por posição é Obrigatório." };
@@ -108,7 +108,7 @@ namespace Prime.UnitTests.Services
         public void Given_variant_with_position_without_TotalPositions_When_save_Then_return_message_miss_TotalPositions()
         {
             //Arrange
-            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().FirstOrDefault();
+            var variantComplet = FactoryVariant.ListSimpleVariantWithPosition().First();
             variantComplet.Positions.TotalPositions = 0;
             
             var expectedMessage = new MessageReturn() { Message = "Total de posições é Obrigatório." };
@@ -134,7 +134,7 @@ namespace Prime.UnitTests.Services
             var resultMethod = _variantService.SaveAsync(variantComplet);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception.Message);
+            Assert.IsNotEmpty(resultMethod?.Exception?.Message);
         }
     }
 }

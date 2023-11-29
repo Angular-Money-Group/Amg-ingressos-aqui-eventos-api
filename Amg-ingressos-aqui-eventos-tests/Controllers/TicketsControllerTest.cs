@@ -8,7 +8,6 @@ using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Amg_ingressos_aqui_eventos_api.Infra;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
@@ -16,19 +15,16 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
     [TestFixture]
     public class TicketsControllerTest
     {
-        private TicketController _ticketController;
-        private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
-        private Mock<HttpClient> _clientMock = new Mock<HttpClient>();
-        private Mock<ICieloClient> _clientCieloMock = new Mock<ICieloClient>();
-
-        private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
-        private Mock<ITicketRowRepository> _ticketRowRepositoryMock = new Mock<ITicketRowRepository>();
-        private Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
-        private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
-        private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
-        private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
-        private Mock<ILogger<TicketService>> _loggerServiceMock = new Mock<ILogger<TicketService>>();
-        private Mock<ILogger<TicketController>> _loggerMock = new Mock<ILogger<TicketController>>();
+        private TicketController _ticketController = new TicketController();
+        private readonly Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
+        private readonly Mock<ICieloClient> _clientCieloMock = new Mock<ICieloClient>();
+        private readonly Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
+        private readonly Mock<ITicketRowRepository> _ticketRowRepositoryMock = new Mock<ITicketRowRepository>();
+        private readonly Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
+        private readonly Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
+        private readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
+        private readonly Mock<ILogger<TicketService>> _loggerServiceMock = new Mock<ILogger<TicketService>>();
+        private readonly Mock<ILogger<TicketController>> _loggerMock = new Mock<ILogger<TicketController>>();
 
         [SetUp]
         public void Setup()
@@ -63,7 +59,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             // Assert
             Assert.IsInstanceOf<OkObjectResult>(result);
-            var okResult = result as OkObjectResult;
+            var okResult = (OkObjectResult)result;
             Assert.AreEqual(messageReturn, okResult?.Value);
         }
 
@@ -82,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             // Assert
             Assert.IsInstanceOf<OkObjectResult>(result);
-            var okResult = result as OkObjectResult;
+            var okResult = (OkObjectResult)result;
             Assert.AreEqual(messageReturn, okResult?.Value);
         }
     }

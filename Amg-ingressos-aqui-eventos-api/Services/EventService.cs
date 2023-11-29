@@ -18,6 +18,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private ILogger<EventService> _logger;
 
+        public EventService(){}
+        
         public EventService(
             IEventRepository eventRepository,
             IVariantService variantService,
