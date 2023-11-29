@@ -14,8 +14,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         private readonly ILogger<TicketController> _logger;
         private readonly ITicketService _ticketService;
 
-        public TicketController(){}
-
         public TicketController(ILogger<TicketController> logger, ITicketService ticketService)
         {
             _logger = logger;

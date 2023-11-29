@@ -9,27 +9,25 @@ using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Enum;
 using Amg_ingressos_aqui_eventos_api.Consts;
+using System.Data;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class TicketService : ITicketService
     {
-        private ITicketRepository _ticketRepository;
-        private ITicketRowRepository _ticketRowRepository;
-        private IVariantRepository _variantRepository;
-        private ILotRepository _lotRepository;
-        private IEmailService _emailService;
-        private IEventRepository _eventRepository;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly ITicketRowRepository _ticketRowRepository;
+        private readonly IVariantRepository _variantRepository;
+        private readonly ILotRepository _lotRepository;
+        private readonly IEmailService _emailService;
+        private readonly IEventRepository _eventRepository;
         private MessageReturn _messageReturn;
-        private ILogger<TicketService> _logger;
-
-        public TicketService(){}
+        private readonly ILogger<TicketService> _logger;
 
         public TicketService(
             ITicketRepository ticketRepository,
             ITicketRowRepository ticketRowRepository,
             IVariantRepository variantRepository,
-            ICieloClient cieloClient,
             ILotRepository lotRepository,
             IEmailService emailService,
             IEventRepository eventRepository,
@@ -52,10 +50,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 if (ticket.IdLot == null)
                     throw new SaveException("Id Lote é Obrigatório.");
-                if (ticket?.Value == 0)
+                if (ticket.Value == 0)
                     throw new SaveException("Valor do Ingresso é Obrigatório.");
 
-                ticket?.IdLot?.ValidateIdMongo();
+                ticket.IdLot.ValidateIdMongo();
                 _messageReturn.Data = await _ticketRepository.SaveAsync<object>(ticket!);
             }
             catch (SaveException ex)
@@ -237,7 +235,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(ProcessEmailSending), "email cortesia"), courtesyTicket);
-                throw new Exception("An error occurred while processing email sending", ex);
+                throw;
             }
         }
 
@@ -290,7 +288,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 ticket.QrCode
                             );
 
-                            var isEmailSend = await ProcessEmail(
+                            await ProcessEmail(
                                 ticketsRow.Email,
                                 ticketEventDataDto,
                                 ticket.QrCode,
@@ -321,7 +319,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 qrCodeImage
                             );
 
-                            var isEmailSend = await ProcessEmail(
+                            await ProcessEmail(
                                 ticketsRow.Email,
                                 ticketEventDataDto,
                                 qrCodeImage,
@@ -402,7 +400,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             else
             {
-                throw new Exception("Insufficient courtesy quantity");
+                throw new RuleException("Insufficient courtesy quantity");
             }
         }
 
@@ -427,7 +425,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             Event editEvent = eventToGenerateTicket ?? throw new RuleException("evento nao pode ser null");
 
-            editEvent.Courtesy?.CourtesyHistory.Add(
+            editEvent.Courtesy.CourtesyHistory.Add(
                 new CourtesyHistory()
                 {
                     Email = CourtesyTicket.Email,
@@ -438,17 +436,20 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
             );
 
-            RemainingCourtesy remainingCourtesy = editEvent?.Courtesy?.RemainingCourtesy.Find(
+            RemainingCourtesy remainingCourtesy = editEvent.Courtesy.RemainingCourtesy.Find(
                 x => x.VariantId == CourtesyTicket.IdVariant
             ) ?? new RemainingCourtesy();
 
             remainingCourtesy.Quantity -= CourtesyTicket.Quantity;
 
-            _eventRepository.Edit<Event>(eventToGenerateTicket.Id, editEvent ?? new Event());
+            _eventRepository.Edit<Event>(eventToGenerateTicket.Id, editEvent);
         }
 
         private Ticket CreateTicketToSend(string idUser, Lot lotToGenerateTicket)
         {
+            if(lotToGenerateTicket == null)
+                throw new RuleException("Lote Nao pode ser null");
+
             return new Ticket()
             {
                 IdLot = lotToGenerateTicket.Id,
@@ -872,11 +873,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     "{endereco_evento}",
                     $"{ticketEventDto?.Event?.Address?.AddressDescription} - {ticketEventDto?.Event?.Address?.Number} - {ticketEventDto?.Event?.Address?.Neighborhood} - {ticketEventDto?.Event?.Address?.City} - {ticketEventDto?.Event?.Address?.State}"
                 );
-                email.Body = email.Body.Replace("{area_evento}", ticketEventDto.Variant.Name);
+                email.Body = email.Body.Replace("{area_evento}", ticketEventDto?.Variant.Name);
                 email.Body = email.Body.Replace("{tipo_ingresso}", "Cortesia");
                 email.Body = email.Body.Replace("{qr_code}", urlQrCode);
 
-                var savedEmailResult = _emailService.SaveAsync(email).Result;
+                await _emailService.SaveAsync(email);
 
                 var isEmailSend = _emailService.Send(email?.id ?? string.Empty, ticketsRow, index, rowId).Result;
 

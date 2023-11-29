@@ -12,13 +12,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class VariantService : IVariantService
     {
-        private IVariantRepository _variantRepository;
+        private readonly IVariantRepository _variantRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private ILotService _lotService;
-        private ILogger<VariantService> _logger;
-        private MessageReturn _messageReturn;
-
-        public VariantService(){}
+        private readonly ILotService _lotService;
+        private readonly ILogger<VariantService> _logger;
+        private readonly MessageReturn _messageReturn;
 
         public VariantService(
             IVariantRepository variantRepository,
@@ -52,7 +50,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
                         i.IdVariant = idVariant.ToString() ?? string.Empty;
-                        i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
+                        i.Id = _lotService.SaveAsync(i).Result.Data.ToString()??string.Empty;
                         IdentificateLot++;
                     });
             }
@@ -142,7 +140,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 listVariant.ForEach(async variant =>
                 {
-                    List<string> LotsId = variant.Lot.Select(d => d.Id).ToList() ?? throw new RuleException("id lotes nao pode ser null");
+                    List<string> LotsId = variant.Lot.Select(d => d.Id).ToList();
 
                     await _lotService.DeleteManyAsync(LotsId);
                 });

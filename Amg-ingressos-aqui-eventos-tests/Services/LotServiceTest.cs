@@ -11,7 +11,7 @@ namespace Prime.UnitTests.Services
 {
     public class LotServiceTest
     {
-        private LotService _lotService = new LotService();
+        private LotService _lotService;
         private readonly Mock<ILogger<LotService>> _loggerMock = new Mock<ILogger<LotService>>();
         private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private readonly Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();

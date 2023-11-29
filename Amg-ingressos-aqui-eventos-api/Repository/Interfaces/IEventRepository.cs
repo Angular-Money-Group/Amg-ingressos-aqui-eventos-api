@@ -13,7 +13,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> Delete<T>(object id);
         Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
         Task<List<GetEventsWithNames>> GetWithUserData<T>();
-        Task<List<Model.Querys.GetEventwithTicket.GetEventWitTickets>> GetAllEventsWithTickets(string idEvent,string idOrganizer);
+        Task<List<Model.Querys.GetEventwithTicket.GetEventWithTickets>> GetAllEventsWithTickets(string idEvent,string idOrganizer);
         Task<List<Model.Querys.GetEventTransactions.GetEventTransactions>> GetAllEventsWithTransactions(string idEvent,string idOrganizer);
         Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions);

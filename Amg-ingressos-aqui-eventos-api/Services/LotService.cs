@@ -9,12 +9,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class LotService : ILotService
     {
-        private ILotRepository _lotRepository;
-        private ITicketService _ticketService;
-        private MessageReturn _messageReturn;
-        private ILogger<LotService> _logger;
-
-        public LotService(){}
+        private readonly ILotRepository _lotRepository;
+        private readonly ITicketService _ticketService;
+        private readonly MessageReturn _messageReturn;
+        private readonly ILogger<LotService> _logger;
 
         public LotService(
             ILotRepository lotRepository, 

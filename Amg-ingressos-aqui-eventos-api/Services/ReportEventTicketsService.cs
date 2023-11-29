@@ -32,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 idOrganizer.ValidateIdMongo();
 
-                List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(
+                List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(
                     string.Empty,
                     idOrganizer
                 );
@@ -124,7 +124,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Variante é Obrigatório.");
                 idVariant.ValidateIdMongo();
 
-                List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
                 var eventDataProcess = eventData.FirstOrDefault(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, idVariant);
                 return _messageReturn;
@@ -148,7 +148,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 if (string.IsNullOrEmpty(idEvent))
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
-                List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
                 var eventDataProcess = eventData.FirstOrDefault(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, string.Empty);
                 return _messageReturn;
@@ -165,7 +165,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private ReportEventOrganizerDetailDto ProcessEvent(GetEventWitTickets eventData, string? idVariant)
+        private ReportEventOrganizerDetailDto ProcessEvent(GetEventWithTickets eventData, string? idVariant)
         {
             var variants = ProcessVariant(eventData, string.Empty);
             return new ReportEventOrganizerDetailDto()
@@ -204,7 +204,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             };
         }
 
-        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData)
+        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWithTickets eventData)
         {
             if (eventData.Courtesy.RemainingCourtesy.Count == 0) return new CourtesyReportDto();
             return new CourtesyReportDto()
@@ -232,7 +232,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             };
         }
 
-        private List<VariantReportDto> ProcessVariant(GetEventWitTickets eventData, string idVariant)
+        private List<VariantReportDto> ProcessVariant(GetEventWithTickets eventData, string idVariant)
         {
             List<VariantReportDto> variantList = new List<VariantReportDto>();
             var variant = string.IsNullOrEmpty(idVariant)
@@ -282,7 +282,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         }
 
         private CourtesyReportDto ProcessCortesy(
-            GetEventWitTickets eventData,
+            GetEventWithTickets eventData,
             Model.Querys.GetEventwithTicket.Variant x
         )
         {

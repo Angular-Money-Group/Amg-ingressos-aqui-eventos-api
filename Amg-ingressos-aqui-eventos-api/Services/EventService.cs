@@ -12,13 +12,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class EventService : IEventService
     {
-        private IEventRepository _eventRepository;
-        private IVariantService _variantService;
-        private MessageReturn _messageReturn;
+        private readonly IEventRepository _eventRepository;
+        private readonly IVariantService _variantService;
+        private readonly MessageReturn _messageReturn;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private ILogger<EventService> _logger;
-
-        public EventService(){}
+        private readonly ILogger<EventService> _logger;
         
         public EventService(
             IEventRepository eventRepository,

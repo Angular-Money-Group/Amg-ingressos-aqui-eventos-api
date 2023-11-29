@@ -16,6 +16,8 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
             Image = string.Empty;
             Type = string.Empty;
             IdMeansReceipt = string.Empty;
+            Description = string.Empty;
+            Address= new Model.Address();
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         /// Descrição
         /// </summary>
         [Required]
-        public string? Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// Data Inicio
         /// </summary>
@@ -74,7 +76,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         /// Endereço
         /// </summary>
         [Required]
-        public Model.Address? Address { get; set; }
+        public Model.Address Address { get; set; }
 
         /// <summary>
         /// Id mongo Meio de Recebimento

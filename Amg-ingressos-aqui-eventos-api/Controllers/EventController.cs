@@ -13,8 +13,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     {
         private readonly ILogger<EventController> _logger;
         private readonly IEventService _eventService;
-
-        public EventController(){}
         
         public EventController(
             ILogger<EventController> logger,

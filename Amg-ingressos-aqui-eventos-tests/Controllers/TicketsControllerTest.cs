@@ -15,9 +15,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
     [TestFixture]
     public class TicketsControllerTest
     {
-        private TicketController _ticketController = new TicketController();
+        private TicketController _ticketController;
         private readonly Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
-        private readonly Mock<ICieloClient> _clientCieloMock = new Mock<ICieloClient>();
         private readonly Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private readonly Mock<ITicketRowRepository> _ticketRowRepositoryMock = new Mock<ITicketRowRepository>();
         private readonly Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
@@ -35,7 +34,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
                     _ticketRepositoryMock.Object,
                     _ticketRowRepositoryMock.Object,
                     _variantRepositoryMock.Object,
-                    _clientCieloMock.Object,
                     _lotRepositoryMock.Object,
                     _emailRepositoryMock.Object,
                     _eventRepositoryMock.Object,

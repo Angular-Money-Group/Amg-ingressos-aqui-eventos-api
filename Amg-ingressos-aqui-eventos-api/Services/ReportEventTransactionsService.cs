@@ -35,7 +35,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 idOrganizer.ValidateIdMongo();
 
-                List<GetEventWitTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(string.Empty, idOrganizer);
+                List<GetEventWithTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(string.Empty, idOrganizer);
                 List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(string.Empty, idOrganizer);
                 var ReportTransactionsDto = ProcessEvent(eventDataTickets, eventDataTransaction, string.Empty);
 
@@ -69,7 +69,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
 
-                List<GetEventWitTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                List<GetEventWithTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
                 List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(idEvent, idOrganizer);
                 var ReportTransactionsDto = ProcessEvent(eventDataTickets, eventDataTransaction, idVariant);
 
@@ -95,7 +95,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private ReportTransactionsDto ProcessEvent(List<GetEventWitTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
+        private ReportTransactionsDto ProcessEvent(List<GetEventWithTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
         {
             List<Transaction> listTransaction = GerenateJoinLists(eventDataTickets, eventDataTransaction, idVariant);
 
@@ -144,7 +144,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return report;
         }
 
-        private static List<Transaction> GerenateJoinLists(List<GetEventWitTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
+        private static List<Transaction> GerenateJoinLists(List<GetEventWithTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
         {
             //get tickets de lotes do evento e variante de filtro
             List<Model.Ticket> listTickets = new();

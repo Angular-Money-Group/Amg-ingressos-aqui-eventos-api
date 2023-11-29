@@ -13,7 +13,7 @@ namespace Prime.UnitTests.Services
 {
     public class EventServiceTest
     {
-        private EventService _eventService = new EventService();
+        private EventService _eventService;
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private readonly Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private readonly Mock<ILogger<EventService>> _loggerMock = new Mock<ILogger<EventService>>();

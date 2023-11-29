@@ -5,20 +5,18 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Infra;
 using Microsoft.Extensions.Logging;
 
 namespace Prime.UnitTests.Services
 {
     public class TicketServiceTest
     {
-        private TicketService _ticketService = new TicketService();
+        private TicketService _ticketService;
         private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private Mock<ITicketRowRepository> _ticketRowRepositoryMock =
             new Mock<ITicketRowRepository>();
         private readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private readonly Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
-        private readonly Mock<ICieloClient> _clientCieloMock = new Mock<ICieloClient>();
         private readonly Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
         private readonly Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private readonly Mock<ILogger<TicketService>> _loggerMock = new Mock<ILogger<TicketService>>();
@@ -32,7 +30,6 @@ namespace Prime.UnitTests.Services
                 _ticketRepositoryMock.Object,
                 _ticketRowRepositoryMock.Object,
                 _variantRepositoryMock.Object,
-                _clientCieloMock.Object,
                 _lotRepositoryMock.Object,
                 _emailRepositoryMock.Object,
                 _eventRepositoryMock.Object,

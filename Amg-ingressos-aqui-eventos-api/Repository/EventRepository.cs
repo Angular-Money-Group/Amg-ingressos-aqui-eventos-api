@@ -445,7 +445,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<Model.Querys.GetEventwithTicket.GetEventWitTickets>> GetAllEventsWithTickets(
+        public async Task<List<Model.Querys.GetEventwithTicket.GetEventWithTickets>> GetAllEventsWithTickets(
             string idEvent,
             string idOrganizer
         )
@@ -467,8 +467,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 BsonDocument document = BsonDocument.Parse(json);
                 BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
 
-                List<Model.Querys.GetEventwithTicket.GetEventWitTickets> pResults = await _eventCollection
-                    .AggregateAsync<Model.Querys.GetEventwithTicket.GetEventWitTickets>(pipeline)
+                List<Model.Querys.GetEventwithTicket.GetEventWithTickets> pResults = await _eventCollection
+                    .AggregateAsync<Model.Querys.GetEventwithTicket.GetEventWithTickets>(pipeline)
                     .Result
                     .ToListAsync();
 

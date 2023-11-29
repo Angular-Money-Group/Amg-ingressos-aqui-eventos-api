@@ -19,7 +19,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         [JsonProperty("_id")]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Identificador de Lote

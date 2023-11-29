@@ -12,7 +12,7 @@ namespace Prime.UnitTests.Services
 {
     public class VariantServiceTest
     {
-        private VariantService _variantService = new VariantService();
+        private VariantService _variantService;
         private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private readonly Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
