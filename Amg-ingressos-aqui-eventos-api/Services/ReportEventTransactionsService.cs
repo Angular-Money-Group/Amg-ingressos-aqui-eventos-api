@@ -1,3 +1,4 @@
+using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto.report;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
@@ -7,20 +8,24 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using Lot = Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket.Lot;
-using Ticket = Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket.Ticket;
 using Variant = Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket.Variant;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class ReportEventTransactionsService : IReportEventTransactions
     {
-        private MessageReturn _messageReturn= new MessageReturn();
+        private MessageReturn _messageReturn = new MessageReturn();
         private IEventRepository _eventRepository;
+        private ILogger<ReportEventTransactionsService> _logger;
 
-        public ReportEventTransactionsService(IEventRepository eventRepository)
+        public ReportEventTransactionsService(
+            IEventRepository eventRepository, 
+            ILogger<ReportEventTransactionsService> logger)
         {
             _eventRepository = eventRepository;
+            _logger = logger;
         }
+
         public async Task<MessageReturn> ProcessReportEventTransactions(string idOrganizer)
         {
             try
@@ -30,28 +35,29 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 idOrganizer.ValidateIdMongo();
 
-                List<GetEventWitTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(string.Empty,idOrganizer);
+                List<GetEventWitTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(string.Empty, idOrganizer);
                 List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(string.Empty, idOrganizer);
-                
                 var ReportTransactionsDto = ProcessEvent(eventDataTickets, eventDataTransaction, string.Empty);
-
 
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
             }
             catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), idOrganizer);
+                throw;
             }
         }
 
@@ -63,28 +69,29 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
 
-
                 List<GetEventWitTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
                 List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(idEvent, idOrganizer);
                 var ReportTransactionsDto = ProcessEvent(eventDataTickets, eventDataTransaction, idVariant);
-
 
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
             }
             catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), idOrganizer);
+                throw;
             }
         }
 
@@ -141,11 +148,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             //get tickets de lotes do evento e variante de filtro
             List<Model.Ticket> listTickets = new();
-            if(!string.IsNullOrEmpty(idVariant)){
-                var listLotes = eventDataTickets.FirstOrDefault().Variant.FirstOrDefault(i => i._id == idVariant).Lot;
-                listLotes.ForEach(i => { listTickets.AddRange(i.ticket); });
+            if (!string.IsNullOrEmpty(idVariant))
+            {
+                var listLotes = eventDataTickets?.FirstOrDefault()?.Variant?.FirstOrDefault(i => i._id == idVariant)?.Lot;
+                listLotes?.ForEach(i => { listTickets.AddRange(i.ticket); });
             }
-            else{
+            else
+            {
                 List<Variant> listVariant = new List<Variant>();
                 eventDataTickets.ForEach(x =>
                 {
@@ -172,8 +181,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             });
             //relacionamento entre ticket e transacoes
             var listTransactionTicktes = from transactionTickets in listTransactionItens
-                                      join tickets in listTickets on transactionTickets.IdTicket equals tickets.Id
-                                      select transactionTickets;
+                                         join tickets in listTickets on transactionTickets.IdTicket equals tickets.Id
+                                         select transactionTickets;
             //lista de transacao para report
             var listTransaction = from transactionJoin in listTransactionTicktes
                                   join transactions in listTransactions

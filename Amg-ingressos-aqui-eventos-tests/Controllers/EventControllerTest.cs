@@ -25,6 +25,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<IMongoCollection<Event>> _eventCollectionMock = new Mock<IMongoCollection<Event>>();
         private Mock<ILogger<EventController>> _loggerMock = new Mock<ILogger<EventController>>();
+        private Mock<ILogger<EventService>> _loggerServiceMock = new Mock<ILogger<EventService>>();
         private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
 
@@ -37,7 +38,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         public void Setup()
         {
             _eventController = new EventController(_loggerMock.Object,
-            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object, _clientMock.Object));
+            new EventService(_eventRepositoryMock.Object, _variantServiceMock.Object, _webHostEnvironmentMock.Object,_loggerServiceMock.Object));
         }
 
         [Test]

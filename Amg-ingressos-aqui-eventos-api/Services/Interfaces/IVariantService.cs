@@ -5,10 +5,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
 {
     public interface IVariantService
     {
-        Task<MessageReturn> SaveAsync(Model.Variant variant);
-        Task<MessageReturn> SaveManyAsync(List<Model.Variant> listVariant);
+        Task<MessageReturn> SaveAsync(Variant variant);
+        Task<MessageReturn> SaveManyAsync(List<Variant> listVariant);
         Task<MessageReturn> EditAsync(List<VariantEditDto> variantEditDto);
-        Task<MessageReturn> DeleteAsync(string Idvariant);
-        Task<MessageReturn> DeleteManyAsync(List<Variant> Variants);
+        Task<MessageReturn> DeleteAsync(string id);
+        Task<MessageReturn> DeleteManyAsync(List<Variant> listVariant);
     }
 }

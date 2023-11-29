@@ -1,11 +1,11 @@
 using System.Text;
 using System.Text.Json;
-using Amg_ingressos_aqui_eventos_api.Infra;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.Net.Http.Headers;
+using Amg_ingressos_aqui_eventos_api.Exceptions;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -18,7 +18,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         public EmailService(
             IEmailRepository emailRepository,
-            ITicketRowRepository ticketRowRepository,
             ILogger<EmailService> logger
         )
         {
@@ -35,15 +34,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _logger.LogInformation(string.Format("Init - Save: {0}", this.GetType().Name));
             try
             {
+                if (email == null)
+                    throw new SaveException("Email é obrigatório");
+
                 _logger.LogInformation(
                     string.Format("Save Repository - Save: {0}", this.GetType().Name)
                 );
                 _messageReturn.Data = await _emailRepository.SaveAsync(email);
             }
+            catch (SaveException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, ex.Message);
+                throw;
             }
+
             _logger.LogInformation(string.Format("Finished - Save: {0}", this.GetType().Name));
             return _messageReturn;
         }
@@ -58,23 +66,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 _logger.LogInformation(string.Format("Init - Send: {0}", this.GetType().Name));
+
                 var jsonBody = new StringContent(
                     JsonSerializer.Serialize(new { emailID = idEmail }),
                     Encoding.UTF8,
                     Application.Json
-                ); // using static System.Net.Mime.MediaTypeNames;
+                );
                 var url = "http://api.ingressosaqui.com:3006/";
                 var uri = "v1/email/";
 
-                _logger.LogInformation(
-                    string.Format("Call PostAsync - Send: {0}", this.GetType().Name)
-                );
-                HttpResponseMessage response = await _HttpClient.PostAsync(url + uri, jsonBody);
+                _logger.LogInformation(string.Format("Call PostAsync - Send: {0}", this.GetType().Name));
 
+                HttpResponseMessage response = await _HttpClient.PostAsync(url + uri, jsonBody);
                 _messageReturn.Data = response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Erro ao enviar email.");
                 _messageReturn.Message = ex.Message;
             }
 
@@ -85,28 +93,19 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _logger.LogInformation(
-                    string.Format("Init - GenerateBody: {0}", this.GetType().Name)
-                );
+                _logger.LogInformation(string.Format("Init - GenerateBody: {0}", this.GetType().Name));
+
                 var path = Environment.CurrentDirectory + "/Template/index.html";
                 var html = File.ReadAllText(path);
                 var body = html;
-                _logger.LogInformation(
-                    string.Format("Finished - GenerateBody: {0}", this.GetType().Name)
-                );
+
+                _logger.LogInformation(string.Format("Finished - GenerateBody: {0}", this.GetType().Name));
                 return body;
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    string.Format(
-                        "error - GenerateBody: {0},message: {1}",
-                        this.GetType().Name,
-                        ex.Message
-                    ),
-                    ex
-                );
-                throw ex;
+                _logger.LogError(ex, string.Format("error - GenerateBody: {0},message: {1}", this.GetType().Name, ex.Message));
+                throw;
             }
         }
     }

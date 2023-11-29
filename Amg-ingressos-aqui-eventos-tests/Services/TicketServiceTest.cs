@@ -7,6 +7,7 @@ using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Infra;
+using Microsoft.Extensions.Logging;
 
 namespace Prime.UnitTests.Services
 {
@@ -25,6 +26,7 @@ namespace Prime.UnitTests.Services
         private Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
         private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private Mock<ILogger<TicketService>> _loggerMock = new Mock<ILogger<TicketService>>();
 
         [SetUp]
         public void SetUp()
@@ -38,7 +40,8 @@ namespace Prime.UnitTests.Services
                 _clientCieloMock.Object,
                 _lotRepositoryMock.Object,
                 _emailRepositoryMock.Object,
-                _eventRepositoryMock.Object
+                _eventRepositoryMock.Object,
+                _loggerMock.Object
             );
         }
 

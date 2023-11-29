@@ -30,7 +30,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _reportService.GetReportEventTicketsDetail(idEvent, idVariant);
+                var result = _reportService.GetReportEventTicketsDetail(idEvent, idVariant);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -58,7 +58,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = _reportService.GetReportEventTicketsDetails(idEvent).Result;
+                var result = _reportService.GetReportEventTicketsDetails(idEvent);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -86,7 +86,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _reportService.GetReportEventTickets(idOrganizer);
+                var result = _reportService.GetReportEventTickets(idOrganizer);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -114,7 +114,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _reportService.GetReportEventTransactionsDetail(idEvent, idVariant, idOrganizer);
+                var result = _reportService.GetReportEventTransactionsDetail(idEvent, idVariant, idOrganizer);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -142,7 +142,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _reportService.GetReportEventTransactions(idOrganizer);
+                var result = _reportService.GetReportEventTransactions(idOrganizer);
 
                 if (result.Message != null && result.Message.Any())
                 {

@@ -331,7 +331,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _ticketService.GetCourtesyStatus(id);
+                var result = await _ticketService.GetCourtesyStatusById(id);
 
                 return Ok(result.Data);
             }

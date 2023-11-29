@@ -1,12 +1,12 @@
 using NUnit.Framework;
 using Moq;
-using System.Text.Json;
 using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Prime.UnitTests.Services
 {
@@ -16,12 +16,13 @@ namespace Prime.UnitTests.Services
         private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
+        private Mock<ILogger<VariantService>> _loggerMock = new Mock<ILogger<VariantService>>();
 
         [SetUp]
         public void SetUp()
         {
             _variantRepositoryMock = new Mock<IVariantRepository>();
-            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object);
+            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object,_loggerMock.Object);
         }
 
         [Test]

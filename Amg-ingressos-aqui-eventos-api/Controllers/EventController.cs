@@ -118,7 +118,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
-                var result = await _eventService.FindEventByNameAsync(name);
+                var result = await _eventService.GetEventByNameAsync(name);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);

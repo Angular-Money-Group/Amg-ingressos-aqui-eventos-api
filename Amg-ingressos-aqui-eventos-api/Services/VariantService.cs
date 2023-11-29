@@ -5,6 +5,8 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using Amg_ingressos_aqui_eventos_api.Dto;
 using System.Text.RegularExpressions;
+using Amg_ingressos_aqui_eventos_api.Consts;
+using System.Data;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -13,48 +15,54 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private IVariantRepository _variantRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private ILotService _lotService;
+        private ILogger<VariantService> _logger;
         private MessageReturn _messageReturn;
 
         public VariantService(
             IVariantRepository variantRepository,
             IWebHostEnvironment webHostEnvironment,
-            ILotService lotService
+            ILotService lotService,
+            ILogger<VariantService> logger
         )
         {
             _variantRepository = variantRepository;
             _lotService = lotService;
             _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
             _messageReturn = new MessageReturn();
         }
-        public async Task<MessageReturn> SaveAsync(Model.Variant variant)
+        public async Task<MessageReturn> SaveAsync(Variant variant)
         {
             try
             {
                 ValidateModelSave(variant);
-                if(variant.LocaleImage != string.Empty){
+                if (variant.LocaleImage != string.Empty)
+                {
                     variant.LocaleImage = StoreImageAndGenerateLinkToAccess(variant.LocaleImage!);
                 }
                 variant.Status = Enum.StatusVariant.Active;
-                _messageReturn.Data = await _variantRepository.Save<object>(variant);
+                var idVariant = await _variantRepository.Save<object>(variant) ?? throw new RuleException("Id nao pode ser null");
                 var IdentificateLot = 1;
                 variant.Lot
                     .ToList()
-                    .ForEach(async i =>
+                    .ForEach(i =>
                     {
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
-                        i.IdVariant = _messageReturn.Data.ToString();
+                        i.IdVariant = idVariant.ToString() ?? string.Empty;
                         i.Id = _lotService.SaveAsync(i).Result.Data.ToString();
                         IdentificateLot++;
                     });
             }
             catch (SaveException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Variante"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Variante"));
+                throw;
             }
 
             return _messageReturn;
@@ -66,7 +74,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 foreach (var item in variantEditDto)
                 {
-                    var variantEdit = new Model.Variant()
+                    var variantEdit = new Variant()
                     {
                         Description = item.Description,
                         HasPositions = item.HasPositions,
@@ -78,10 +86,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         SellTicketsBeforeStartAnother = item.SellTicketsBeforeStartAnother,
                         SellTicketsInAnotherBatch = item.SellTicketsInAnotherBatch,
                         Status = item.Status,
-                        Id= item.Id,
+                        Id = item.Id,
                         IdEvent = item.IdEvent
                     };
-                    if(variantEdit.Id != null)
+
+                    if (variantEdit.Id != null)
                         _messageReturn.Data = await _variantRepository.Edit<object>(variantEdit.Id, variantEdit);
                     else
                         _messageReturn.Data = await _variantRepository.Save<object>(variantEdit);
@@ -89,11 +98,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (EditException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Variante"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Variante"));
+                throw;
             }
 
             return _messageReturn;
@@ -109,45 +120,49 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (DeleteException ex)
             {
-                DeleteAsync(id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Variante"));
+                _ = DeleteAsync(id);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                DeleteAsync(id);
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Variante"));
+                _ = DeleteAsync(id);
+                throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> DeleteManyAsync(List<Variant> Variant)
+        public async Task<MessageReturn> DeleteManyAsync(List<Variant> listVariant)
         {
             try
             {
-                Variant.ForEach(async variant =>
+                listVariant.ForEach(async variant =>
                 {
-                    var LotsId = variant.Lot.Select(d => d.Id).ToList();
+                    List<string> LotsId = variant.Lot.Select(d => d.Id).ToList() ?? throw new RuleException("id lotes nao pode ser null");
 
                     await _lotService.DeleteManyAsync(LotsId);
                 });
 
-                List<string> variantId = Variant.Select(v => v.Id).ToList();
+                List<string> variantId = listVariant.Select(v => v.Id).ToList();
                 _messageReturn.Data = await _variantRepository.DeleteMany<object>(variantId);
             }
             catch (DeleteException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Variantes"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Variantes"));
+                throw;
             }
 
             return _messageReturn;
         }
 
-        private void ValidateModelSave(Model.Variant variant)
+        private void ValidateModelSave(Variant variant)
         {
             if (variant.Name == "")
                 throw new SaveException("Nome é Obrigatório.");
@@ -164,22 +179,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        public async Task<MessageReturn> SaveManyAsync(List<Model.Variant> listVariant)
+        public async Task<MessageReturn> SaveManyAsync(List<Variant> listVariant)
         {
             try
             {
                 listVariant.ForEach(v =>
                 {
                     ValidateModelSave(v);
-                    if(!string.IsNullOrEmpty(v.LocaleImage)){
+                    if (!string.IsNullOrEmpty(v.LocaleImage))
+                    {
                         v.LocaleImage = StoreImageAndGenerateLinkToAccess(v.LocaleImage!);
                     }
-
                     v.Status = Enum.StatusVariant.Active;
                 });
-                _messageReturn.Data = await _variantRepository.SaveMany<Model.Variant>(listVariant);
+                _messageReturn.Data = await _variantRepository.SaveMany<Variant>(listVariant);
 
-                listVariant.ForEach(async i =>
+                listVariant.ForEach(i =>
                 {
                     var IdentificateLot = 1;
                     i.Lot.ForEach(l =>
@@ -191,16 +206,18 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdentificateLot++;
                         IdentificateLot++;
                     });
-                    _lotService.SaveManyAsync(i.Lot);
+                    _ = _lotService.SaveManyAsync(i.Lot);
                 });
             }
             catch (SaveException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), "Variantes"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), "Variantes"));
+                throw;
             }
 
             return _messageReturn;
@@ -234,7 +251,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format("{0}:{1} - Erro ao gerar link imagem variante.", this.GetType().Name, nameof(StoreImageAndGenerateLinkToAccess)),image);
+                throw;
             }
         }
     }

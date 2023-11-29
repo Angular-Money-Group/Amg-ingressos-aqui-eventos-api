@@ -6,19 +6,20 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amazon.Runtime.Internal.Util;
+using Microsoft.Extensions.Logging;
 
 namespace Prime.UnitTests.Services
 {
     public class EventServiceTest
     {
         private EventService _eventService;
-        private Mock<HttpClient> _clientMock = new Mock<HttpClient>();
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
+        private Mock<ILogger<EventService>> _loggerMock = new Mock<ILogger<EventService>>();
 
         private Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
         private Pagination pagination = new Pagination();
@@ -30,7 +31,7 @@ namespace Prime.UnitTests.Services
         public void SetUp()
         {
             _eventRepositoryMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object,_clientMock.Object);
+            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object,_loggerMock.Object);
         }
 
         [Test]

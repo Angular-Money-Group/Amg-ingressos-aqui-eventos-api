@@ -1,14 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Amg_ingressos_aqui_eventos_api.Consts
 {
     public static class MessageLogErrors
     {
         public const string SaveMessage = "{0} : Erro inesperado ao salvar um(a) {1}";
         public const string DeleteMessage = "{0} : Erro inesperado ao deletar um(a) {1}";
+        public const string GetById = "{0}:{1} - erro ao buscar {2} por Id.";
+        public const string Get = "{0}:{1} - erro ao buscar {2}.";
+        public const string Save = "{0}:{1} - erro ao salvar {2}.";
+        public const string Delete = "{0}:{1} - erro ao apagar {2}.";
+        public const string Edit = "{0}:{1} - erro ao editar {2}.";
+        public const string Report = "{0}:{1} - erro ao gerar relatório {2}.";
         public const string saveEventMessage = "SaveEventAsync : Erro inesperado ao salvar um evento";
         public const string highlightEventmessage = "HighlightEventAsync : Erro inesperado ao destacar um evento";
         public const string deleteEventMessage = "DeleteEventAsync : Erro inesperado ao deletar um evento";

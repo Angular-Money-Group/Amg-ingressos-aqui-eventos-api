@@ -1,5 +1,6 @@
 ﻿using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
+using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,19 +54,21 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
-                    return StatusCode( Convert.ToInt32(result.Data), result.Message);
+                    return StatusCode(404, result.Message);
                 }
 
                 return Ok(result.Data);
             }
+            catch (RuleException ex)
+            {
+                _logger.LogError( ex, MessageLogErrors.entranceTicket);
+                return StatusCode(400, MessageLogErrors.entranceTicket + ex.Message);
+            }
             catch (Exception ex)
             {
-                _logger.LogError( MessageLogErrors.entranceTicket ?? string.Empty, ex.Message, "teste");
+                _logger.LogError(ex, MessageLogErrors.entranceTicket);
                 return StatusCode(500, MessageLogErrors.entranceTicket + ex.Message);
             }
         }
-
-
-
     }
 }

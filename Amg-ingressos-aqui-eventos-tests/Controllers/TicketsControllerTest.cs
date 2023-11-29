@@ -27,6 +27,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
         private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
+        private Mock<ILogger<TicketService>> _loggerServiceMock = new Mock<ILogger<TicketService>>();
         private Mock<ILogger<TicketController>> _loggerMock = new Mock<ILogger<TicketController>>();
 
         [SetUp]
@@ -41,7 +42,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
                     _clientCieloMock.Object,
                     _lotRepositoryMock.Object,
                     _emailRepositoryMock.Object,
-                    _eventRepositoryMock.Object
+                    _eventRepositoryMock.Object,
+                    _loggerServiceMock.Object
                 )
             );
         }
