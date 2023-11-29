@@ -22,7 +22,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions
         public double TotalValue { get; set; }
         public string Discount { get; set; }
         public int Status { get; set; }
-        public Enum.StageTransactionEnum Stage { get; set; }
+        public Enum.EnumStageTransaction Stage { get; set; }
         public object ReturnUrl { get; set; }
         public object PaymentIdService { get; set; }
         public object Details { get; set; }
@@ -47,7 +47,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions
     public class PaymentMethod
     {
         public string IdPaymentMethod { get; set; }
-        public Enum.TypePaymentEnum TypePayment { get; set; }
+        public Enum.EnumTypePayment TypePayment { get; set; }
         public string CardNumber { get; set; }
         public string Holder { get; set; }
         public string ExpirationDate { get; set; }

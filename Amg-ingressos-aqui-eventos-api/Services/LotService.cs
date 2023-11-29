@@ -30,7 +30,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 ValidateModelSave(lot);
-                lot.Status = Enum.StatusLot.Open;
+                lot.Status = Enum.EnumStatusLot.Open;
                 var idLot = await _lotRepository.Save<object>(lot) ?? throw new RuleException("id Lot é obrigatório");
                 List<Ticket> listTicket = new List<Ticket>();
                 for (int i = 0; i < lot.TotalTickets; i++)

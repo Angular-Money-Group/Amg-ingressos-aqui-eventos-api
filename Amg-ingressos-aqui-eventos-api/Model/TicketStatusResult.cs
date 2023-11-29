@@ -18,7 +18,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 
         [BsonElement("Status")]
         [JsonPropertyName("status")]
-        public TicketStatusProcessEnum Status { get; set; }
+        public EnumTicketStatusProcess Status { get; set; }
 
         [BsonElement("TicketId")]
         [JsonPropertyName("ticketId")]

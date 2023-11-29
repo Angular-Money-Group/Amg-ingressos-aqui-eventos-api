@@ -37,7 +37,7 @@ builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IReportEventTickets, ReportEventTicketsService>();
-builder.Services.AddScoped<IReportEventTransactions,ReportEventTransactionsService>();
+builder.Services.AddScoped<IReportEventTransactions, ReportEventTransactionsService>();
 builder.Services.AddScoped<IEntranceService, EntranceService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository<object>>();

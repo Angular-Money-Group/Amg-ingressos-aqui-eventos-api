@@ -246,7 +246,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var ticketStatusResult = new TicketStatusResult()
                 {
                     Identificate = i,
-                    Status = TicketStatusProcessEnum.Processando
+                    Status = EnumTicketStatusProcess.Processando
                 };
 
                 ticketsRow.TicketStatus.Add(ticketStatusResult);
@@ -262,7 +262,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 .Result;
 
             ticketsRow.TicketStatus
-                .FindAll(t => t.Status == TicketStatusProcessEnum.Erro)
+                .FindAll(t => t.Status == EnumTicketStatusProcess.Erro)
                 .ForEach(
                     async (t) =>
                     {
@@ -451,7 +451,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 IdLot = lotToGenerateTicket.Id,
                 IdUser = idUser,
-                Status = StatusTicket.CORTESIA,
+                Status = EnumStatusTicket.CORTESIA,
                 Value = lotToGenerateTicket.ValueTotal,
                 IsSold = true,
                 ReqDocs = false,
@@ -564,12 +564,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             for (var i = 0; i < ticketsRow.TicketStatus.Count; i++)
             {
-                if (ticketsRow.TicketStatus[i].Status != TicketStatusProcessEnum.Processando)
+                if (ticketsRow.TicketStatus[i].Status != EnumTicketStatusProcess.Processando)
                 {
                     continue;
                 }
 
-                ticketsRow.TicketStatus[i].Status = TicketStatusProcessEnum.Erro;
+                ticketsRow.TicketStatus[i].Status = EnumTicketStatusProcess.Erro;
                 ticketsRow.TicketStatus[i].Message = "Email sending failed";
 
                 _ = _ticketRowRepository.UpdateTicketsRowAsync<StatusTicketsRow>(rowId, ticketsRow);
@@ -880,7 +880,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 if ((bool)isEmailSend.Data)
                 {
-                    ticketsRow.TicketStatus[index].Status = TicketStatusProcessEnum.Enviado;
+                    ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Enviado;
                     await _ticketRowRepository.UpdateTicketsRowAsync<StatusTicketsRow>(
                         rowId,
                         ticketsRow
@@ -908,7 +908,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             StatusTicketsRow ticketsRow
         )
         {
-            ticketsRow.TicketStatus[index].Status = TicketStatusProcessEnum.Erro;
+            ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Erro;
             ticketsRow.TicketStatus[index].Message = "Failed to send email";
 
             await _ticketRowRepository.UpdateTicketsRowAsync<StatusTicketsRow>(rowId, ticketsRow);
@@ -921,7 +921,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             StatusTicketsRow ticketsRow
         )
         {
-            ticketsRow.TicketStatus[index].Status = TicketStatusProcessEnum.Erro;
+            ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Erro;
             ticketsRow.TicketStatus[index].Message = ex.Message;
 
             await _ticketRowRepository.UpdateTicketsRowAsync<StatusTicketsRow>(rowId, ticketsRow);

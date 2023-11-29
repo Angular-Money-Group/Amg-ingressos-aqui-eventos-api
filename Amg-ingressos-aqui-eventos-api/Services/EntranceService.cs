@@ -62,7 +62,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //Checa o status do ticket e se não passar na validação finaliza a execução
                 // 2- Registra o qrcode lido pelo colaborador
                 #region Checa o status do ticket
-                if (evento.Status == Enum.StatusTicket.USADO)
+                if (evento.Status == Enum.EnumStatusTicket.USADO)
                 {
 
                     //Insere tabela de historico de leituras de qrcode (ticket)
@@ -72,7 +72,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.StatusTicket.USADO,
+                        Status = (int)Enum.EnumStatusTicket.USADO,
                         Date = DateTime.Now
                     });
 
@@ -81,7 +81,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                     throw new RuleException("Ingresso já utilizado");
                 }
-                else if (evento.Status == Enum.StatusTicket.NAO_DISPONIVEL)
+                else if (evento.Status == Enum.EnumStatusTicket.NAO_DISPONIVEL)
                 {
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
@@ -90,7 +90,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.StatusTicket.NAO_DISPONIVEL,
+                        Status = (int)Enum.EnumStatusTicket.NAO_DISPONIVEL,
                         Date = DateTime.Now
                     });
 
@@ -99,7 +99,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                     throw new RuleException("Ingresso não disponível");
                 }
-                else if (evento.Status == Enum.StatusTicket.NAO_VENDIDO)
+                else if (evento.Status == Enum.EnumStatusTicket.NAO_VENDIDO)
                 {
                     _messageReturn.Data = "400";
                     _messageReturn.Message = "Ingresso não vendido";
@@ -111,7 +111,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.StatusTicket.NAO_VENDIDO,
+                        Status = (int)Enum.EnumStatusTicket.NAO_VENDIDO,
                         Date = DateTime.Now
                     });
 
@@ -120,7 +120,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                     throw new RuleException("Ingresso não vendido");
                 }
-                else if (evento.Status == Enum.StatusTicket.EXPIRADO)
+                else if (evento.Status == Enum.EnumStatusTicket.EXPIRADO)
                 {
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
@@ -129,7 +129,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.StatusTicket.EXPIRADO,
+                        Status = (int)Enum.EnumStatusTicket.EXPIRADO,
                         Date = DateTime.Now
                     });
 
@@ -152,7 +152,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     IdColab = entranceDTO.IdColab,
                     IdEvent = entranceDTO.IdEvent,
                     Reason = "Ingresso lido com sucesso",
-                    Status = (int)Enum.StatusTicket.DISPONIVEL,
+                    Status = (int)Enum.EnumStatusTicket.DISPONIVEL,
                     Date = DateTime.Now
                 });
 
@@ -174,7 +174,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 };
 
                 //3- Da baixa (queima) no qrcode (ticket), colocando ele como utilizado
-                await _ticketRepository.BurnTicketsAsync<Ticket>(entranceDTO.IdTicket, (int)Enum.StatusTicket.USADO);
+                await _ticketRepository.BurnTicketsAsync<Ticket>(entranceDTO.IdTicket, (int)Enum.EnumStatusTicket.USADO);
                 #endregion
 
                 _messageReturn.Data = eventQrReadsDto;
@@ -223,7 +223,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdColab = entranceDTO.IdColab,
                         IdEvent = entranceDTO.IdEvent,
                         InitialDate = DateTime.Now,
-                        Status = (int)Enum.EventQrReadsEnum.INICIADO,
+                        Status = (int)Enum.EnumEventQrReads.INICIADO,
                         TotalFail = successQrRead ? 0 : 1,
                         TotalReads = 1,
                         TotalSuccess = successQrRead ? 1 : 0

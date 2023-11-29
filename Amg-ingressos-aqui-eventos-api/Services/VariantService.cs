@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     variant.LocaleImage = StoreImageAndGenerateLinkToAccess(variant.LocaleImage!);
                 }
-                variant.Status = Enum.StatusVariant.Active;
+                variant.Status = Enum.EnumStatusVariant.Active;
                 var idVariant = await _variantRepository.Save<object>(variant) ?? throw new RuleException("Id nao pode ser null");
                 var IdentificateLot = 1;
                 variant.Lot
@@ -190,7 +190,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     {
                         v.LocaleImage = StoreImageAndGenerateLinkToAccess(v.LocaleImage!);
                     }
-                    v.Status = Enum.StatusVariant.Active;
+                    v.Status = Enum.EnumStatusVariant.Active;
                 });
                 _messageReturn.Data = await _variantRepository.SaveMany<Variant>(listVariant);
 
@@ -199,7 +199,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     var IdentificateLot = 1;
                     i.Lot.ForEach(l =>
                     {
-                        l.Status = IdentificateLot == 1 ? Enum.StatusLot.Open : Enum.StatusLot.Wait;
+                        l.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
                         l.Identificate = IdentificateLot;
                         l.ReqDocs = i.ReqDocs;
                         l.IdVariant = i.Id;

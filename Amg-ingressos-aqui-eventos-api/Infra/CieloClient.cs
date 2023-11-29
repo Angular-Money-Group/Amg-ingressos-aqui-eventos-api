@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
@@ -10,7 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
     public class CieloClient : ICieloClient
     {
         private readonly HttpClient _httpClient;
-        private IOptions<CieloSettings> _config;
+        private readonly IOptions<CieloSettings> _config;
         public CieloClient(IOptions<CieloSettings> transactionDatabaseSettings, HttpClient httpClientFactory)
         {
             _config = transactionDatabaseSettings;

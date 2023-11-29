@@ -27,7 +27,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var filter = Builders<Event>.Filter.Eq("_Id", id);
 
-                var update = Builders<Event>.Update.Set("Status", Enum.StatusEvent.Canceled);
+                var update = Builders<Event>.Update.Set("Status", Enum.EnumStatusEvent.Canceled);
 
                 var action = await _eventCollection.UpdateOneAsync(filter, update);
 
@@ -265,7 +265,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 var filter = Builders<Event>.Filter.And(
                     Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
                     Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1)),
-                    Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
+                    Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
                 );
 
                 List<Event> pResults = await _eventCollection
@@ -293,7 +293,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                 var filter = Builders<Event>.Filter.And(
                     Builders<Event>.Filter.Eq("Highlighted", true),
-                    Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
+                    Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
                 );
 
                 List<Event> pResults = await _eventCollection

@@ -86,7 +86,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 ValidateModelSave(eventObject);
                 IsBase64Image(eventObject.Image!);
                 eventObject.Image = StoreImageAndGenerateLinkToAccess(eventObject.Image!);
-                eventObject.Status = Enum.StatusEvent.Active;
+                eventObject.Status = Enum.EnumStatusEvent.Active;
                 eventObject.Courtesy = new Courtesy()
                 {
                     RemainingCourtesy = new List<RemainingCourtesy>(),

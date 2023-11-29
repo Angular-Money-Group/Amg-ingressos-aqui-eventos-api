@@ -19,7 +19,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         public decimal Value { get; set; }
         public bool ReqDocs { get; set; }
         public bool IsSold { get; set; }
-        public Enum.StatusTicket Status { get; set; }
+        public Enum.EnumStatusTicket Status { get; set; }
         public string QrCode { get; set; }
         public UserDto User { get; set; }
     }

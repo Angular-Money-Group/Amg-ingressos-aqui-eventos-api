@@ -102,9 +102,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             if (!listTransaction.Any())
                 return new ReportTransactionsDto();
 
-            var listCredit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.TypePaymentEnum.CreditCard);
-            var listDebit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.TypePaymentEnum.DebitCard);
-            var listPix = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.TypePaymentEnum.Pix);
+            var listCredit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.EnumTypePayment.CreditCard);
+            var listDebit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.EnumTypePayment.DebitCard);
+            var listPix = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.EnumTypePayment.Pix);
 
             ReportTransactionsDto report = new ReportTransactionsDto()
             {
@@ -189,7 +189,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                   on transactionJoin.IdTransaction equals transactions._id
                                   select transactions;
             //filtro de transacoes finalizadas
-            listTransaction = listTransaction.Where(x => x.PaymentMethod != null && x.Stage == Enum.StageTransactionEnum.Finished);
+            listTransaction = listTransaction.Where(x => x.PaymentMethod != null && x.Stage == Enum.EnumStageTransaction.Finished);
             return listTransaction.ToList();
         }
     }
