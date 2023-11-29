@@ -59,7 +59,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetEventByNameAsync(string name)
+        public async Task<MessageReturn> GetByNameAsync(string name)
         {
             try
             {
@@ -68,12 +68,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventByNameAsync), "Evento"), name);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Evento"), name);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventByNameAsync), "Evento"), name);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Evento"), name);
                 _messageReturn.Message = ex.Message;
             }
             return _messageReturn;
@@ -131,7 +131,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetHighlightEventAsync(string id)
+        public async Task<MessageReturn> SetHighlightEventAsync(string id)
         {
             try
             {
@@ -140,12 +140,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetHighlightEventAsync), "Eventos Destaque"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), id);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetHighlightEventAsync), "Eventos Destaque"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), id);
                 throw;
             }
 
@@ -203,31 +203,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventByNameAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventByNameAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
                 throw;
             }
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetAllEventsAsync()
+        public async Task<MessageReturn> GetWithUserData()
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.GetAllEventsAdmin<List<GetEventsWithNames>>();
+                _messageReturn.Data = await _eventRepository.GetWithUserData<List<GetEventsWithNames>>();
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"));
                 throw;
             }
             return _messageReturn;
@@ -249,12 +249,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventByNameAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventByNameAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
                 throw;
             }
             return _messageReturn;

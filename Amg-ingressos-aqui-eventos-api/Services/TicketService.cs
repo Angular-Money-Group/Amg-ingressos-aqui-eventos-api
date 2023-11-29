@@ -481,7 +481,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             var ticketToSend = new Ticket() { Id = ticketId, QrCode = qrCodeUrl };
 
-            await EditTicketsAsync(ticketId, ticketToSend);
+            await EditAsync(ticketId, ticketToSend);
 
             return qrCodeUrl;
         }
@@ -576,61 +576,61 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        public async Task<MessageReturn> GetTicketByUser(string idUser)
+        public async Task<MessageReturn> GetByUser(string idUser)
         {
             try
             {
                 idUser.ValidateIdMongo();
-                var list = await _ticketRepository.GetTicketsByUser<
+                var list = await _ticketRepository.GetByUser<
                     List<GetTicketDataEvent>
                 >(idUser);
                 _messageReturn.Data = list.Where(x => x.IsSold);
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketByUser), "ticket"), idUser);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketByUser), "ticket"), idUser);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketByUser), "ticket"), idUser);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
                 throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetTicketByUserEvent(string idUser, string idEvent)
+        public async Task<MessageReturn> GetByUserAndEvent(string idUser, string idEvent)
         {
             try
             {
                 idUser.ValidateIdMongo();
-                var list = await _ticketRepository.GetTicketsByUser<
+                var list = await _ticketRepository.GetByUser<
                     List<GetTicketDataEvent>>(idUser);
                 _messageReturn.Data = list.Where(x => x.IsSold && x.Event.Id == idEvent);
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketByUserEvent), "ticket"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketByUserEvent), "ticket"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketByUserEvent), "ticket"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
                 throw;
             }
 
@@ -666,7 +666,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetTicketsRemainingByLot(string idLot)
+        public async Task<MessageReturn> GetRemainingByLot(string idLot)
         {
             try
             {
@@ -677,26 +677,26 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsRemainingByLot), "ticket"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), "ticket"));
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsRemainingByLot), "ticket"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), "ticket"));
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsRemainingByLot), "ticket"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), "ticket"));
                 throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetTicketById(string id)
+        public async Task<MessageReturn> GetById(string id)
         {
             try
             {
@@ -707,31 +707,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketById), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), id);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketById), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), id);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketById), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), id);
                 throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetTicketByIdDataUser(string id)
+        public async Task<MessageReturn> GetByIdWithDataUser(string id)
         {
             try
             {
                 id.ValidateIdMongo();
-                GetTicketDataUser ticketUserData = (GetTicketDataUser)await _ticketRepository.GetTicketByIdDataUser<GetTicketDataUser>(id);
+                GetTicketDataUser ticketUserData = (GetTicketDataUser)await _ticketRepository.GetByIdWithDataUser<GetTicketDataUser>(id);
 
                 _messageReturn.Data = new TicketUserDto()
                 {
@@ -752,75 +752,75 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketByIdDataUser), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketByIdDataUser), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketByIdDataUser), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
                 throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetTicketByIdDataEvent(string id)
+        public async Task<MessageReturn> GetByIdWithDataEvent(string id)
         {
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = (GetTicketDataEvent)await _ticketRepository.GetTicketByIdDataEvent<GetTicketDataEvent>(id);
+                _messageReturn.Data = (GetTicketDataEvent)await _ticketRepository.GetByIdWithDataEvent<GetTicketDataEvent>(id);
             }
             catch (GetException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketByIdDataEvent), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketByIdDataEvent), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetTicketByIdDataEvent), "ticket"), id);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
                 throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> EditTicketsAsync(string id, Ticket ticket)
+        public async Task<MessageReturn> EditAsync(string id, Ticket ticket)
         {
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = await _ticketRepository.UpdateTicketsAsync<object>(id, ticket);
+                _messageReturn.Data = await _ticketRepository.EditAsync<object>(id, ticket);
             }
             catch (EditException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditTicketsAsync), "ticket"), ticket);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ticket);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditTicketsAsync), "ticket"), ticket);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ticket);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditTicketsAsync), "ticket"), ticket);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ticket);
                 throw;
             }
 

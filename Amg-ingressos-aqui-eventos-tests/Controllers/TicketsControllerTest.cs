@@ -59,7 +59,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
                 .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
             // Act
-            var result = await _ticketController.GetTicketByUser(userID);
+            var result = await _ticketController.GetByUser(userID);
 
             // Assert
             Assert.IsInstanceOf<OkObjectResult>(result);
@@ -78,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
                 .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
             // Act
-            var result = await _ticketController.GetTicketsRemainingByLot(lotID);
+            var result = await _ticketController.GetRemainingByLot(lotID);
 
             // Assert
             Assert.IsInstanceOf<OkObjectResult>(result);

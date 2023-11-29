@@ -203,7 +203,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<List<GetEventsWithNames>> GetAllEventsAdmin<T1>()
+        public async Task<List<GetEventsWithNames>> GetWithUserData<T1>()
         {
             try
             {

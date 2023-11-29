@@ -68,11 +68,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> EditAsync(List<VariantEditDto> variantEditDto)
+        public async Task<MessageReturn> EditAsync(List<VariantEditDto> listVariant)
         {
             try
             {
-                foreach (var item in variantEditDto)
+                foreach (var item in listVariant)
                 {
                     var variantEdit = new Variant()
                     {

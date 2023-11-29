@@ -22,35 +22,35 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// Editar Lot 
         /// </summary>
         /// <param name="id">Id Lot</param>
+        /// <param name="lotEdit">dados de lote a serem alterados</param>
         /// <returns>200 Lot Editado</returns>
         /// <returns>500 Erro inesperado</returns>
         [Route("{id}")]
         [HttpPatch]
-        public async Task<IActionResult> EditLotAsync([FromRoute] string id, [FromBody] Lot lotEdit)
+        public async Task<IActionResult> EditLotAsync([FromRoute] string id, [FromBody]Lot lotEdit)
         {
             try
             {
                 var result = await _LotService.EditAsync(id, lotEdit);
-
                 return Ok(result.Data);
             }
             catch (DeleteException ex)
             {
-                _logger.LogInformation(MessageLogErrors.saveEventMessage, ex);
+                _logger.LogInformation(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditLotAsync),"Lote"));
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.saveEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.saveEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditLotAsync),"Lote"));
+                return StatusCode(500, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditLotAsync),"Lote"));
             }
         }
         
         /// <summary>
         /// Editar Lot 
         /// </summary>
-        /// <param name="id">Id Lot</param>
-        /// <returns>200 Lot Editado</returns>
+        /// <param name="id">Id Lote</param>
+        /// <returns>200 Lot deletado</returns>
         /// <returns>500 Erro inesperado</returns>
         [Route("{id}")]
         [HttpDelete]
@@ -59,18 +59,17 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _LotService.DeleteAsync(id);
-
                 return Ok(result.Data);
             }
             catch (DeleteException ex)
             {
-                _logger.LogInformation(MessageLogErrors.saveEventMessage, ex);
+                _logger.LogInformation(ex, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteLotAsync),"Lote"));
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.saveEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.saveEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteLotAsync),"Lote"));
+                return StatusCode(500, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteLotAsync),"Lote"));
             }
         }
     }

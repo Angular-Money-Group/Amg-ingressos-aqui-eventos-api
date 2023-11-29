@@ -13,7 +13,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         private readonly ILogger<EntranceController> _logger;
         private readonly IEntranceService _entranceService;
 
-        public EntranceController(ILogger<EntranceController> logger, IEntranceService entranceService)
+        public EntranceController(
+            ILogger<EntranceController> logger,
+            IEntranceService entranceService)
         {
             _logger = logger;
             _entranceService = entranceService;
@@ -22,8 +24,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Entrada Ticket
         /// </summary>
-        /// <param name="id">Id do ticket</param>
-        /// <param name="ticket">Objeto do ticket a ser alterado</param>
+        /// <param name="entrance">Objeto dto entrance</param>
         /// <returns>200 Edita os dados do Ticket</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
@@ -33,20 +34,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 if (entrance == null)
-                {
                     return StatusCode(400, MessageLogErrors.objectInvalid);
-                }
                 else
                 {
                     if (string.IsNullOrEmpty(entrance.IdTicket))
-                    {
                         return StatusCode(404, "Ticket não foi informado");
-                    }
-
                     if (string.IsNullOrEmpty(entrance.IdColab))
-                    {
                         return StatusCode(404, "Colaborador não foi informado");
-                    }
                 }
 
                 var result = await _entranceService.EntranceTicket(entrance);
@@ -61,13 +55,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (RuleException ex)
             {
-                _logger.LogError( ex, MessageLogErrors.entranceTicket);
-                return StatusCode(400, MessageLogErrors.entranceTicket + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
+                return StatusCode(400, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, MessageLogErrors.entranceTicket);
-                return StatusCode(500, MessageLogErrors.entranceTicket + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
+                return StatusCode(500, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
             }
         }
     }

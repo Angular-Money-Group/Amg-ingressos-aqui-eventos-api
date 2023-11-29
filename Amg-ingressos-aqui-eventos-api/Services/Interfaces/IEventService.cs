@@ -7,13 +7,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
     {
         Task<MessageReturn> SaveAsync(Event eventObject);
         Task<MessageReturn> GetByIdAsync(string id);
-        Task<MessageReturn> GetHighlightEventAsync(string id);
+        Task<MessageReturn> SetHighlightEventAsync(string id);
         Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventDto);
         Task<MessageReturn> GetAllEventsWithTickets(string idEvent);
-        Task<MessageReturn> GetEventByNameAsync(string name);
+        Task<MessageReturn> GetByNameAsync(string name);
         Task<MessageReturn> GetByOrganizerAsync(string idOrganizer, Pagination paginationOptions, FilterOptions? filter);
         Task<MessageReturn> DeleteAsync(string id);
         Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly,   Pagination paginationOptions);
-        Task<MessageReturn> GetAllEventsAsync();
+        Task<MessageReturn> GetWithUserData();
     }
 }

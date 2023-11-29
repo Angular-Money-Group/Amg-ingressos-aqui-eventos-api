@@ -41,7 +41,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new GetException("Colaborador da leitura do ingresso inválido");
 
                 //Consulta os dados do evento, do qrcode (ticket) que acabou de ser lido
-                var evento = (GetTicketDataEvent)_ticketRepository.GetTicketByIdDataEvent<GetTicketDataEvent>(entranceDTO.IdTicket).Result;
+                var evento = (GetTicketDataEvent)_ticketRepository.GetByIdWithDataEvent<GetTicketDataEvent>(entranceDTO.IdTicket).Result;
 
                 //Se for null, é um qrcode (ticket) inexistente
                 if (evento == null)
@@ -52,7 +52,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new RuleException("Ingresso não pertencente ao evento");
 
                 //Consulta os dados do usuários do qrcode (ticket) que acabou de ser lido
-                var userTicket = (GetTicketDataUser)_ticketRepository.GetTicketByIdDataUser<GetTicketDataUser>(entranceDTO.IdTicket).Result;
+                var userTicket = (GetTicketDataUser)_ticketRepository.GetByIdWithDataUser<GetTicketDataUser>(entranceDTO.IdTicket).Result;
 
                 //Se não encontrar dados de usúario é um qrcode(ticket) inválido
                 if (userTicket == null)

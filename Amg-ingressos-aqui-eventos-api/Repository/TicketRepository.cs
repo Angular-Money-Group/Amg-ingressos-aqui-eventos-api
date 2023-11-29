@@ -30,7 +30,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _ticketStatusCollection = dbConnectionCourtesy.GetConnection("statusCourtesyTickets");
         }
 
-        public async Task<List<GetTicketDataEvent>> GetTicketsByUser<T1>(string idUser)
+        public async Task<List<GetTicketDataEvent>> GetByUser<T1>(string idUser)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             try
             {
                 var data = ticket as Ticket ??
-                    throw new SaveException(string.Format(MessageLogErrors.SaveMessage,this.GetType().Name,"ticket"));
+                    throw new SaveException(string.Format(MessageLogErrors.Save,this.GetType().Name,"ticket"));
 
                 await _ticketCollection.InsertOneAsync(data);
                 return data.Id;
@@ -142,7 +142,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (result.DeletedCount >= 1)
                     return "Ingressos Deletado";
                 else
-                    throw new DeleteException(string.Format(MessageLogErrors.DeleteMessage,this.GetType().Name,"Ticket"));
+                    throw new DeleteException(string.Format(MessageLogErrors.Delete,this.GetType().Name,"Ticket"));
             }
             catch
             {
@@ -160,7 +160,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 if (result.DeletedCount >= 1)
                     return "Ingressos Deletado";
                 else
-                    throw new DeleteException(string.Format(MessageLogErrors.DeleteMessage,this.GetType().Name,"Ticket"));
+                    throw new DeleteException(string.Format(MessageLogErrors.Delete,this.GetType().Name,"Ticket"));
             }
             catch
             {
@@ -233,7 +233,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<object> UpdateTicketsAsync<T1>(string id, Ticket ticket)
+        public async Task<object> EditAsync<T1>(string id, Ticket ticket)
         {
             try
             {
@@ -258,7 +258,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<object> GetTicketByIdDataUser<T1>(string id)
+        public async Task<object> GetByIdWithDataUser<T1>(string id)
         {
             try
             {
@@ -294,7 +294,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             }
         }
 
-        public async Task<object> GetTicketByIdDataEvent<T1>(string id)
+        public async Task<object> GetByIdWithDataEvent<T1>(string id)
         {
             try
             {
