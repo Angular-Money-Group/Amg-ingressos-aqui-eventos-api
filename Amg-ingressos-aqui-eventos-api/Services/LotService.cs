@@ -67,8 +67,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 listLot.ForEach(i => { ValidateModelSave(i); });
-
-                //listLot.Status = Enum.StatusLot.Open;
                 _messageReturn.Data = await _lotRepository.SaveMany<object>(listLot);
                 listLot.ForEach(x =>
                 {
@@ -144,31 +142,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> EditAsync(string id, Lot lotEdit)
+        public async Task<MessageReturn> EditAsync(string id, Lot lot)
         {
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = await _lotRepository.Edit<object>(id, lotEdit);
+                _messageReturn.Data = await _lotRepository.Edit<object>(id, lot);
                 await _ticketService.DeleteTicketsByLot(id);
 
-                for (int i = 0; i < lotEdit.TotalTickets; i++)
+                for (int i = 0; i < lot.TotalTickets; i++)
                 {
                     await _ticketService.SaveAsync(new Ticket()
                     {
                         IdLot = id,
-                        Value = lotEdit.ValueTotal
+                        Value = lot.ValueTotal
                     });
                 }
             }
             catch (EditException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), lotEdit);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), lot);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), lotEdit);
+                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), lot);
                 throw;
             }
 

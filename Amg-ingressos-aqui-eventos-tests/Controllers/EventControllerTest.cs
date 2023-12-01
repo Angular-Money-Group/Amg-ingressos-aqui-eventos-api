@@ -45,8 +45,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             // Arrange
             Pagination pagination = new Pagination(){
-                page = 1,
-                pageSize = 10
+                Page = 1,
+                PageSize = 10
             };
             highlights = false;
             weekly = false;
@@ -116,8 +116,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             // Arrange
              Pagination pagination = new Pagination(){
-                page = 10,
-                pageSize = 100
+                Page = 10,
+                PageSize = 100
             };
             highlights = true;
             weekly = false;

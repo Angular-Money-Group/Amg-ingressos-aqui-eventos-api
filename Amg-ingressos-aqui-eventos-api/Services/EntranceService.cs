@@ -10,10 +10,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class EntranceService : IEntranceService
     {
-        private IEntranceRepository _entranceRepository;
-        private ITicketRepository _ticketRepository;
-        private MessageReturn _messageReturn;
-        private ILogger<EntranceService> _logger;
+        private readonly IEntranceRepository _entranceRepository;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly MessageReturn _messageReturn;
+        private readonly ILogger<EntranceService> _logger;
 
         public EntranceService(
             IEntranceRepository entranceRepository,
@@ -181,6 +181,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch
             {
+                _logger.LogError("erro ao processar entrance");
                 throw;
             }
 
@@ -237,7 +238,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     eventQrReads.TotalFail = successQrRead ? eventQrReads.TotalFail : (eventQrReads.TotalFail + 1);
 
                     //Atualiza os qrCode lido do evento na data de hoje
-                    eventQrReads = _entranceRepository.UpdateEventQrReads<EventQrReads>(eventQrReads).GetAwaiter().GetResult();
+                    eventQrReads = _entranceRepository.EditEventQrReads<EventQrReads>(eventQrReads).GetAwaiter().GetResult();
                 }
 
                 return eventQrReads;

@@ -14,16 +14,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class ReportEventTransactionsService : IReportEventTransactions
     {
-        private MessageReturn _messageReturn = new MessageReturn();
-        private IEventRepository _eventRepository;
-        private ILogger<ReportEventTransactionsService> _logger;
+        private readonly MessageReturn _messageReturn;
+        private readonly IEventRepository _eventRepository;
+        private readonly ILogger<ReportEventTransactionsService> _logger;
 
         public ReportEventTransactionsService(
-            IEventRepository eventRepository, 
+            IEventRepository eventRepository,
             ILogger<ReportEventTransactionsService> logger)
         {
             _eventRepository = eventRepository;
             _logger = logger;
+            _messageReturn = new MessageReturn();
         }
 
         public async Task<MessageReturn> ProcessReportEventTransactions(string idOrganizer)
@@ -150,35 +151,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             List<Model.Ticket> listTickets = new();
             if (!string.IsNullOrEmpty(idVariant))
             {
-                var listLotes = eventDataTickets?.FirstOrDefault()?.Variant?.FirstOrDefault(i => i._id == idVariant)?.Lot;
+                var listLotes = eventDataTickets?.FirstOrDefault()?.Variant?.Find(i => i._id == idVariant)?.Lot;
                 listLotes?.ForEach(i => { listTickets.AddRange(i.ticket); });
             }
             else
             {
                 List<Variant> listVariant = new List<Variant>();
-                eventDataTickets.ForEach(x =>
-                {
-                    listVariant.AddRange(x.Variant);
-                });
                 List<Lot> listLotes = new List<Lot>();
-                listVariant.ForEach(x =>
-                {
-                    listLotes.AddRange(x.Lot);
-                });
+                eventDataTickets.ForEach(x => { listVariant.AddRange(x.Variant); });
+                listVariant.ForEach(x => { listLotes.AddRange(x.Lot); });
                 listLotes.ForEach(i => { listTickets.AddRange(i.ticket); });
             }
 
             //get tickets transactions
             List<Transaction> listTransactions = new List<Transaction>();
-            eventDataTransaction.ForEach(x =>
-            {
-                listTransactions.AddRange(x.Transaction);
-            });
+            eventDataTransaction.ForEach(x => { listTransactions.AddRange(x.Transaction); });
             List<TransactionIten> listTransactionItens = new List<TransactionIten>();
-            listTransactions.ForEach(x =>
-            {
-                listTransactionItens.AddRange(x.TransactionItens);
-            });
+            listTransactions.ForEach(x => { listTransactionItens.AddRange(x.TransactionItens); });
+
             //relacionamento entre ticket e transacoes
             var listTransactionTicktes = from transactionTickets in listTransactionItens
                                          join tickets in listTickets on transactionTickets.IdTicket equals tickets.Id

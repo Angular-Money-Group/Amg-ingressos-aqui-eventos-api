@@ -53,6 +53,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Status da leitura
         /// </summary>
-        public int? Status { get; set; }
+        public int Status { get; set; }
     }
 }

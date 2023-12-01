@@ -34,7 +34,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 if (entrance == null)
-                    return StatusCode(400, MessageLogErrors.objectInvalid);
+                    return StatusCode(400, MessageLogErrors.ObjectInvalid);
                 else
                 {
                     if (string.IsNullOrEmpty(entrance.IdTicket))

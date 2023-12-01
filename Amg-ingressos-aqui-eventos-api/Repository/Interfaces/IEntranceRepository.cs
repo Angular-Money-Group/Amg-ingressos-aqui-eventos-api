@@ -8,6 +8,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> SaveReadyHistories<T>(object ticket);
         Task<EventQrReads> GetEventQrReads<T>(string idEvent, string idUser, DateTime initialDate);
         Task<EventQrReads> SaveEventQrReads<T>(object eventQr);
-        Task<EventQrReads> UpdateEventQrReads<T>(object eventQr);
+        Task<EventQrReads> EditEventQrReads<T>(object eventQr);
     }
 }

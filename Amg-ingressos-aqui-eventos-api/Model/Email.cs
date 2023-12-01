@@ -7,6 +7,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
     {
         public Email()
         {
+            Id = string.Empty; 
             Sender = string.Empty;
             To = string.Empty;
             Subject = string.Empty;
@@ -16,7 +17,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? id;
+        public string Id;
         public string Sender { get; set; }
         public string To { get; set; }
         public string Subject { get; set; }

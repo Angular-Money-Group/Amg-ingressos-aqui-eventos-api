@@ -11,9 +11,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class EmailService : IEmailService
     {
-        private MessageReturn _messageReturn;
-        private IEmailRepository _emailRepository;
-        private HttpClient _HttpClient;
+        private readonly MessageReturn _messageReturn;
+        private readonly IEmailRepository _emailRepository;
+        private readonly HttpClient _HttpClient;
         private readonly ILogger<EmailService> _logger;
 
         public EmailService(
@@ -58,7 +58,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         public async Task<MessageReturn> Send(
             string idEmail,
-            Model.StatusTicketsRow ticketsRow,
+            StatusTicketsRow ticketsRow,
             int index,
             string rowId
         )

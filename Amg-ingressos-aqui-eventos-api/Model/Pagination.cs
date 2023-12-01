@@ -5,11 +5,11 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Pagina atual
         /// </summary>
-        public int page { get; set; }
+        public int Page { get; set; }
 
         /// <summary>
         /// Tamanho da Pagina
         /// </summary>
-        public int pageSize { get; set; }
+        public int PageSize { get; set; }
     }
 }

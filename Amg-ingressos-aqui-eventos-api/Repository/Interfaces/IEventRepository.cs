@@ -8,7 +8,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<object> Save<T>(object eventComplet);
         Task<object> GetById<T>(object id);
         Task<Event> SetHighlightEvent<T>(string id);
-        Task<List<Event>> GetByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filter);
+        Task<List<Event>> GetByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filterOptions);
         Task<List<Event>> GetByName<T>(string name);
         Task<object> Delete<T>(object id);
         Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
@@ -17,7 +17,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<Model.Querys.GetEventTransactions.GetEventTransactions>> GetAllEventsWithTransactions(string idEvent,string idOrganizer);
         Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
         Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions);
-        Task<Event> Edit<T>(string id, Event eventEdit);
+        Task<Event> Edit<T>(string id, Event eventObj);
         Task<Event> GetByIdVariant<T>(string id);
     }
 }

@@ -314,8 +314,8 @@ namespace Prime.UnitTests.Services
             //Arrange
             var messageReturn = FactoryEvent.ListSimpleEventWithNames();
             Pagination pagination = new Pagination(){
-                page = 1,
-                pageSize = 10
+                Page = 1,
+                PageSize = 10
             };
             var highlights = false;
             var weekly = false;

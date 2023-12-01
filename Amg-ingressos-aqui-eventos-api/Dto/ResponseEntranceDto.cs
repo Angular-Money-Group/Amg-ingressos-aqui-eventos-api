@@ -10,7 +10,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
             VariantName = string.Empty;
         }
 
-        public Boolean ReqDocs { get; set; }
+        public bool ReqDocs { get; set; }
         public string UserName { get; set; }
         public string UserDoc { get; set; }
         public string UserEmail { get; set; }

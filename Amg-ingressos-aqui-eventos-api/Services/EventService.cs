@@ -376,7 +376,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             try
             {
-                byte[] imageData = Convert.FromBase64String(base64Data);
+                Convert.FromBase64String(base64Data);
             }
             catch (FormatException)
             {
@@ -386,34 +386,27 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         private string StoreImageAndGenerateLinkToAccess(string image)
         {
-            try
+            image = Regex.Replace(image, @"data:image/.*?;base64,", "");
+
+            byte[] imageBytes = Convert.FromBase64String(image);
+
+            var nomeArquivoImage = $"{Guid.NewGuid()}.jpg";
+            var directoryPathImage = Path.Combine(
+                _webHostEnvironment.ContentRootPath,
+                "images"
+            );
+
+            Directory.CreateDirectory(directoryPathImage);
+
+            var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
+
+            string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
+
+            using (var stream = new FileStream(filePathImage, FileMode.Create))
             {
-                image = Regex.Replace(image, @"data:image/.*?;base64,", "");
-
-                byte[] imageBytes = Convert.FromBase64String(image);
-
-                var nomeArquivoImage = $"{Guid.NewGuid()}.jpg";
-                var directoryPathImage = Path.Combine(
-                    _webHostEnvironment.ContentRootPath,
-                    "images"
-                );
-
-                Directory.CreateDirectory(directoryPathImage);
-
-                var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
-
-                string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
-
-                using (var stream = new FileStream(filePathImage, FileMode.Create))
-                {
-                    stream.Write(imageBytes, 0, imageBytes.Length);
-                }
-                return linkImagem;
+                stream.Write(imageBytes, 0, imageBytes.Length);
             }
-            catch
-            {
-                throw;
-            }
+            return linkImagem;
         }
     }
 }

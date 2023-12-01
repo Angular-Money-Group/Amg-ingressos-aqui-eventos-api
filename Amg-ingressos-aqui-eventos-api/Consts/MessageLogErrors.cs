@@ -14,6 +14,6 @@ namespace Amg_ingressos_aqui_eventos_api.Consts
         public const string EditController = "{0}:{1} - erro inesperador ao editar {2}.";
         public const string DeleteController = "{0}:{1} - erro inesperador ao deletar {2}.";
         public const string SendController = "{0}:{1} - erro inesperador ao enviar {2}.";
-        public const string objectInvalid = "Objeto inválido ou nulo";
+        public const string ObjectInvalid = "Objeto inválido ou nulo";
     }
 }

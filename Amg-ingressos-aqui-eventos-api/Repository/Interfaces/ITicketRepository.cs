@@ -6,7 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     public interface ITicketRepository 
     {
         Task<object> SaveAsync<T>(object ticket);
-        Task<object> DeleteMany<T>(List<string> idLot);
+        Task<object> DeleteMany<T>(List<string> listId);
         Task<object> DeleteByLot<T>(string idLot);
         Task<List<Ticket>> GetTickets<T>(Ticket ticket);
         Task<List<GetTicketDataEvent>> GetByUser<T>(string idUser);

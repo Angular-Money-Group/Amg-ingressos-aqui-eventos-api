@@ -18,15 +18,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
         public async Task<object> SaveAsync(object email)
         {
-            try
-            {
-                await _emailCollection.InsertOneAsync((Email)email);
-                return (Email)email;
-            }
-            catch
-            {
-                throw;
-            }
+            await _emailCollection.InsertOneAsync((Email)email);
+            return (Email)email;
         }
     }
 }

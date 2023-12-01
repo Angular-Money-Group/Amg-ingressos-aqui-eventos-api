@@ -11,9 +11,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class ReportEventTicketsService : IReportEventTickets
     {
-        private MessageReturn _messageReturn = new();
-        private IEventRepository _eventRepository;
-        private ILogger<ReportEventTicketsService> _logger;
+        private readonly MessageReturn _messageReturn;
+        private readonly IEventRepository _eventRepository;
+        private readonly ILogger<ReportEventTicketsService> _logger;
 
         public ReportEventTicketsService(
             IEventRepository eventRepository, 
@@ -21,6 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             _eventRepository = eventRepository;
             _logger = logger;
+            _messageReturn = new MessageReturn();
         }
 
         public async Task<MessageReturn> ProcessReportEventTickets(string idOrganizer)
@@ -124,10 +125,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Variante é Obrigatório.");
                 idVariant.ValidateIdMongo();
 
-                List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
-                var eventDataProcess = eventData.FirstOrDefault(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
+                List<GetEventWithTickets> eventData = 
+                    await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                var eventDataProcess = eventData.Find(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, idVariant);
                 return _messageReturn;
+                
             }
             catch (ReportException ex)
             {
@@ -149,7 +152,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
                 List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
-                var eventDataProcess = eventData.FirstOrDefault(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
+                var eventDataProcess = eventData.Find(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, string.Empty);
                 return _messageReturn;
             }
@@ -200,7 +203,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 },
                 Cortesy = VerifyCortesy(variants, eventData),
                 Variant = string.IsNullOrEmpty(idVariant) ? new VariantReportDto()
-                    : variants?.FirstOrDefault(x => x.Name == eventData?.Variant?.FirstOrDefault(i => i._id == idVariant)?.Name) ?? new VariantReportDto()
+                    : variants?.Find(x => x.Name == eventData?.Variant?.Find(i => i._id == idVariant)?.Name) ?? new VariantReportDto()
             };
         }
 
@@ -349,7 +352,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     new LotReportDto()
                     {
                         Name = i.Identificate.ToString(),
-                        AmountTicket = i.ticket.Count(),
+                        AmountTicket = i.ticket.Count,
                         Tickets = new TicketsReportDto()
                         {
                             Sold = new SoldDto()
@@ -357,7 +360,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 Percent =
                                     (
                                         Convert.ToDouble(i.ticket.Count(x => x.IsSold))
-                                        / Convert.ToDouble(i.ticket.Count())
+                                        / Convert.ToDouble(i.ticket.Count)
                                     ) * 100,
                                 Amount = i.ticket.Count(x => x.IsSold),
                                 Tax = 15,
@@ -373,7 +376,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 Percent =
                                     (
                                         Convert.ToDouble(i.ticket.Count(x => !x.IsSold))
-                                        / Convert.ToDouble(i.ticket.Count())
+                                        / Convert.ToDouble(i.ticket.Count)
                                     ) * 100,
                                 Amount = i.ticket.Count(x => !x.IsSold)
                             }

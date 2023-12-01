@@ -10,14 +10,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> GetByUserAndEvent(string idUser, string idEvent);
         Task<MessageReturn> GetTicketsByLot(string idLot);
         Task<MessageReturn> GetRemainingByLot(string idLot);
-        Task<MessageReturn> EditAsync(string id, Ticket ticketObject);
+        Task<MessageReturn> EditAsync(string id, Ticket ticket);
         Task<MessageReturn> GetById(string id);
         Task<MessageReturn> GetCourtesyStatusById(string id);
         Task<MessageReturn> GetByIdWithDataUser(string id);
         Task<MessageReturn> GetByIdWithDataEvent(string id);
         Task<MessageReturn> DeleteTicketsByLot(string lotId);
         Task<MessageReturn> SaveManyAsync(List<Ticket> listTicket);
-        MessageReturn SendCourtesyTickets(GenerateCourtesyTicketDto courtesyTicketDto);
+        MessageReturn SendCourtesyTickets(GenerateCourtesyTicketDto courtesyTicket);
         MessageReturn ReSendCourtesyTickets(string rowId, string variantId);
     }
 }

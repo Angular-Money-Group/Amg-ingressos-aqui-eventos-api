@@ -7,10 +7,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class ReportService : IReportService
     {
-        private IReportEventTickets _reporteventTickets;
-        private IReportEventTransactions _reporteventTransactions;
-        private ILogger<ReportService> _logger;
-        private MessageReturn _messageReturn = new MessageReturn();
+        private readonly IReportEventTickets _reporteventTickets;
+        private readonly IReportEventTransactions _reporteventTransactions;
+        private readonly ILogger<ReportService> _logger;
+        private readonly MessageReturn _messageReturn;
 
         public ReportService(
             IReportEventTickets reporteventTickets,
@@ -21,6 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _reporteventTickets = reporteventTickets;
             _reporteventTransactions = reporteventTransactions;
             _logger = logger;
+            _messageReturn = new MessageReturn();
         }
         public MessageReturn GetReportEventTicketsDetail(string idEvent, string idVariant)
         {
@@ -71,7 +72,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw;
             }
         }
-        
+
         public MessageReturn GetReportEventTickets(string idOrganizer)
         {
             try
