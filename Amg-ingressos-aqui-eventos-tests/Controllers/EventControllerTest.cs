@@ -186,8 +186,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var messageReturn = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.GetById<Event>(id)).
-                Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.GetById<EventComplet>(id)).
+                Returns(Task.FromResult(new EventComplet()));
 
             // Act
             var result = (OkObjectResult)await _eventController.GetByIdAsync(id);

@@ -6,7 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     public interface IEventRepository 
     {
         Task<object> Save<T>(object eventComplet);
-        Task<object> GetById<T>(object id);
+        Task<T> GetById<T>(string id);
         Task<Event> SetHighlightEvent<T>(string id);
         Task<List<Event>> GetByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filterOptions);
         Task<List<Event>> GetByName<T>(string name);

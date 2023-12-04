@@ -245,7 +245,8 @@ namespace Prime.UnitTests.Services
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.GetById<Event>(id)).Returns(Task.FromResult(eventComplet as object));
+            _eventRepositoryMock.Setup(x => x.GetById<EventComplet>(id))
+            .Returns(Task.FromResult(new EventComplet()));
 
             //Act
             var result = _eventService.GetByIdAsync(id);

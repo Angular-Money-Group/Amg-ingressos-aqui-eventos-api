@@ -41,9 +41,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return "Evento deletado com sucesso";
         }
 
-        public async Task<object> GetById<T1>(object id)
+        public async Task<T1> GetById<T1>(string id)
         {
-            var json = QuerysMongo.GetEventQuery;
+            /*var json = QuerysMongo.GetEventQuery;
 
             BsonDocument documentFilter1 = BsonDocument.Parse(
                 @"{ $match: { '$and': [{ '_id': ObjectId('" + id.ToString() + "') }] }}"
@@ -53,11 +53,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             {
                     documentFilter1,
                     document
-            };
-            List<GetEvents> pResults =
+            };*/
+            var eventData = await _eventCollection.Aggregate()
+                     .Match(new BsonDocument { { "_id", ObjectId.Parse(id) } })
+                     .Lookup("variants", "_id", "IdEvent", "Variants")
+                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                     .As<T1>()
+                     .ToListAsync();
+
+            /*List<GetEvents> pResults =
                 (List<GetEvents>)(await _eventCollection.AggregateAsync<GetEvents>(pipeline)
-                ?? throw new GetException("Evento não encontrado"));
-            return pResults;
+                ?? throw new GetException("Evento não encontrado"));*/
+            return eventData[0];
         }
 
         public async Task<Event> GetByIdVariant<T1>(string id)
