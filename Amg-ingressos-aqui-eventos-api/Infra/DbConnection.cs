@@ -1,4 +1,3 @@
-using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -6,14 +5,16 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
 {
     public class DbConnection<T> : IDbConnection<T>
     {
-        private IOptions<EventDatabaseSettings> _config;
+        private readonly IOptions<EventDatabaseSettings> _config;
         private MongoClient _mongoClient;
         public DbConnection(IOptions<EventDatabaseSettings> eventDatabaseSettings)
         {
+            _mongoClient = new MongoClient();
             _config = eventDatabaseSettings;
         }
 
-        public IMongoCollection<T> GetConnection(string colletionName){
+        public IMongoCollection<T> GetConnection(string colletionName)
+        {
 
             var mongoUrl = new MongoUrl(_config.Value.ConnectionString);
             _mongoClient = new MongoClient(mongoUrl);
@@ -21,7 +22,9 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
 
             return mongoDatabase.GetCollection<T>(colletionName);
         }
-        public MongoClient GetClient(){
+        
+        public MongoClient GetClient()
+        {
             return _mongoClient;
         }
     }

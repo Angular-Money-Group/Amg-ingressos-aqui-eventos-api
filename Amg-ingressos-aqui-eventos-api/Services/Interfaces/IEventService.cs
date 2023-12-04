@@ -5,15 +5,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
 {
     public interface IEventService
     {
-        Task<MessageReturn> SaveAsync(Model.Event eventSave);
-        Task<MessageReturn> FindByIdAsync(string id);
-        Task<MessageReturn> HighlightEventAsync(string id);
-        Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventEditDto);
+        Task<MessageReturn> SaveAsync(Event eventObject);
+        Task<MessageReturn> GetByIdAsync(string id);
+        Task<MessageReturn> SetHighlightEventAsync(string id);
+        Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventDto);
         Task<MessageReturn> GetAllEventsWithTickets(string idEvent);
-        Task<MessageReturn> FindEventByNameAsync(string name);
-        Task<MessageReturn> FindByOrganizerAsync(string idOrganizer, Pagination paginationOptions, FilterOptions? filter);
+        Task<MessageReturn> GetByNameAsync(string name);
+        Task<MessageReturn> GetByOrganizerAsync(string idOrganizer, Pagination paginationOptions, FilterOptions? filter);
         Task<MessageReturn> DeleteAsync(string id);
         Task<MessageReturn> GetEventsAsync(bool highlights, bool weekly,   Pagination paginationOptions);
-        Task<MessageReturn> GetAllEventsAsync();
+        Task<MessageReturn> GetWithUserData();
     }
 }

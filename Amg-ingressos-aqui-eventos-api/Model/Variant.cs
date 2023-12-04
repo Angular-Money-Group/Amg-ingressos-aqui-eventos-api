@@ -48,7 +48,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         [JsonProperty("Status")]
-        public Enum.StatusVariant Status { get; set; }
+        public Enum.EnumStatusVariant Status { get; set; }
         /// <summary>
         /// Id Evento
         /// </summary>

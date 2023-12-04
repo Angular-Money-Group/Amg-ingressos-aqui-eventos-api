@@ -5,19 +5,18 @@ using System.Threading.Tasks;
 
 namespace Amg_ingressos_aqui_eventos_api.Exceptions
 {
-    public class MaxHighlightedEvents : Exception
+    public class RuleException: Exception
     {
-
-        public MaxHighlightedEvents()
+        public RuleException()
         {
         }
 
-        public MaxHighlightedEvents(string message)
+        public RuleException(string message)
             : base(message)
         {
         }
 
-        public MaxHighlightedEvents(string message, Exception inner)
+        public RuleException(string message, Exception inner)
             : base(message, inner)
         {
         }

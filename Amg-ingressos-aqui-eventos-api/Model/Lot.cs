@@ -19,7 +19,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         [JsonProperty("_id")]
-        public string? Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Identificador de Lote
@@ -61,7 +61,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         [JsonProperty("Status")]
-        public Enum.StatusLot Status { get; set; }
+        public Enum.EnumStatusLot Status { get; set; }
 
         /// <summary>
         /// Precisa verificar os documentos?

@@ -1,3 +1,4 @@
+using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto.report;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
@@ -10,12 +11,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 {
     public class ReportEventTicketsService : IReportEventTickets
     {
-        private MessageReturn _messageReturn = new();
-        private IEventRepository _eventRepository;
+        private readonly MessageReturn _messageReturn;
+        private readonly IEventRepository _eventRepository;
+        private readonly ILogger<ReportEventTicketsService> _logger;
 
-        public ReportEventTicketsService(IEventRepository eventRepository)
+        public ReportEventTicketsService(
+            IEventRepository eventRepository, 
+            ILogger<ReportEventTicketsService> logger)
         {
             _eventRepository = eventRepository;
+            _logger = logger;
+            _messageReturn = new MessageReturn();
         }
 
         public async Task<MessageReturn> ProcessReportEventTickets(string idOrganizer)
@@ -23,11 +29,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 if (string.IsNullOrEmpty(idOrganizer))
-                    throw new SaveTicketException("Id Organizador é Obrigatório.");
+                    throw new ReportException("Id Organizador é Obrigatório.");
 
                 idOrganizer.ValidateIdMongo();
 
-                List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(
+                List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(
                     string.Empty,
                     idOrganizer
                 );
@@ -87,63 +93,82 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     }
                 };
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), idOrganizer);
+                throw;
             }
 
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> ProcessReportEventTicketsDetail(
-            string idEvent,
-            string idVariant
-        )
+        public async Task<MessageReturn> ProcessReportEventTicketsDetail(string idEvent, string idVariant)
         {
-            if (string.IsNullOrEmpty(idEvent))
-                throw new SaveTicketException("Id Evento é Obrigatório.");
-            idEvent.ValidateIdMongo();
-            if (string.IsNullOrEmpty(idVariant))
-                throw new SaveTicketException("Id Variante é Obrigatório.");
-            idVariant.ValidateIdMongo();
+            try
+            {
+                if (string.IsNullOrEmpty(idEvent))
+                    throw new ReportException("Id Evento é Obrigatório.");
+                idEvent.ValidateIdMongo();
+                if (string.IsNullOrEmpty(idVariant))
+                    throw new ReportException("Id Variante é Obrigatório.");
+                idVariant.ValidateIdMongo();
 
-            List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(
-                idEvent,
-                string.Empty
-            );
-            var eventDataProcess = eventData.FirstOrDefault(i => i._id == idEvent);
-            _messageReturn.Data = ProcessEvent(eventDataProcess, idVariant);
-            return _messageReturn;
+                List<GetEventWithTickets> eventData = 
+                    await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                var eventDataProcess = eventData.Find(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
+                _messageReturn.Data = ProcessEvent(eventDataProcess, idVariant);
+                return _messageReturn;
+                
+            }
+            catch (ReportException ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetail), "Eventos por ticket"));
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetail), "Eventos por ticket"));
+                throw;
+            }
         }
 
         public async Task<MessageReturn> ProcessReportEventTicketsDetails(string idEvent)
         {
-            if (string.IsNullOrEmpty(idEvent))
-                throw new SaveTicketException("Id Evento é Obrigatório.");
-            idEvent.ValidateIdMongo();
-            List<GetEventWitTickets> eventData = await _eventRepository.GetAllEventsWithTickets(
-                idEvent,
-                string.Empty
-            );
-            var eventDataProcess = eventData.FirstOrDefault(i => i._id == idEvent);
-            _messageReturn.Data = ProcessEvent(eventDataProcess, string.Empty);
-            return _messageReturn;
+            try
+            {
+                if (string.IsNullOrEmpty(idEvent))
+                    throw new ReportException("Id Evento é Obrigatório.");
+                idEvent.ValidateIdMongo();
+                List<GetEventWithTickets> eventData = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                var eventDataProcess = eventData.Find(i => i._id == idEvent) ?? throw new ReportException("Dados não pode ser null");
+                _messageReturn.Data = ProcessEvent(eventDataProcess, string.Empty);
+                return _messageReturn;
+            }
+            catch (ReportException ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetails), "Eventos por ticket"), idEvent);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetails), "Eventos por ticket"), idEvent);
+                throw;
+            }
         }
 
-        private ReportEventOrganizerDetailDto ProcessEvent(
-            GetEventWitTickets eventData,
-            string? idVariant
-        )
+        private ReportEventOrganizerDetailDto ProcessEvent(GetEventWithTickets eventData, string? idVariant)
         {
             var variants = ProcessVariant(eventData, string.Empty);
             return new ReportEventOrganizerDetailDto()
@@ -168,9 +193,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     {
                         Percent =
                             (
-                                Convert.ToDouble(
-                                    variants.Sum(i => i.Tickets.Remaining.Amount)
-                                ) / Convert.ToDouble(variants.Sum(i => i.AmountTickets))
+                                Convert.ToDouble(variants.Sum(i => i.Tickets.Remaining.Amount)) / Convert.ToDouble(variants.Sum(i => i.AmountTickets))
                             ) * 100,
                         Amount = variants.Sum(i => i.Tickets.Remaining.Amount),
                         Tax = 15,
@@ -179,12 +202,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     }
                 },
                 Cortesy = VerifyCortesy(variants, eventData),
-                Variant = string.IsNullOrEmpty(idVariant) ? null
-                    : variants.FirstOrDefault(x => x.Name == eventData.Variant.FirstOrDefault(i => i._id == idVariant).Name) ?? new VariantReportDto()
+                Variant = string.IsNullOrEmpty(idVariant) ? new VariantReportDto()
+                    : variants?.Find(x => x.Name == eventData?.Variant?.Find(i => i._id == idVariant)?.Name) ?? new VariantReportDto()
             };
         }
 
-        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWitTickets eventData)
+        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, GetEventWithTickets eventData)
         {
             if (eventData.Courtesy.RemainingCourtesy.Count == 0) return new CourtesyReportDto();
             return new CourtesyReportDto()
@@ -212,10 +235,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             };
         }
 
-        private List<VariantReportDto> ProcessVariant(
-            GetEventWitTickets eventData,
-            string idVariant
-        )
+        private List<VariantReportDto> ProcessVariant(GetEventWithTickets eventData, string idVariant)
         {
             List<VariantReportDto> variantList = new List<VariantReportDto>();
             var variant = string.IsNullOrEmpty(idVariant)
@@ -265,7 +285,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         }
 
         private CourtesyReportDto ProcessCortesy(
-            GetEventWitTickets eventData,
+            GetEventWithTickets eventData,
             Model.Querys.GetEventwithTicket.Variant x
         )
         {
@@ -332,7 +352,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     new LotReportDto()
                     {
                         Name = i.Identificate.ToString(),
-                        AmountTicket = i.ticket.Count(),
+                        AmountTicket = i.ticket.Count,
                         Tickets = new TicketsReportDto()
                         {
                             Sold = new SoldDto()
@@ -340,7 +360,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 Percent =
                                     (
                                         Convert.ToDouble(i.ticket.Count(x => x.IsSold))
-                                        / Convert.ToDouble(i.ticket.Count())
+                                        / Convert.ToDouble(i.ticket.Count)
                                     ) * 100,
                                 Amount = i.ticket.Count(x => x.IsSold),
                                 Tax = 15,
@@ -356,7 +376,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 Percent =
                                     (
                                         Convert.ToDouble(i.ticket.Count(x => !x.IsSold))
-                                        / Convert.ToDouble(i.ticket.Count())
+                                        / Convert.ToDouble(i.ticket.Count)
                                     ) * 100,
                                 Amount = i.ticket.Count(x => !x.IsSold)
                             }

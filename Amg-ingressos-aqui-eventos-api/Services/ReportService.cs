@@ -1,124 +1,148 @@
+using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
-
     public class ReportService : IReportService
     {
-        private IReportEventTickets _reporteventTickets;
-        private IReportEventTransactions _reporteventTransactions;
-        private MessageReturn _messageReturn = new MessageReturn();
+        private readonly IReportEventTickets _reporteventTickets;
+        private readonly IReportEventTransactions _reporteventTransactions;
+        private readonly ILogger<ReportService> _logger;
+        private readonly MessageReturn _messageReturn;
 
-        public ReportService(IReportEventTickets reporteventTickets,IReportEventTransactions reporteventTransactions){
+        public ReportService(
+            IReportEventTickets reporteventTickets,
+            IReportEventTransactions reporteventTransactions,
+            ILogger<ReportService> logger
+            )
+        {
             _reporteventTickets = reporteventTickets;
             _reporteventTransactions = reporteventTransactions;
+            _logger = logger;
+            _messageReturn = new MessageReturn();
         }
-        public async Task<MessageReturn> GetReportEventTicketsDetail(string idEvent, string idVariant)
+        public MessageReturn GetReportEventTicketsDetail(string idEvent, string idVariant)
         {
             try
             {
                 return _reporteventTickets.ProcessReportEventTicketsDetail(idEvent, idVariant).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"));
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"));
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"));
+                throw;
             }
         }
 
-        public async Task<MessageReturn> GetReportEventTicketsDetails(string idEvent)
+        public MessageReturn GetReportEventTicketsDetails(string idEvent)
         {
             try
             {
                 return _reporteventTickets.ProcessReportEventTicketsDetails(idEvent).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), idEvent);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), idEvent);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), idEvent);
+                throw;
             }
         }
-        public async Task<MessageReturn> GetReportEventTickets(string idOrganizer)
+
+        public MessageReturn GetReportEventTickets(string idOrganizer)
         {
             try
             {
                 return _reporteventTickets.ProcessReportEventTickets(idOrganizer).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), idOrganizer);
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), idOrganizer);
+                throw;
             }
-        }    
-        public async Task<MessageReturn> GetReportEventTransactionsDetail(string idEvent, string idVariant,string idOrganizer)
+        }
+        public MessageReturn GetReportEventTransactionsDetail(string idEvent, string idVariant, string idOrganizer)
         {
             try
             {
-                return _reporteventTransactions.ProcessReportEventTransactionsDetail(idEvent,idVariant,idOrganizer).Result;
+                return _reporteventTransactions.ProcessReportEventTransactionsDetail(idEvent, idVariant, idOrganizer).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"));
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"));
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"));
+                throw;
             }
         }
-        public async Task<MessageReturn> GetReportEventTransactions(string idOrganizer)
+        public MessageReturn GetReportEventTransactions(string idOrganizer)
         {
             try
             {
                 return _reporteventTransactions.ProcessReportEventTransactions(idOrganizer).Result;
             }
-            catch (SaveTicketException ex)
+            catch (ReportException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"));
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (IdMongoException ex)
             {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"));
                 _messageReturn.Message = ex.Message;
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"));
+                throw;
             }
         }
     }

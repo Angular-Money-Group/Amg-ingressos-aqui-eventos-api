@@ -6,11 +6,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers;
 [Route("[controller]")]
 public class HealthCheckController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
     private readonly ILogger<HealthCheckController> _logger;
 
     public HealthCheckController(ILogger<HealthCheckController> logger)
@@ -19,14 +14,9 @@ public class HealthCheckController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    public IActionResult Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        _logger.LogInformation("teste");
+        return Ok();
     }
 }

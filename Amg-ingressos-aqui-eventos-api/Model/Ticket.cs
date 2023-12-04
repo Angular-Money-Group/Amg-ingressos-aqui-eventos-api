@@ -56,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// STATUS DO INGRESSO
         /// </summary>
-        public StatusTicket? Status { get; set; }
+        public EnumStatusTicket? Status { get; set; }
 
         /// <summary>
         /// Colaborador que realizou a leitura

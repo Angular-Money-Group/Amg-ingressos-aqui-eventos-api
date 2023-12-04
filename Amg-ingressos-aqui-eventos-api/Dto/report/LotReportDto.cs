@@ -12,7 +12,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
         }
 
         [JsonPropertyName("Nome")]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
         [JsonPropertyName("QuantidadeIngressos")]
         public int AmountTicket { get; set; }

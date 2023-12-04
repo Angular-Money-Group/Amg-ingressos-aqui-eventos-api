@@ -5,7 +5,6 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
-using Amg_ingressos_aqui_eventos_api.Repository.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -19,135 +18,94 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _variantCollection = dbconnection.GetConnection("variants");
         }
 
-        public async Task<object> Save<T>(object variant)
+        public async Task<object> Save<T1>(object variant)
         {
-            try
-            {
-                await _variantCollection.InsertOneAsync(variant as Variant);
-                
-                return ((Variant)variant).Id;
-            }
-            catch (SaveVariantException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            var data = variant as Variant ?? throw new SaveException("Variante não pode ser null.");
+            await _variantCollection.InsertOneAsync(data);
+
+            return data.Id;
         }
 
-        public async Task<object> SaveMany<T>(List<Variant> lstVariant)
+        public async Task<object> SaveMany<T1>(List<Variant> listVariant)
         {
-            try
-            {
-                await _variantCollection.InsertManyAsync(lstVariant);
-                return lstVariant;
-            }
-            catch (SaveVariantException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            if (listVariant.Any())
+                throw new SaveException("Variante não pode ser null.");
+
+            await _variantCollection.InsertManyAsync(listVariant);
+
+            return listVariant;
         }
 
-        public async Task<object> Delete<T>(object id)
+        public async Task<Variant> Edit<T1>(string id, Variant variant)
         {
-            try
-            {
-                var filter = Builders<Variant>.Filter.Eq(l => l.Id, id.ToString());
+            if (id == null || string.IsNullOrEmpty(id.ToString()))
+                throw new EditException("id é obrigatório");
+            if (variant == null)
+                throw new EditException("Variante é obrigatório");
 
-                var deleteResult = await _variantCollection.DeleteOneAsync(filter);
-                if (deleteResult.DeletedCount == 1)
-                    return "Variante deletada";
-                else
-                    throw new SaveLotException("Algo deu errado ao deletar");
-            }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
+            var filtro = Builders<Variant>.Filter.Eq("_id", ObjectId.Parse(id));
+
+            var update = Builders<Variant>.Update
+                .Set("Name", variant.Name)
+                .Set("Description", variant.Description)
+                .Set("HasPositions", variant.HasPositions)
+                .Set("Status", variant.Status)
+                .Set("IdEvent", variant.IdEvent)
+                .Set("QuantityCourtesy", variant.QuantityCourtesy)
+                .Set("ReqDocs", variant.ReqDocs)
+                .Set("Positions", variant.Positions);
+
+            var result = await _variantCollection.UpdateOneAsync(filtro, update);
+
+            if (result.MatchedCount >= 1)
+                return variant;
+            else
+                throw new EditException("Algo deu errado ao atualizar Variant");
         }
 
-        public async Task<Variant> Edit<T>(string id, Variant variantObj)
+        public async Task<object> Delete<T1>(object id)
         {
-            try
-            {
-                var filtro = Builders<Variant>.Filter.Eq("_id", ObjectId.Parse(id));
+            if (id == null || string.IsNullOrEmpty(id.ToString()))
+                throw new DeleteException("id é obrigatório");
 
-                var update = Builders<Variant>.Update
-                    .Set("Name", variantObj.Name)
-                    .Set("Description", variantObj.Description)
-                    .Set("HasPositions", variantObj.HasPositions)
-                    .Set("Status", variantObj.Status)
-                    .Set("IdEvent", variantObj.IdEvent)
-                    .Set("QuantityCourtesy", variantObj.QuantityCourtesy)
-                    .Set("ReqDocs", variantObj.ReqDocs)
-                    .Set("Positions", variantObj.Positions);
+            var filter = Builders<Variant>.Filter.Eq(l => l.Id, id.ToString());
+            var result = await _variantCollection.DeleteOneAsync(filter);
 
-                await _variantCollection.UpdateOneAsync(filtro, update);
-
-                return variantObj;
-            }
-            catch (SaveEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            if (result.DeletedCount == 1)
+                return "Variante deletada";
+            else
+                throw new DeleteException("Algo deu errado ao deletar Variant");
         }
 
-        public async Task<object> DeleteMany<T>(List<string> variants)
+        public async Task<object> DeleteMany<T1>(List<string> listVariant)
         {
-            try
-            {
-                var filter = Builders<Variant>.Filter.In("_id", variants);
+            if (listVariant == null)
+                throw new DeleteException("Lista de Variantes é obrigatória.");
 
-                var deleteResult = await _variantCollection.DeleteManyAsync(filter);
-                if (deleteResult.DeletedCount >= 1)
-                    return "Variantes deletadas";
-                else
-                    throw new SaveLotException("Algo deu errado ao deletar");
-            }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
+            var filter = Builders<Variant>.Filter.In("_id", listVariant);
+
+            var deleteResult = await _variantCollection.DeleteManyAsync(filter);
+            if (deleteResult.DeletedCount >= 1)
+                return "Variantes deletadas";
+            else
+                throw new DeleteException("Algo deu errado ao deletar");
         }
 
-        public async Task<List<Variant>> FindById<T>(string id)
+        public async Task<List<Variant>> FindById<T1>(string id)
         {
-            try
-            {
-                var filter = Builders<Variant>.Filter.Eq(l => l.Id, id.ToString());
+            if (id == null || string.IsNullOrEmpty(id.ToString()))
+                throw new GetException("id é obrigatório");
 
-                var pResult = _variantCollection.Find<Variant>(filter).ToList();
-                if (!pResult.Any())
-                    throw new SaveLotException("Variante não encontrada");
+            var filter = Builders<Variant>.Filter.Eq(l => l.Id, id.ToString());
 
-                return pResult;
-            }
-            catch (SaveLotException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw;
-            }
+            var pResult = await _variantCollection.FindAsync<Variant>(filter)
+            .Result
+            .ToListAsync();
+
+            if (!pResult.Any())
+                throw new GetException("Variante não encontrada");
+
+            return pResult;
         }
     }
 }

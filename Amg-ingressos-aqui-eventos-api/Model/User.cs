@@ -45,14 +45,14 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </sumary>
         [BsonElement("Status")]
         [JsonPropertyName("status")]
-        public TypeStatusEnum Status { get; set; }
+        public EnumTypeStatus Status { get; set; }
 
         /// <summary>
         /// Tipo do usuário
         /// </summary>
         [BsonElement("Type")]
         [JsonPropertyName("type")]
-        public TypeUserEnum Type { get; set; }
+        public EnumTypeUser Type { get; set; }
 
         /// <summary>
         /// Endereço do usuário

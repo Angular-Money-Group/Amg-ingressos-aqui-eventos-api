@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
@@ -9,7 +5,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
     public interface IEmailService
     {
         Task<MessageReturn> SaveAsync(Email email);
-        Task<MessageReturn> Send(string idEmail, Model.StatusTicketsRow ticketsRow, int index, string rowId);
+        Task<MessageReturn> Send(string idEmail, StatusTicketsRow ticketsRow, int index, string rowId);
         string GenerateBody();
     }
 }

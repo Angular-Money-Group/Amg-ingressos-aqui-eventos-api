@@ -21,162 +21,106 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _eventCollection = dbconnection.GetConnection("events");
         }
 
-        public async Task<object> Delete<T>(object id)
+        public async Task<object> Delete<T1>(object id)
         {
-            try
+            var filter = Builders<Event>.Filter.Eq("_Id", id);
+
+            var update = Builders<Event>.Update.Set("Status", Enum.EnumStatusEvent.Canceled);
+
+            var action = await _eventCollection.UpdateOneAsync(filter, update);
+
+            if (action.MatchedCount == 0)
             {
-                var filter = Builders<Event>.Filter.Eq("_Id", id);
-
-                var update = Builders<Event>.Update.Set("Status", Enum.StatusEvent.Canceled);
-
-                var action = await _eventCollection.UpdateOneAsync(filter, update);
-
-                if (action.MatchedCount == 0)
-                {
-                    throw new DeleteEventException("Evento não encontrado");
-                }
-                else if (action.ModifiedCount == 0)
-                {
-                    throw new DeleteEventException("Evento já excluido");
-                }
-
-                var value = "Evento deletado com sucesso";
-                return value;
+                throw new DeleteException("Evento não encontrado");
             }
-            catch (DeleteEventException ex)
+            else if (action.ModifiedCount == 0)
             {
-                throw ex;
+                throw new DeleteException("Evento já excluido");
             }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+
+            return "Evento deletado com sucesso";
         }
 
-        public async Task<object> FindById<T>(object id)
+        public async Task<T1> GetById<T1>(string id)
         {
-            try
-            {
-                var json = QuerysMongo.GetEventQuery;
+            /*var json = QuerysMongo.GetEventQuery;
 
-                BsonDocument documentFilter1 = BsonDocument.Parse(
-                    @"{ $match: { '$and': [{ '_id': ObjectId('" + id.ToString() + "') }] }}"
-                );
-                BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[]
-                {
-                    //documentFilter,
+            BsonDocument documentFilter1 = BsonDocument.Parse(
+                @"{ $match: { '$and': [{ '_id': ObjectId('" + id.ToString() + "') }] }}"
+            );
+            BsonDocument document = BsonDocument.Parse(json);
+            BsonDocument[] pipeline = new BsonDocument[]
+            {
                     documentFilter1,
                     document
-                };
-                List<GetEvents> pResults =
-                    _eventCollection.Aggregate<GetEvents>(pipeline).ToList()
-                    ?? throw new FindByIdEventException("Evento não encontrado");
-                return pResults;
-            }
-            catch (FindByIdEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            };*/
+            var eventData = await _eventCollection.Aggregate()
+                     .Match(new BsonDocument { { "_id", ObjectId.Parse(id) } })
+                     .Lookup("variants", "_id", "IdEvent", "Variants")
+                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                     .As<T1>()
+                     .ToListAsync();
+
+            /*List<GetEvents> pResults =
+                (List<GetEvents>)(await _eventCollection.AggregateAsync<GetEvents>(pipeline)
+                ?? throw new GetException("Evento não encontrado"));*/
+            return eventData[0];
         }
 
-        public async Task<Event> FindByIdVariant<T>(string id)
+        public async Task<Event> GetByIdVariant<T1>(string id)
         {
-            try
-            {
-                var filter = Builders<Event>.Filter.Eq("_Id", ObjectId.Parse(id));
+            var filter = Builders<Event>.Filter.Eq("_Id", ObjectId.Parse(id));
 
-                var pResult = _eventCollection.Find(filter).ToList();
+            var pResult = await _eventCollection.FindAsync(filter);
 
-                return pResult.FirstOrDefault()
-                    ?? throw new FindByIdEventException("Evento não encontrado");
-            }
-            catch (FindByIdEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            return pResult.FirstOrDefault()
+                ?? throw new GetException("Evento não encontrado");
         }
 
-        public async Task<List<Event>> FindByName<T>(string nome)
+        public async Task<List<Event>> GetByName<T1>(string name)
         {
-            try
-            {
-                var filter = Builders<Event>.Filter.Regex(
-                    g => g.Name,
-                    new BsonRegularExpression(nome, "i")
-                );
+            var filter = Builders<Event>.Filter.Regex(
+                g => g.Name,
+                new BsonRegularExpression(name, "i")
+            );
 
-                List<Event> pResults = await _eventCollection.Find(filter).ToListAsync();
-                if (!pResults.Any())
-                    throw new FindByDescriptionException("Eventos não encontrados");
+            List<Event> pResults = await _eventCollection.Find(filter).ToListAsync();
+            if (!pResults.Any())
+                throw new GetException("Eventos não encontrados");
 
-                return pResults;
-            }
-            catch (FindByDescriptionException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            return pResults;
         }
 
-        public async Task<Event> SetHighlightEvent<T>(string id)
+        public async Task<Event> SetHighlightEvent<T1>(string id)
         {
-            try
-            {
-                List<Event> pHighlightedEvents = _eventCollection
-                    .Find(Builders<Event>.Filter.Eq("Highlighted", true))
-                    .ToList();
+            List<Event> pHighlightedEvents = _eventCollection
+                .Find(Builders<Event>.Filter.Eq("Highlighted", true))
+                .ToList();
 
-                if (pHighlightedEvents.Count >= 9)
-                    throw new MaxHighlightedEvents("Maximo de Eventos destacados atingido");
+            if (pHighlightedEvents.Count >= 9)
+                throw new GetException("Maximo de Eventos destacados atingido");
 
-                var filter = Builders<Event>.Filter.Eq("_Id", id);
+            var filter = Builders<Event>.Filter.Eq("_Id", id);
 
-                Event eventDoc = _eventCollection.Find(filter).FirstOrDefault();
+            Event eventDoc = (Event)await _eventCollection.FindAsync(filter);
 
-                if (eventDoc == null)
-                    throw new FindByDescriptionException("Evento não encontrado");
+            if (eventDoc == null)
+                throw new GetException("Evento não encontrado");
 
-                var isHighlighted = eventDoc.Highlighted;
-                var newValue = !isHighlighted;
+            var isHighlighted = eventDoc.Highlighted;
+            var newValue = !isHighlighted;
 
-                var updated = Builders<Event>.Update.Set(e => e.Highlighted, newValue);
+            var updated = Builders<Event>.Update.Set(e => e.Highlighted, newValue);
 
-                var pResults = _eventCollection.UpdateOne(filter, updated);
+            _eventCollection.UpdateOne(filter, updated);
 
-                eventDoc.Highlighted = !eventDoc.Highlighted;
-                return eventDoc;
-            }
-            catch (FindByDescriptionException ex)
-            {
-                throw ex;
-            }
-            catch (MaxHighlightedEvents ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            eventDoc.Highlighted = !eventDoc.Highlighted;
+            return eventDoc;
         }
 
-        public async Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions)
+        public async Task<List<GetEventsWithNames>> GetAllEvents<T1>(Pagination paginationOptions)
         {
-            try
-            {
-                List<BsonDocument> pipeline = new List<BsonDocument>
+            List<BsonDocument> pipeline = new List<BsonDocument>
                 {
                     BsonDocument.Parse(
                         @"
@@ -207,37 +151,26 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     BsonDocument.Parse("{ $match: { 'Status': 0 } }")
                 };
 
-                List<GetEventsWithNames> pResults = _eventCollection
-                    .Aggregate<GetEventsWithNames>(pipeline)
-                    .ToList();
+            List<GetEventsWithNames> pResults = (List<GetEventsWithNames>)await _eventCollection
+                .AggregateAsync<GetEventsWithNames>(pipeline);
 
-                if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+            if (!pResults.Any())
+                throw new GetException("Eventos não encontrados");
 
-                pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
+            pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
 
-                int startIndex = (paginationOptions.page - 1) * paginationOptions.pageSize;
-                List<GetEventsWithNames> pagedResults = pResults
-                    .Skip(startIndex)
-                    .Take(paginationOptions.pageSize)
-                    .ToList();
-                return pagedResults;
-            }
-            catch (GetAllEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            int startIndex = (paginationOptions.Page - 1) * paginationOptions.PageSize;
+            List<GetEventsWithNames> pagedResults = pResults
+                .Skip(startIndex)
+                .Take(paginationOptions.PageSize)
+                .ToList();
+
+            return pagedResults;
         }
 
-        public async Task<List<GetEventsWithNames>> GetAllEventsAdmin<T>()
+        public async Task<List<GetEventsWithNames>> GetWithUserData<T1>()
         {
-            try
-            {
-                List<BsonDocument> pipeline = new List<BsonDocument>
+            List<BsonDocument> pipeline = new List<BsonDocument>
                 {
                     BsonDocument.Parse(
                         @"
@@ -268,267 +201,195 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     BsonDocument.Parse("{ $sort: { 'Highlighted': -1, 'Status': 1, 'StartDate': 1 } }")
                 };
 
-                List<GetEventsWithNames> pResults = _eventCollection
-                    .Aggregate<GetEventsWithNames>(pipeline)
-                    .ToList();
+            List<GetEventsWithNames> pResults = await _eventCollection
+                .AggregateAsync<GetEventsWithNames>(pipeline).Result.ToListAsync();
 
-                if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+            if (!pResults.Any())
+                throw new GetException("Eventos não encontrados");
 
-                List<GetEventsWithNames> pagedResults = pResults.ToList();
-                return pagedResults;
-            }
-            catch (GetAllEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            List<GetEventsWithNames> pagedResults = pResults.ToList();
+            return pagedResults;
         }
 
-        public Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions)
+        public async Task<List<Event>> GetWeeklyEvents<T1>(Pagination paginationOptions)
         {
-            try
-            {
-                DateTime now = DateTime.Now;
-                DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
-                DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
-                DateTime endOfRange = startOfWeek.AddDays(6); // sábado
+            DateTime now = DateTime.Now;
+            DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
+            DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
+            DateTime endOfRange = startOfWeek.AddDays(6); // sábado
 
-                var filter = Builders<Event>.Filter.And(
-                    Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
-                    Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1)),
-                    Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
-                );
+            var filter = Builders<Event>.Filter.And(
+                Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
+                Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1)),
+                Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
+            );
 
-                List<Event> pResults = _eventCollection
-                    .Find(filter)
-                    .ToList()
-                    .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
-                    .Take(paginationOptions.pageSize)
-                    .ToList();
-                if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+            List<Event> pResults = await _eventCollection
+                .FindAsync(filter).Result.ToListAsync();
+            var listResult =
+                pResults
+                .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
+                .Take(paginationOptions.PageSize)
+                .ToList();
 
-                return Task.FromResult(pResults);
-            }
-            catch (GetAllEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            if (!listResult.Any())
+                throw new GetException("Eventos não encontrados");
+
+            return listResult;
         }
 
-        public Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions)
+        public async Task<List<Event>> GetHighlightedEvents<T1>(Pagination paginationOptions)
         {
-            try
-            {
-                var filter = Builders<Event>.Filter.And(
-                    Builders<Event>.Filter.Eq("Highlighted", true),
-                    Builders<Event>.Filter.Eq("Status", Enum.StatusEvent.Active)
-                );
+            var filter = Builders<Event>.Filter.And(
+                Builders<Event>.Filter.Eq("Highlighted", true),
+                Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
+            );
 
-                List<Event> pResults = _eventCollection
-                    .Find(filter)
-                    .ToList()
-                    .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
-                    .Take(paginationOptions.pageSize)
-                    .ToList();
-                if (!pResults.Any())
-                    throw new GetAllEventException("Eventos não encontrados");
+            List<Event> pResults = await _eventCollection
+                .FindAsync(filter).Result.ToListAsync();
 
-                return Task.FromResult(pResults);
-            }
-            catch (GetAllEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            var listResult =
+            pResults
+            .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
+            .Take(paginationOptions.PageSize)
+            .ToList();
+            if (!listResult.Any())
+                throw new GetException("Eventos não encontrados");
+
+            return listResult;
         }
 
-        public async Task<List<Event>> FindByProducer<T>(
+        public async Task<List<Event>> GetByProducer<T1>(
             string id,
             Pagination paginationOptions,
             FilterOptions? filterOptions
         )
         {
-            try
-            {
-                var filters = new List<FilterDefinition<Event>>
+            var filters = new List<FilterDefinition<Event>>
                 {
                     Builders<Event>.Filter.Eq("IdOrganizer", ObjectId.Parse(id))
                 };
 
-                if (filterOptions != null)
+            if (filterOptions != null)
+            {
+                if (!string.IsNullOrEmpty(filterOptions.Name))
                 {
-                    if (!string.IsNullOrEmpty(filterOptions.Name))
-                    {
-                        filters.Add(
-                            Builders<Event>.Filter.Regex(
-                                g => g.Name,
-                                new BsonRegularExpression(filterOptions.Name, "i")
-                            )
-                        );
-                    }
+                    filters.Add(
+                        Builders<Event>.Filter.Regex(
+                            g => g.Name,
+                            new BsonRegularExpression(filterOptions.Name, "i")
+                        )
+                    );
+                }
 
-                    if (!string.IsNullOrEmpty(filterOptions.Local))
-                    {
-                        filters.Add(
-                            Builders<Event>.Filter.Regex(
-                                g => g.Local,
-                                new BsonRegularExpression(filterOptions.Local, "i")
-                            )
-                        );
-                    }
+                if (!string.IsNullOrEmpty(filterOptions.Local))
+                {
+                    filters.Add(
+                        Builders<Event>.Filter.Regex(
+                            g => g.Local,
+                            new BsonRegularExpression(filterOptions.Local, "i")
+                        )
+                    );
+                }
 
-                    if (filterOptions.StartDate != null)
-                    {
-                        filters.Add(
-                            Builders<Event>.Filter.Gte(g => g.StartDate, filterOptions.StartDate)
-                        );
-                    }
+                if (filterOptions.StartDate != null)
+                {
+                    filters.Add(
+                        Builders<Event>.Filter.Gte(g => g.StartDate, filterOptions.StartDate)
+                    );
+                }
 
-                    if (filterOptions.EndDate != null)
-                    {
-                        filters.Add(
-                            Builders<Event>.Filter.Lte(g => g.EndDate, filterOptions.EndDate)
-                        );
-                    }
+                if (filterOptions.EndDate != null)
+                {
+                    filters.Add(
+                        Builders<Event>.Filter.Lte(g => g.EndDate, filterOptions.EndDate)
+                    );
+                }
 
-                    if (!string.IsNullOrEmpty(filterOptions.Type))
-                    {
-                        var typeMappings = new Dictionary<string, string>
+                if (!string.IsNullOrEmpty(filterOptions.Type))
+                {
+                    var typeMappings = new Dictionary<string, string>
                         {
                             { "show", "Show" },
                             { "apresentacao", "Apresentação" },
                             { "evento", "Evento" }
                         };
 
-                        if (typeMappings.TryGetValue(filterOptions.Type, out var eventType))
-                        {
-                            filters.Add(Builders<Event>.Filter.Eq(g => g.Type, eventType));
-                        }
-                    }
-                }
-                var filter = Builders<Event>.Filter.And(filters);
-
-                SortDefinition<Event> sort = Builders<Event>.Sort.Descending(e => e.StartDate);
-
-                var pResults = _eventCollection
-                    .Find(filter)
-                    .Sort(sort)
-                    .Skip((paginationOptions.page - 1) * paginationOptions.pageSize)
-                    .Limit(paginationOptions.pageSize)
-                    .ToList();
-
-                if (pResults.Count == 0)
-                {
-                    throw new GetAllEventException("Eventos não encontrados");
-                }
-
-                return pResults;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<object> Save<T>(object eventComplet)
-        {
-            try
-            {
-                eventComplet = eventComplet as Event;
-                await _eventCollection.InsertOneAsync(eventComplet as Event);
-                return (eventComplet as Event)!.Id!;
-            }
-            catch (SaveEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<Event> Edit<T>(string id, Event eventObj)
-        {
-            try
-            {
-                var filtro = Builders<Event>.Filter.Eq("_id", ObjectId.Parse(id));
-
-                var update = Builders<Event>.Update.Combine();
-
-                foreach (var property in typeof(Event).GetProperties())
-                {
-                    if (property.GetValue(eventObj) != null && property.Name != "_Id" && property.Name != "Variant")
+                    if (typeMappings.TryGetValue(filterOptions.Type, out var eventType))
                     {
-                        update = update.Set(property.Name, property.GetValue(eventObj));
+                        filters.Add(Builders<Event>.Filter.Eq(g => g.Type, eventType));
                     }
                 }
+            }
+            var filter = Builders<Event>.Filter.And(filters);
 
-                object value = await _eventCollection.UpdateOneAsync(filtro, update);
+            List<Event> pResults = await _eventCollection
+                .FindAsync(filter).Result
+                .ToListAsync();
 
-                return (eventObj as Event)!;
-            }
-            catch (SaveEventException ex)
+            if (pResults.Count == 0)
             {
-                throw ex;
+                throw new GetException("Eventos não encontrados");
             }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+
+            return pResults;
         }
 
-        public async Task<List<Model.Querys.GetEventwithTicket.GetEventWitTickets>> GetAllEventsWithTickets(
+        public async Task<object> Save<T1>(object eventComplet)
+        {
+            var data = eventComplet as Event ??
+                throw new SaveException("Algo deu errado ao salvar evento");
+            await _eventCollection.InsertOneAsync(data);
+            return data.Id;
+        }
+
+        public async Task<Event> Edit<T1>(string id, Event eventObj)
+        {
+            var filtro = Builders<Event>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<Event>.Update.Combine();
+
+            foreach (var property in typeof(Event).GetProperties())
+            {
+                if (property.GetValue(eventObj) != null && property.Name != "_Id" && property.Name != "Variant")
+                {
+                    update = update.Set(property.Name, property.GetValue(eventObj));
+                }
+            }
+
+            await _eventCollection.UpdateOneAsync(filtro, update);
+
+            return eventObj;
+        }
+
+        public async Task<List<Model.Querys.GetEventwithTicket.GetEventWithTickets>> GetAllEventsWithTickets(
             string idEvent,
             string idOrganizer
         )
         {
-            try
-            {
-                var json = QuerysMongo.GetEventWithTicketsQuery;
-                BsonDocument documentFilter1 = !string.IsNullOrEmpty(idEvent)
-                    ? BsonDocument.Parse(
-                        @"{ $match: { '$and': [{ '_id': ObjectId('"
-                            + idEvent.ToString()
-                            + "') }] }}"
-                    )
-                    : BsonDocument.Parse(
-                        @"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('"
-                            + idOrganizer.ToString()
-                            + "') }] }}"
-                    );
-                BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
+            var json = QuerysMongo.GetEventWithTicketsQuery;
+            BsonDocument documentFilter1 = !string.IsNullOrEmpty(idEvent)
+                ? BsonDocument.Parse(
+                    @"{ $match: { '$and': [{ '_id': ObjectId('"
+                        + idEvent.ToString()
+                        + "') }] }}"
+                )
+                : BsonDocument.Parse(
+                    @"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('"
+                        + idOrganizer.ToString()
+                        + "') }] }}"
+                );
+            BsonDocument document = BsonDocument.Parse(json);
+            BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
 
-                List<Model.Querys.GetEventwithTicket.GetEventWitTickets> pResults = _eventCollection
-                    .Aggregate<Model.Querys.GetEventwithTicket.GetEventWitTickets>(pipeline)
-                    .ToList();
+            List<Model.Querys.GetEventwithTicket.GetEventWithTickets> pResults = await _eventCollection
+                .AggregateAsync<Model.Querys.GetEventwithTicket.GetEventWithTickets>(pipeline)
+                .Result
+                .ToListAsync();
 
-                if (!pResults.Any())
-                    throw new GetAllEventException("Evento não encontrado");
+            if (!pResults.Any())
+                throw new GetException("Evento não encontrado");
 
-                return pResults;
-            }
-            catch (GetAllEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            return pResults;
         }
 
         public async Task<List<GetEventTransactions>> GetAllEventsWithTransactions(
@@ -536,41 +397,31 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             string idOrganizer
         )
         {
-            try
-            {
-                var json = QuerysMongo.GetEventWithTransactionsQuery;
-                BsonDocument documentFilter1 = !string.IsNullOrEmpty(idEvent)
-                    ? BsonDocument.Parse(
-                        @"{ $match: { '$and': [{ '_id': ObjectId('"
-                            + idEvent.ToString()
-                            + "') }] }}"
-                    )
-                    : BsonDocument.Parse(
-                        @"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('"
-                            + idOrganizer.ToString()
-                            + "') }] }}"
-                    );
+            var json = QuerysMongo.GetEventWithTransactionsQuery;
+            BsonDocument documentFilter1 = !string.IsNullOrEmpty(idEvent)
+                ? BsonDocument.Parse(
+                    @"{ $match: { '$and': [{ '_id': ObjectId('"
+                        + idEvent.ToString()
+                        + "') }] }}"
+                )
+                : BsonDocument.Parse(
+                    @"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('"
+                        + idOrganizer.ToString()
+                        + "') }] }}"
+                );
 
-                BsonDocument document = BsonDocument.Parse(json);
-                BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
+            BsonDocument document = BsonDocument.Parse(json);
+            BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
 
-                List<GetEventTransactions> pResults = _eventCollection
-                    .Aggregate<GetEventTransactions>(pipeline)
-                    .ToList();
+            List<GetEventTransactions> pResults = await _eventCollection
+                .AggregateAsync<GetEventTransactions>(pipeline)
+                .Result
+                .ToListAsync();
 
-                if (!pResults.Any())
-                    throw new GetAllEventException("Evento não encontrado");
+            if (!pResults.Any())
+                throw new GetException("Evento não encontrado");
 
-                return pResults;
-            }
-            catch (GetAllEventException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            return pResults;
         }
     }
 }

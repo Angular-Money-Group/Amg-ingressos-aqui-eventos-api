@@ -13,16 +13,21 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     {
         private readonly ILogger<EventController> _logger;
         private readonly IEventService _eventService;
-
-        public EventController(ILogger<EventController> logger, IEventService eventService)
+        
+        public EventController(
+            ILogger<EventController> logger,
+            IEventService eventService)
         {
             _logger = logger;
             _eventService = eventService;
         }
 
         /// <summary>
-        /// Busca os eventos destacados ou semanais ou todos
+        /// Busca os eventos
         /// </summary>
+        /// <param name="highlights"> eventos em destaque</param>
+        /// <param name="weekly"> eventos da semana</param>
+        /// <param name="paginationOptions"> paginacao </param>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
@@ -36,20 +41,23 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
-                    return NoContent();
+                    
+                    return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetEventsAsync),"Evento"));
                 }
+                if(result.Data.ToString() == string.Empty)
+                    return NoContent();
 
                 return Ok(result.Data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.GetAllEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.GetAllEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetEventsAsync),"Eventos"));
+                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetEventsAsync),"Eventos"));
             }
         }
 
         /// <summary>
-        /// Busca os eventos destacados ou semanais ou todos
+        /// Busca os eventos com organizador
         /// </summary>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
@@ -57,11 +65,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("getAllAdmin")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetAllAdmin()
+        public async Task<IActionResult> GetWithUserData()
         {
             try
             {
-                var result = await _eventService.GetAllEventsAsync();
+                var result = await _eventService.GetWithUserData();
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -72,8 +80,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.GetAllEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.GetAllEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetWithUserData),"Eventos"));
+                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetWithUserData),"Eventos"));
             }
         }
 
@@ -86,11 +94,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> FindByIdEventAsync([FromRoute] string id)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
         {
             try
             {
-                var result = await _eventService.FindByIdAsync(id);
+                var result = await _eventService.GetByIdAsync(id);
                 if (result.Message != null && result.Message.Any())
                 {
                     return NotFound(result.Message);
@@ -99,8 +107,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByIdAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByIdAsync),"Evento"));
             }
         }
 
@@ -114,11 +122,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("searchEvents")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindEventByNameAsync(string name)
+        public async Task<IActionResult> GetByNameAsync(string name)
         {
             try
             {
-                var result = await _eventService.FindEventByNameAsync(name);
+                var result = await _eventService.GetByNameAsync(name);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -128,13 +136,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByNameAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByNameAsync),"Evento"));
             }
         }
 
         /// <summary>
-        /// Busca os eventos do produtor
+        /// Busca os eventos do organizador
         /// </summary>
         /// <param name="idOrganizer">Descrição desejada do Evento</param>
         /// <returns>200 Evento da busca</returns>
@@ -143,11 +151,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("getEvents/{idOrganizer}")]
         [Produces("application/json")]
-        public async Task<IActionResult> FindByOrganizerAsync([FromRoute] string idOrganizer, Pagination paginationOptions, FilterOptions? filter)
+        public async Task<IActionResult> GetByOrganizerAsync([FromRoute] string idOrganizer, Pagination paginationOptions, FilterOptions? filter)
         {
             try
             {
-                var result = await _eventService.FindByOrganizerAsync(idOrganizer, paginationOptions, filter);
+                var result = await _eventService.GetByOrganizerAsync(idOrganizer, paginationOptions, filter);
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
@@ -157,8 +165,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.FindByIdEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.FindByIdEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByOrganizerAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByOrganizerAsync),"Evento"));
             }
         }
 
@@ -170,7 +178,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
         [Route("createEvent")]
-        public async Task<IActionResult> SaveEventAsync([FromBody] Model.Event eventObject)
+        public async Task<IActionResult> SaveEventAsync([FromBody] Event eventObject)
         {
             try
             {
@@ -179,50 +187,44 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
                 if (result.Message != null && result.Message.Any())
                 {
                     _logger.LogInformation(result.Message);
-                    return StatusCode(500, MessageLogErrors.saveEventMessage);
+                    return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(SaveEventAsync),"Evento"));
                 }
 
                 return Ok(result.Data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.saveEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.saveEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(SaveEventAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(SaveEventAsync),"Evento"));
             }
         }
 
         /// <summary>
         /// Edita destaque evento
         /// </summary>
-        /// <param name="id">Corpo Evento a ser Gravado</param>
+        /// <param name="id">id evento</param>
         /// <returns>200 Evento criado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpPut]
         [Route("highlightEvent/{id}")]
-        public async Task<IActionResult> HighlightEventAsync([FromRoute] string id)
+        public async Task<IActionResult> SetHighlightEventAsync([FromRoute] string id)
         {
             try
             {
-                var result = await _eventService.HighlightEventAsync(id);
+                var result = await _eventService.SetHighlightEventAsync(id);
 
                 if (result.Message != null && result.Message.Any())
                 {
-
-                    if (result.Message == "Maximo de Eventos destacados atingido")
-                    {
-                        _logger.LogInformation(result.Message);
-                        return StatusCode(400, result.Message);
-                    }
                     _logger.LogInformation(result.Message);
-                    return StatusCode(500, MessageLogErrors.highlightEventmessage);
+                    return StatusCode(204, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(SetHighlightEventAsync),"Evento"));
                 }
 
                 return Ok(result.Data);
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.highlightEventmessage, ex);
-                return StatusCode(500, MessageLogErrors.highlightEventmessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(SetHighlightEventAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(SetHighlightEventAsync),"Evento"));
             }
         }
 
@@ -230,6 +232,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// Editar Evento 
         /// </summary>
         /// <param name="id">Id Evento</param>
+        /// <param name="eventEdit">Ojbeto para qual vai ser alterado o evento</param>
         /// <returns>200 Evento Editado</returns>
         /// <returns>500 Erro inesperado</returns>
         [Route("{id}")]
@@ -239,18 +242,17 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.EditEventsAsync(id, eventEdit);
-
                 return Ok(result.Data);
             }
-            catch (DeleteEventException ex)
+            catch (EditException ex)
             {
-                _logger.LogInformation(MessageLogErrors.EditEventMessage, ex);
+                _logger.LogInformation(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditEventAsync),"Evento"));
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.EditEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.EditEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditEventAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditEventAsync),"Evento"));
             }
         }
 
@@ -266,18 +268,17 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             try
             {
                 var result = await _eventService.DeleteAsync(id);
-
-                return Ok(result.Data); 
+                return Ok(result.Data);
             }
-            catch (DeleteEventException ex)
+            catch (DeleteException ex)
             {
-                _logger.LogInformation(MessageLogErrors.deleteEventMessage, ex);
+                _logger.LogInformation(ex, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteEventAsync),"Evento"));
                 return NotFound();
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.deleteEventMessage, ex);
-                return StatusCode(500, MessageLogErrors.deleteEventMessage);
+                _logger.LogError(ex, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteEventAsync),"Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteEventAsync),"Evento"));
             }
         }
     }

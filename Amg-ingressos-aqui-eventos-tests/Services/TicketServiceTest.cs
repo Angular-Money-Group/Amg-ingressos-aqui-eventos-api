@@ -1,12 +1,11 @@
 using NUnit.Framework;
 using Moq;
-using System.Text.Json;
 using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Infra;
+using Microsoft.Extensions.Logging;
 
 namespace Prime.UnitTests.Services
 {
@@ -16,15 +15,11 @@ namespace Prime.UnitTests.Services
         private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private Mock<ITicketRowRepository> _ticketRowRepositoryMock =
             new Mock<ITicketRowRepository>();
-        private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
-
-        private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
-        private Mock<HttpClient> _clientMock = new Mock<HttpClient>();
-        private Mock<ICieloClient> _clientCieloMock = new Mock<ICieloClient>();
-
-        private Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
-        private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
-        private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
+        private readonly Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
+        private readonly Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
+        private readonly Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
+        private readonly Mock<ILogger<TicketService>> _loggerMock = new Mock<ILogger<TicketService>>();
 
         [SetUp]
         public void SetUp()
@@ -35,10 +30,10 @@ namespace Prime.UnitTests.Services
                 _ticketRepositoryMock.Object,
                 _ticketRowRepositoryMock.Object,
                 _variantRepositoryMock.Object,
-                _clientCieloMock.Object,
                 _lotRepositoryMock.Object,
                 _emailRepositoryMock.Object,
-                _eventRepositoryMock.Object
+                _eventRepositoryMock.Object,
+                _loggerMock.Object
             );
         }
 
@@ -49,7 +44,7 @@ namespace Prime.UnitTests.Services
             var ticketComplet = FactoryTicket.SimpleTicket();
             var messageReturn = "OK";
             _ticketRepositoryMock
-                .Setup(x => x.Save<object>(ticketComplet))
+                .Setup(x => x.SaveAsync<object>(ticketComplet))
                 .Returns(Task.FromResult(messageReturn as object));
 
             //Act
@@ -98,14 +93,14 @@ namespace Prime.UnitTests.Services
             //Arrange
             var ticket = FactoryTicket.SimpleTicket();
             _ticketRepositoryMock
-                .Setup(x => x.Save<object>(ticket))
+                .Setup(x => x.SaveAsync<object>(ticket))
                 .Throws(new Exception("Erro ao conectar a base de dados"));
 
             //Act
             var resultMethod = _ticketService.SaveAsync(ticket);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception.Message);
+            Assert.IsNotEmpty(resultMethod?.Exception?.Message);
         }
     }
 }

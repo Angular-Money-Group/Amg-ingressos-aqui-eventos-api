@@ -6,7 +6,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
     {
         public VariantReportDto()
         {
-            Name = String.Empty;
+            Name = string.Empty;
             AmountTickets = 0;
             Tickets = new TicketsReportDto();
             Cortesys = new CourtesyReportDto();

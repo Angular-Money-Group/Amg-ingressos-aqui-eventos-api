@@ -9,7 +9,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<Lot> Edit<T>(string id, Lot lotObj);
         Task<object> Delete<T>(object id);
         Task<object> DeleteByVariant<T>(object idVariant);
-        Task<Lot> GetLotByIdVariant<T>(string id);
-        Task<object> DeleteMany<T>(List<string> lot);
+        Task<Lot> GetLotByIdVariant<T>(string idVariant);
+        Task<object> DeleteMany<T>(List<string> listLot);
     }
 }

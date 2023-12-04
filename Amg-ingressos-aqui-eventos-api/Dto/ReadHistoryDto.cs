@@ -2,6 +2,15 @@
 {
     public class ReadHistoryDto
     {
+        public ReadHistoryDto()
+        {
+            Id = string.Empty;
+            idEvent = string.Empty;
+            idColab = string.Empty;
+            idTicket = string.Empty;
+            reason = string.Empty;
+        }
+
         /// <summary>
         /// Id mongo
         /// </summary>

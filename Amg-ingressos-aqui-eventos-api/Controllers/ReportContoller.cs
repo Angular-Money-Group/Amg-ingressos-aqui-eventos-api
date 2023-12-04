@@ -21,16 +21,18 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Relatorio de evento com variante e tickets detalhado
         /// </summary>
+        /// <param name="idEvent">Id do evento</param>
+        /// <param name="idVariant">Id da variante</param>
         /// <returns>200 Lista de todos os tickets</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("event/{idEvent}/variant/{idVariant}/tickets/details")]
-        public async Task<IActionResult> GetReportEventTicketsDetail([FromRoute] string idEvent, [FromRoute] string idVariant)
+        public IActionResult GetReportEventTicketsDetail([FromRoute] string idEvent, [FromRoute] string idVariant)
         {
             try
             {
-                var result = await _reportService.GetReportEventTicketsDetail(idEvent, idVariant);
+                var result = _reportService.GetReportEventTicketsDetail(idEvent, idVariant);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -41,24 +43,25 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
-                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetail)));
+                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetail)));
             }
         }
 
         /// <summary>
         /// Relatorio de evento com variante e tickets detalhado
         /// </summary>
+        /// <param name="idEvent">Id do evento</param>
         /// <returns>200 Lista de todos os tickets</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("event/{idEvent}/tickets/details")]
-        public async Task<IActionResult> GetReportEventTicketsDetails([FromRoute] string idEvent)
+        public IActionResult GetReportEventTicketsDetails([FromRoute] string idEvent)
         {
             try
             {
-                var result = _reportService.GetReportEventTicketsDetails(idEvent).Result;
+                var result = _reportService.GetReportEventTicketsDetails(idEvent);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -69,24 +72,25 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
-                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetails)));
+                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetails)));
             }
         }
 
         /// <summary>
         /// Relatorio de evento com variante e tickets detalhado
         /// </summary>
+        /// <param name="idOrganizer">Id do Organizador do evento</param>
         /// <returns>200 Lista de todos os tickets</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("event/organizer/{idOrganizer}/tickets")]
-        public async Task<IActionResult> GetReportEventTickets([FromRoute] string idOrganizer)
+        public IActionResult GetReportEventTickets([FromRoute] string idOrganizer)
         {
             try
             {
-                var result = await _reportService.GetReportEventTickets(idOrganizer);
+                var result = _reportService.GetReportEventTickets(idOrganizer);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -97,24 +101,27 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
-                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTickets)));
+                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTickets)));
             }
         }
 
         /// <summary>
         /// Relatorio de evento com variante e tickets detalhado
         /// </summary>
+        /// <param name="idEvent">Id do evento</param>
+        /// <param name="idVariant">Id da variante</param>
+        /// <param name="idOrganizer">Id do usuario organizador do evento</param>
         /// <returns>200 Lista de todos os tickets</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("event/{idEvent}/transactions/details")]
-        public async Task<IActionResult> GetReportEventTransactionsDetail([FromRoute] string idEvent, [FromQuery] string idOrganizer, [FromQuery] string idVariant)
+        public IActionResult GetReportEventTransactionsDetail([FromRoute] string idEvent, [FromQuery] string idOrganizer, [FromQuery] string idVariant)
         {
             try
             {
-                var result = await _reportService.GetReportEventTransactionsDetail(idEvent, idVariant, idOrganizer);
+                var result = _reportService.GetReportEventTransactionsDetail(idEvent, idVariant, idOrganizer);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -125,24 +132,25 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
-                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactionsDetail)));
+                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactionsDetail)));
             }
         }
 
         /// <summary>
         /// Relatorio de evento com variante e tickets detalhado
         /// </summary>
+        /// <param name="idOrganizer">Id do usuario organizador do evento</param>
         /// <returns>200 Lista de todos os tickets</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("event/organizer/{idOrganizer}/transactions")]
-        public async Task<IActionResult> GetReportEventTransactions([FromRoute] string idOrganizer)
+        public IActionResult GetReportEventTransactions([FromRoute] string idOrganizer)
         {
             try
             {
-                var result = await _reportService.GetReportEventTransactions(idOrganizer);
+                var result = _reportService.GetReportEventTransactions(idOrganizer);
 
                 if (result.Message != null && result.Message.Any())
                 {
@@ -153,8 +161,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessageLogErrors.findTicketByUser, ex.Message);
-                return StatusCode(500, MessageLogErrors.findTicketByUser + ex.Message);
+                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactions)));
+                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactions)));
             }
         }
     }

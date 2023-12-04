@@ -2,12 +2,10 @@ using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 
 using MongoDB.Bson;
-using Amg_ingressos_aqui_eventos_api.Repository.Querys;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amg_ingressos_aqui_eventos_api.Exceptions;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -23,60 +21,42 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _ticketStatusCollection = dbConnectionCourtesy.GetConnection("statusCourtesyTickets");
         }
 
-        public async Task<string> SaveRowAsync<T>(StatusTicketsRow tickets)
+        public async Task<string> SaveRowAsync<T1>(StatusTicketsRow ticketRow)
         {
-            try
-            {
-                await _ticketStatusCollection.InsertOneAsync(tickets);
-                return tickets.Id;
-            }
-            catch (SaveTicketException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            if (ticketRow == null || string.IsNullOrEmpty(ticketRow.ToString()))
+                throw new SaveException("TicketRow é obrigatório");
+
+            await _ticketStatusCollection.InsertOneAsync(ticketRow);
+            return ticketRow.Id;
         }
 
-        public async Task<StatusTicketsRow> GetCourtesyStatusById<T>(string id)
+        public async Task<StatusTicketsRow> GetCourtesyStatusById<T1>(string id)
         {
-            try
-            {
-                var filter = Builders<StatusTicketsRow>.Filter.Eq("_id", ObjectId.Parse(id));
-                var pResult = _ticketStatusCollection.Find(filter).ToList();
-                return pResult.FirstOrDefault();
+            if (id == null || string.IsNullOrEmpty(id))
+                throw new GetException("id ticketRow é obrigatório");
 
-            } catch (Exception ex)
-            {
-                throw ex;
-            }
+            var filter = Builders<StatusTicketsRow>.Filter.Eq("_id", ObjectId.Parse(id));
+            var pResult = await _ticketStatusCollection.FindAsync(filter).Result.ToListAsync();
+            return pResult.FirstOrDefault() ?? throw new GetException("Cortesia não encontrada.");
         }
 
-        public async Task<object> UpdateTicketsRowAsync<T>(string id, StatusTicketsRow ticket)
+        public async Task<object> EditTicketsRowAsync<T1>(string id, StatusTicketsRow ticketRow)
         {
-            try
-            {
-                // Cria um filtro para buscar tickets com o ID do lot especificado
-                var filter = Builders<StatusTicketsRow>.Filter.Eq("_id", ObjectId.Parse(id));
-                var update = Builders<StatusTicketsRow>.Update
-                    .Set("TotalTickets", ticket.TotalTickets)
-                    .Set("TicketStatus", ticket.TicketStatus);
+            if (id == null || string.IsNullOrEmpty(id))
+                throw new GetException("id statusTicketRow é obrigatório");
+            if (ticketRow == null)
+                throw new GetException("status ticket row é obrigatório");
 
-                // Busca os tickets que correspondem ao filtro
-                var result = await _ticketStatusCollection.UpdateOneAsync(filter, update);
+            // Cria um filtro para buscar tickets com o ID do lot especificado
+            var filter = Builders<StatusTicketsRow>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<StatusTicketsRow>.Update
+                .Set("TotalTickets", ticketRow.TotalTickets)
+                .Set("TicketStatus", ticketRow.TicketStatus);
 
-                return ticket;
-            }
-            catch (SaveTicketException ex)
-            {
-                throw ex;
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
+            // Busca os tickets que correspondem ao filtro
+            await _ticketStatusCollection.UpdateOneAsync(filter, update);
+
+            return ticketRow;
         }
     }
 }

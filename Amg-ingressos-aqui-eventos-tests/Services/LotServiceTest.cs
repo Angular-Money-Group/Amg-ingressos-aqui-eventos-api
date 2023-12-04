@@ -1,26 +1,26 @@
 using NUnit.Framework;
 using Moq;
-using System.Text.Json;
 using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Microsoft.Extensions.Logging;
 
 namespace Prime.UnitTests.Services
 {
     public class LotServiceTest
     {
         private LotService _lotService;
-        private Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
+        private readonly Mock<ILogger<LotService>> _loggerMock = new Mock<ILogger<LotService>>();
         private Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
-        private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
+        private readonly Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
 
         [SetUp]
         public void SetUp()
         {
             _lotRepositoryMock = new Mock<ILotRepository>();
-            _lotService = new LotService(_lotRepositoryMock.Object,_ticketServiceMock.Object, _ticketRepositoryMock.Object);
+            _lotService = new LotService(_lotRepositoryMock.Object, _ticketServiceMock.Object, _loggerMock.Object);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Prime.UnitTests.Services
             var messageReturn = "OK";
             _lotRepositoryMock.Setup(x => x.Save<object>(lotComplet)).Returns(Task.FromResult(messageReturn as object));
             _ticketServiceMock.Setup(x => x.SaveAsync(It.IsAny<Ticket>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
+                .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             //Act
             var resultMethod = _lotService.SaveAsync(lotComplet);
@@ -93,13 +93,13 @@ namespace Prime.UnitTests.Services
             _lotRepositoryMock.Setup(x => x.Save<object>(lot)).
                 Throws(new Exception("Erro ao conectar a base de dados"));
             _ticketServiceMock.Setup(x => x.SaveAsync(It.IsAny<Ticket>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
+                .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             //Act
             var resultMethod = _lotService.SaveAsync(lot);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception.Message);
+            Assert.IsNotEmpty(resultMethod?.Exception?.Message);
         }
     }
 }

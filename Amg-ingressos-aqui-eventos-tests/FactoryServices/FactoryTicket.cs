@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
@@ -18,6 +14,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 IdUser = "3b241101-e2bb-4255-8caf-4136c566a962",
             };
         }
+
         internal static IEnumerable<Ticket> ListSimpleTicket()
         {
             return new List<Ticket>(){
@@ -42,30 +39,31 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 }
             };
         }
+
         internal static IEnumerable<Ticket> ListSimpleTicketWithoutIdUser()
         {
             return new List<Ticket>(){
                 new Ticket(){
                     IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
-                    IdUser = null,
+                    IdUser = string.Empty,
                     Position = string.Empty,
                     Value = new decimal(150)
                 },
                 new Ticket(){
                     IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
-                    IdUser = null,
-
+                    IdUser = string.Empty,
                     Position = string.Empty,
                     Value = new decimal(200)
                 },
                 new Ticket(){
                     IdLot = "3b241101-e2bb-4255-8caf-4136c566a962",
-                    IdUser = null,
+                    IdUser = string.Empty,
                     Position = string.Empty,
                     Value = new decimal(300)
                 }
             };
         }
+
         internal static IEnumerable<Ticket> ListSimpleTicketWithPosition()
         {
             return new List<Ticket>(){
