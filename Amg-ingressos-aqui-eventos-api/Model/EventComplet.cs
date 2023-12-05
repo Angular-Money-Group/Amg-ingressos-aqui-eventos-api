@@ -1,3 +1,4 @@
+using System.Transactions;
 using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
@@ -9,10 +10,14 @@ namespace Amg_ingressos_aqui_eventos_api.Model
             Variants = new List<Variant>();
             Lots = new List<Lot>();
             User = new List<User>();
+            Tickets = new List<Ticket>();
+            Transactions = new List<Transaction>();
         }
         public List<Variant> Variants { get; set; }
         public List<Lot> Lots { get; set; }
         public List<User> User { get; set; }
+        public List<Ticket> Tickets { get; set; }
+        public List<Transaction> Transactions { get; set; }
 
         public List<EventCompletDto> ModelListToDtoList(List<EventComplet> listEventData)
         {
@@ -37,6 +42,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
                 Status = eventData.Status,
                 Type = eventData.Type,
                 NameOrganizer = eventData?.User?.FirstOrDefault()?.Name ?? string.Empty,
+                Transactions = eventData?.Transactions ?? new List<Transaction>(),
                 Variants = eventData.Variants.Select(v => new VariantWithLotDto()
                 {
                     Description = v.Description,
@@ -51,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
                     SellTicketsBeforeStartAnother = v.SellTicketsBeforeStartAnother,
                     SellTicketsInAnotherBatch = v.SellTicketsInAnotherBatch,
                     Status = v.Status,
-                    Lots = eventData.Lots.Where(i => i.IdVariant == v.Id).Select(l => new LotWitTicketDto()
+                    Lots = eventData.Lots.Where(i => i.IdVariant == v.Id).Select(l => new LotWithTicketDto()
                     {
                         EndDateSales = l.EndDateSales,
                         Id = l.Id,
@@ -61,7 +67,21 @@ namespace Amg_ingressos_aqui_eventos_api.Model
                         StartDateSales = l.StartDateSales,
                         Status = l.Status,
                         TotalTickets = l.TotalTickets,
-                        ValueTotal = l.ValueTotal
+                        ValueTotal = l.ValueTotal,
+                        Tickets = eventData.Tickets.Where(x => x.IdLot == l.Id).Select(t => new Ticket()
+                        {
+                            Id = t.Id,
+                            IdColab = t.IdColab,
+                            IdLot = t.IdLot,
+                            IdUser = t.IdUser,
+                            IsSold = t.IsSold,
+                            Position = t.Position,
+                            QrCode = t.QrCode,
+                            ReqDocs = t.ReqDocs,
+                            Status = t.Status,
+                            TicketCortesia = t.TicketCortesia,
+                            Value = t.Value
+                        }).ToList()
                     }).ToList()
                 }).ToList()
 

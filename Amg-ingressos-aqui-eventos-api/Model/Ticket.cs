@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
+    [BsonIgnoreExtraElements]
     public class Ticket
     {
         public Ticket()
@@ -50,7 +51,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Se o ingresso já foi vendido
         /// </summary>
-        [BsonDefaultValue(false)]
         public bool IsSold { get; set; }
 
         /// <summary>

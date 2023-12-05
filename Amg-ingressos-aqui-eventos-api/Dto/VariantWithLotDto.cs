@@ -6,8 +6,8 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
     {
         public VariantWithLotDto()
         {
-            Lots = new List<LotWitTicketDto>();
+            Lots = new List<LotWithTicketDto>();
         }
-        public List<LotWitTicketDto> Lots { get; set; }
+        public List<LotWithTicketDto> Lots { get; set; }
     }
 }

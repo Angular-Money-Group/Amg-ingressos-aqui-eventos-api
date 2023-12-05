@@ -2,12 +2,12 @@ using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_api.Dto
 {
-    public class LotWitTicketDto : Lot
+    public class LotWithTicketDto : Lot
     {
-        public LotWitTicketDto()
+        public LotWithTicketDto()
         {
             Tickets = new List<Ticket>();
         }
-        List<Ticket> Tickets { get; set; }
+        public List<Ticket> Tickets { get; set; }
     }
 }
