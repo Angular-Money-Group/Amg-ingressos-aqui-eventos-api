@@ -12,6 +12,7 @@ using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
@@ -52,7 +53,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             weekly = false;
 
             var messageReturn = FactoryEvent.ListSimpleEventWithNames();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<GetEventsWithNames>>(pagination)).Returns(Task.FromResult(messageReturn as List<GetEventsWithNames>)!);
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination)).Returns(Task.FromResult(new List<EventComplet>()));
 
             // Act
             var result = (OkObjectResult)await _eventController.GetEventsAsync(highlights, weekly, pagination);
