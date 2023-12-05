@@ -159,51 +159,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pagedResults;
         }
 
-        public async Task<List<Event>> GetWeeklyEvents<T1>(Pagination paginationOptions)
-        {
-            DateTime now = DateTime.Now;
-            DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
-            DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
-            DateTime endOfRange = startOfWeek.AddDays(6); // sábado
-
-            var filter = Builders<Event>.Filter.And(
-                Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
-                Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1)),
-                Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
-            );
-
-            List<Event> pResults = await _eventCollection
-                .FindAsync(filter).Result.ToListAsync();
-            var listResult =
-                pResults
-                .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
-                .Take(paginationOptions.PageSize)
-                .ToList();
-
-            if (!listResult.Any())
-                throw new GetException("Eventos não encontrados");
-
-            return listResult;
-        }
-
-        public async Task<List<Event>> GetHighlightedEvents<T1>(Pagination paginationOptions)
-        {
-            var filter = Builders<Event>.Filter.And(
-                Builders<Event>.Filter.Eq("Highlighted", true),
-                Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
-            );
-
-            List<Event> pResults = await _eventCollection
-                .FindAsync(filter).Result.ToListAsync();
-
-            List<Event>? listResult = pResults
-            .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
-            .Take(paginationOptions.PageSize)
-            .ToList();
-
-            return listResult;
-        }
-
         public async Task<List<Event>> GetByProducer<T1>(
             string id,
             Pagination paginationOptions,

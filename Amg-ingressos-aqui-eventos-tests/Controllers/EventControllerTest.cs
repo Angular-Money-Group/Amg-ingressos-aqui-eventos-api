@@ -113,27 +113,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         }
 
         [Test]
-        public async Task Given_events_When_GetAllEvents_not_foud_register_Then_return_message_empty_list_Async()
-        {
-            // Arrange
-             Pagination pagination = new Pagination(){
-                Page = 10,
-                PageSize = 100
-            };
-            highlights = true;
-            weekly = false;
-
-            var expectedMessage = "Eventos não encontrados";
-            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetException(expectedMessage));
-
-            // Act
-            var result = (ObjectResult)await _eventController.GetEventsAsync(highlights, weekly, pagination);
-
-            // Assert
-            Assert.AreEqual(204, result?.StatusCode);
-        }
-
-        [Test]
         public async Task Given_Events_When_FindEventsByName_Then_return_list_objects_events_Async()
         {
             // Arrange
