@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [Required]
         [BsonElement("EmailConfirmationExpirationDate")]
         [JsonPropertyName("emailConfirmationExpirationDate")]
-        public DateTime EmailConfirmationExpirationDate { get; set; }
+        public DateTime? EmailConfirmationExpirationDate { get; set; }
 
         /// <summary> 
         /// flag de email verificado 

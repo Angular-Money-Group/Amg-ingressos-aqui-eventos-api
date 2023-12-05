@@ -8,10 +8,16 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         {
             Variants = new List<Variant>();
             Lots = new List<Lot>();
+            User = new List<User>();
         }
         public List<Variant> Variants { get; set; }
         public List<Lot> Lots { get; set; }
+        public List<User> User { get; set; }
 
+        public List<EventCompletDto> ModelListToDtoList(List<EventComplet> listEventData)
+        {
+            return listEventData.Select(ModelToDto).ToList();
+        }
         public EventCompletDto ModelToDto(EventComplet eventData)
         {
             return new EventCompletDto()
@@ -30,6 +36,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
                 StartDate = eventData.StartDate,
                 Status = eventData.Status,
                 Type = eventData.Type,
+                NameOrganizer = eventData?.User?.FirstOrDefault()?.Name ?? string.Empty,
                 Variants = eventData.Variants.Select(v => new VariantWithLotDto()
                 {
                     Description = v.Description,

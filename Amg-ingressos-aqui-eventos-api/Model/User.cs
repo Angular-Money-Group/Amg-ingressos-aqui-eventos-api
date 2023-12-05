@@ -101,6 +101,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonElement("UpdateAt")]
         [JsonPropertyName("UpdateAt")]
-        public DateTime UpdateAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
     }
 }

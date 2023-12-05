@@ -11,12 +11,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<Event>> GetByProducer<T>(string id, Pagination paginationOptions,FilterOptions? filterOptions);
         Task<List<Event>> GetByName<T>(string name);
         Task<object> Delete<T>(object id);
-        Task<List<GetEventsWithNames>> GetAllEvents<T>(Pagination paginationOptions);
+        Task<List<T>> GetAllEvents<T>(Pagination paginationOptions);
         Task<List<GetEventsWithNames>> GetWithUserData<T>();
         Task<List<Model.Querys.GetEventwithTicket.GetEventWithTickets>> GetAllEventsWithTickets(string idEvent,string idOrganizer);
         Task<List<Model.Querys.GetEventTransactions.GetEventTransactions>> GetAllEventsWithTransactions(string idEvent,string idOrganizer);
-        Task<List<Event>> GetWeeklyEvents<T>(Pagination paginationOptions);
-        Task<List<Event>> GetHighlightedEvents<T>(Pagination paginationOptions);
         Task<Event> Edit<T>(string id, Event eventObj);
         Task<Event> GetByIdVariant<T>(string id);
     }

@@ -17,7 +17,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly MessageReturn _messageReturn;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<EventService> _logger;
-        
+
         public EventService(
             IEventRepository eventRepository,
             IVariantService variantService,
@@ -183,29 +183,33 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 if (highlights)
                 {
-                    _messageReturn.Data = await _eventRepository.GetHighlightedEvents<List<Event>>(
-                        paginationOptions
-                    );
+                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
+                    data = data.Where(x => x.Highlighted && x.Status == Enum.EnumStatusEvent.Active).ToList();
+                    _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
                 }
                 else if (weekly)
                 {
-                    _messageReturn.Data = await _eventRepository.GetWeeklyEvents<List<Event>>(
-                        paginationOptions
-                    );
+                    DateTime now = DateTime.Now;
+                    DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
+                    DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
+                    DateTime endOfRange = startOfWeek.AddDays(7); // sábado
+
+                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
+                    data = data.Where(x => x.Status == Enum.EnumStatusEvent.Active &&
+                    x.StartDate >= startOfRange && x.StartDate <= endOfRange).ToList();
+                    _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
                 }
                 else
                 {
-                    var allEvents = await _eventRepository.GetAllEvents<List<GetEventsWithNames>>(
-                        paginationOptions
-                    );
-
-                    _messageReturn.Data = allEvents;
+                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
+                    _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
                 }
             }
             catch (GetException ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
                 _messageReturn.Message = ex.Message;
+                throw;
             }
             catch (Exception ex)
             {

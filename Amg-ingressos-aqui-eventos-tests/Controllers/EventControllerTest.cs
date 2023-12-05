@@ -12,6 +12,7 @@ using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Amg_ingressos_aqui_eventos_tests.Controllers
 {
@@ -52,7 +53,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             weekly = false;
 
             var messageReturn = FactoryEvent.ListSimpleEventWithNames();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<List<GetEventsWithNames>>(pagination)).Returns(Task.FromResult(messageReturn as List<GetEventsWithNames>)!);
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination)).Returns(Task.FromResult(new List<EventComplet>()));
 
             // Act
             var result = (OkObjectResult)await _eventController.GetEventsAsync(highlights, weekly, pagination);
@@ -109,27 +110,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Assert
             Assert.AreEqual(500, result?.StatusCode);
             Assert.AreEqual(expectedMessage, result?.Value);
-        }
-
-        [Test]
-        public async Task Given_events_When_GetAllEvents_not_foud_register_Then_return_message_empty_list_Async()
-        {
-            // Arrange
-             Pagination pagination = new Pagination(){
-                Page = 10,
-                PageSize = 100
-            };
-            highlights = true;
-            weekly = false;
-
-            var expectedMessage = "Eventos não encontrados";
-            _eventRepositoryMock.Setup(x => x.GetHighlightedEvents<List<Event>>(pagination)).Throws(new GetException(expectedMessage));
-
-            // Act
-            var result = (ObjectResult)await _eventController.GetEventsAsync(highlights, weekly, pagination);
-
-            // Assert
-            Assert.AreEqual(204, result?.StatusCode);
         }
 
         [Test]

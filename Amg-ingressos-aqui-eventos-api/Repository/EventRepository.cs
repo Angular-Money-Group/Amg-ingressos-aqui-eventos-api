@@ -43,17 +43,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
         public async Task<T1> GetById<T1>(string id)
         {
-            /*var json = QuerysMongo.GetEventQuery;
-
-            BsonDocument documentFilter1 = BsonDocument.Parse(
-                @"{ $match: { '$and': [{ '_id': ObjectId('" + id.ToString() + "') }] }}"
-            );
-            BsonDocument document = BsonDocument.Parse(json);
-            BsonDocument[] pipeline = new BsonDocument[]
-            {
-                    documentFilter1,
-                    document
-            };*/
             var eventData = await _eventCollection.Aggregate()
                      .Match(new BsonDocument { { "_id", ObjectId.Parse(id) } })
                      .Lookup("variants", "_id", "IdEvent", "Variants")
@@ -61,9 +50,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                      .As<T1>()
                      .ToListAsync();
 
-            /*List<GetEvents> pResults =
-                (List<GetEvents>)(await _eventCollection.AggregateAsync<GetEvents>(pipeline)
-                ?? throw new GetException("Evento não encontrado"));*/
             return eventData[0];
         }
 
@@ -118,54 +104,16 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return eventDoc;
         }
 
-        public async Task<List<GetEventsWithNames>> GetAllEvents<T1>(Pagination paginationOptions)
+        public async Task<List<T1>> GetAllEvents<T1>(Pagination paginationOptions)
         {
-            List<BsonDocument> pipeline = new List<BsonDocument>
-                {
-                    BsonDocument.Parse(
-                        @"
-                    {
-                        $lookup: {
-                            from: 'user',
-                            'let': { idOrganizer : { '$toString': '$IdOrganizer' }},
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: [{ '$toString': '$_id' },'$$idOrganizer']
-                                        }
-                                    }
-                                },
-                                                      {
-                            $project: {
-                                'Name': 1,
-                                _id: 0
-                            }
-                        }
-                            ],
-                            as: 'User'
-                        }
-                    }"
-                    ),
-                    BsonDocument.Parse("{ $unwind: '$User' }"),
-                    BsonDocument.Parse("{ $match: { 'Status': 0 } }")
-                };
+            var eventData = await _eventCollection.Aggregate()
+                    .Lookup("variants", "_id", "IdEvent", "Variants")
+                    .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                    .Lookup("user", "IdOrganizer", "_id", "User")
+                    .As<T1>()
+                    .ToListAsync();
 
-            List<GetEventsWithNames> pResults = (List<GetEventsWithNames>)await _eventCollection
-                .AggregateAsync<GetEventsWithNames>(pipeline);
-
-            if (!pResults.Any())
-                throw new GetException("Eventos não encontrados");
-
-            pResults.Sort((x, y) => x.StartDate.CompareTo(y.StartDate));
-
-            int startIndex = (paginationOptions.Page - 1) * paginationOptions.PageSize;
-            List<GetEventsWithNames> pagedResults = pResults
-                .Skip(startIndex)
-                .Take(paginationOptions.PageSize)
-                .ToList();
-
-            return pagedResults;
+            return eventData;
         }
 
         public async Task<List<GetEventsWithNames>> GetWithUserData<T1>()
@@ -209,54 +157,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
             List<GetEventsWithNames> pagedResults = pResults.ToList();
             return pagedResults;
-        }
-
-        public async Task<List<Event>> GetWeeklyEvents<T1>(Pagination paginationOptions)
-        {
-            DateTime now = DateTime.Now;
-            DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
-            DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
-            DateTime endOfRange = startOfWeek.AddDays(6); // sábado
-
-            var filter = Builders<Event>.Filter.And(
-                Builders<Event>.Filter.Gte(e => e.StartDate, startOfRange),
-                Builders<Event>.Filter.Lt(e => e.StartDate, endOfRange.AddDays(1)),
-                Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
-            );
-
-            List<Event> pResults = await _eventCollection
-                .FindAsync(filter).Result.ToListAsync();
-            var listResult =
-                pResults
-                .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
-                .Take(paginationOptions.PageSize)
-                .ToList();
-
-            if (!listResult.Any())
-                throw new GetException("Eventos não encontrados");
-
-            return listResult;
-        }
-
-        public async Task<List<Event>> GetHighlightedEvents<T1>(Pagination paginationOptions)
-        {
-            var filter = Builders<Event>.Filter.And(
-                Builders<Event>.Filter.Eq("Highlighted", true),
-                Builders<Event>.Filter.Eq("Status", Enum.EnumStatusEvent.Active)
-            );
-
-            List<Event> pResults = await _eventCollection
-                .FindAsync(filter).Result.ToListAsync();
-
-            var listResult =
-            pResults
-            .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
-            .Take(paginationOptions.PageSize)
-            .ToList();
-            if (!listResult.Any())
-                throw new GetException("Eventos não encontrados");
-
-            return listResult;
         }
 
         public async Task<List<Event>> GetByProducer<T1>(
