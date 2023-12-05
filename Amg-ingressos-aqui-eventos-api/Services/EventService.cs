@@ -311,7 +311,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idEvent.ValidateIdMongo();
-                _messageReturn.Data = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                var data = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
+                _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
                 return _messageReturn;
             }
             catch (IdMongoException ex)

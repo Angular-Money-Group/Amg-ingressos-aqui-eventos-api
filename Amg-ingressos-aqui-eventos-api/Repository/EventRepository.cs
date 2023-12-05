@@ -261,67 +261,46 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return eventObj;
         }
 
-        public async Task<List<Model.Querys.GetEventwithTicket.GetEventWithTickets>> GetAllEventsWithTickets(
+        public async Task<List<T1>> GetAllEventsWithTickets<T1>(
             string idEvent,
             string idOrganizer
         )
         {
-            var json = QuerysMongo.GetEventWithTicketsQuery;
-            BsonDocument documentFilter1 = !string.IsNullOrEmpty(idEvent)
-                ? BsonDocument.Parse(
-                    @"{ $match: { '$and': [{ '_id': ObjectId('"
-                        + idEvent.ToString()
-                        + "') }] }}"
-                )
-                : BsonDocument.Parse(
-                    @"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('"
-                        + idOrganizer.ToString()
-                        + "') }] }}"
-                );
-            BsonDocument document = BsonDocument.Parse(json);
-            BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
+            BsonDocument documentFilter = !string.IsNullOrEmpty(idEvent)
+                ? new BsonDocument { { "_id", ObjectId.Parse(idEvent) } }
+                : new BsonDocument { { "IdOrganizer", ObjectId.Parse(idOrganizer) } };
 
-            List<Model.Querys.GetEventwithTicket.GetEventWithTickets> pResults = await _eventCollection
-                .AggregateAsync<Model.Querys.GetEventwithTicket.GetEventWithTickets>(pipeline)
-                .Result
-                .ToListAsync();
+            var eventData = await _eventCollection.Aggregate()
+                    .Match(documentFilter)
+                    .Lookup("variants", "_id", "IdEvent", "Variants")
+                    .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                    .Lookup("tickets", "Lots._id", "IdLot", "Tickets")
+                    .Lookup("user", "IdOrganizer", "_id", "User")
+                    .As<T1>()
+                    .ToListAsync();
 
-            if (!pResults.Any())
-                throw new GetException("Evento não encontrado");
-
-            return pResults;
+            return eventData;
         }
 
-        public async Task<List<GetEventTransactions>> GetAllEventsWithTransactions(
+        public async Task<List<T1>> GetAllEventsWithTransactions<T1>(
             string idEvent,
             string idOrganizer
         )
         {
-            var json = QuerysMongo.GetEventWithTransactionsQuery;
-            BsonDocument documentFilter1 = !string.IsNullOrEmpty(idEvent)
-                ? BsonDocument.Parse(
-                    @"{ $match: { '$and': [{ '_id': ObjectId('"
-                        + idEvent.ToString()
-                        + "') }] }}"
-                )
-                : BsonDocument.Parse(
-                    @"{ $match: { '$and': [{ 'IdOrganizer': ObjectId('"
-                        + idOrganizer.ToString()
-                        + "') }] }}"
-                );
+            BsonDocument documentFilter = !string.IsNullOrEmpty(idEvent)
+                ? new BsonDocument { { "_id", ObjectId.Parse(idEvent) } }
+                : new BsonDocument { { "IdOrganizer", ObjectId.Parse(idOrganizer) } };
 
-            BsonDocument document = BsonDocument.Parse(json);
-            BsonDocument[] pipeline = new BsonDocument[] { documentFilter1, document };
+            var eventData = await _eventCollection.Aggregate()
+                    .Match(documentFilter)
+                    .Lookup("variants", "_id", "IdEvent", "Variants")
+                    .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                    .Lookup("tickets", "Lots._id", "IdLot", "Tickets")
+                    .Lookup("user", "IdOrganizer", "_id", "User")
+                    .As<T1>()
+                    .ToListAsync();
 
-            List<GetEventTransactions> pResults = await _eventCollection
-                .AggregateAsync<GetEventTransactions>(pipeline)
-                .Result
-                .ToListAsync();
-
-            if (!pResults.Any())
-                throw new GetException("Evento não encontrado");
-
-            return pResults;
+            return eventData;
         }
     }
 }

@@ -1,14 +1,11 @@
 using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Dto.report;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
-using Lot = Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket.Lot;
-using Variant = Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket.Variant;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -36,9 +33,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 idOrganizer.ValidateIdMongo();
 
-                List<GetEventWithTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(string.Empty, idOrganizer);
-                List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(string.Empty, idOrganizer);
-                var ReportTransactionsDto = ProcessEvent(eventDataTickets, eventDataTransaction, string.Empty);
+                List<EventComplet> dataTicket = await _eventRepository.GetAllEventsWithTickets<EventComplet>(string.Empty, idOrganizer);
+                var dataDto = new EventComplet().ModelListToDtoList(dataTicket);
+
+                List<EventComplet> dataTransaction = await _eventRepository.GetAllEventsWithTransactions<EventComplet>(string.Empty, idOrganizer);
+                var dataTransactionDto = new EventComplet().ModelListToDtoList(dataTransaction);
+                
+                var ReportTransactionsDto = ProcessEvent(dataDto, dataTransactionDto, string.Empty);
 
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
@@ -70,9 +71,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
 
-                List<GetEventWithTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
-                List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(idEvent, idOrganizer);
-                var ReportTransactionsDto = ProcessEvent(eventDataTickets, eventDataTransaction, idVariant);
+                //List<GetEventWithTickets> eventDataTickets = await _eventRepository.GetAllEventsWithTickets(idEvent, string.Empty);
+                List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
+                var dataTicketsDto = new EventComplet().ModelListToDtoList(dataTickets);
+
+                List<EventComplet> dataTransactions = await _eventRepository.GetAllEventsWithTransactions<EventComplet>(idEvent, idOrganizer);
+                var dataTransactionDto = new EventComplet().ModelListToDtoList(dataTickets);
+                
+                //List<GetEventTransactions> eventDataTransaction = await _eventRepository.GetAllEventsWithTransactions(idEvent, idOrganizer);
+                var ReportTransactionsDto = ProcessEvent(dataTicketsDto, dataTransactionDto, idVariant);
 
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
@@ -96,7 +103,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private ReportTransactionsDto ProcessEvent(List<GetEventWithTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
+        private ReportTransactionsDto ProcessEvent(List<EventCompletDto> eventDataTickets, List<EventCompletDto> eventDataTransaction, string idVariant)
         {
             List<Transaction> listTransaction = GerenateJoinLists(eventDataTickets, eventDataTransaction, idVariant);
 
@@ -145,27 +152,27 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return report;
         }
 
-        private static List<Transaction> GerenateJoinLists(List<GetEventWithTickets> eventDataTickets, List<GetEventTransactions> eventDataTransaction, string idVariant)
+        private static List<Transaction> GerenateJoinLists(List<EventCompletDto> eventDataTickets, List<EventCompletDto> eventDataTransaction, string idVariant)
         {
             //get tickets de lotes do evento e variante de filtro
-            List<Model.Ticket> listTickets = new();
+            List<Ticket> listTickets = new();
             if (!string.IsNullOrEmpty(idVariant))
             {
-                var listLotes = eventDataTickets?.FirstOrDefault()?.Variant?.Find(i => i._id == idVariant)?.Lot;
-                listLotes?.ForEach(i => { listTickets.AddRange(i.ticket); });
+                var listLotes = eventDataTickets?.FirstOrDefault()?.Variants?.Find(i => i.Id == idVariant)?.Lots;
+                listLotes?.ForEach(i => { listTickets.AddRange(i.Tickets); });
             }
             else
             {
-                List<Variant> listVariant = new List<Variant>();
-                List<Lot> listLotes = new List<Lot>();
-                eventDataTickets.ForEach(x => { listVariant.AddRange(x.Variant); });
-                listVariant.ForEach(x => { listLotes.AddRange(x.Lot); });
-                listLotes.ForEach(i => { listTickets.AddRange(i.ticket); });
+                List<VariantWithLotDto> listVariant = new List<VariantWithLotDto>();
+                List<LotWithTicketDto> listLotes = new List<LotWithTicketDto>();
+                eventDataTickets.ForEach(x => { listVariant.AddRange(x.Variants); });
+                listVariant.ForEach(x => { listLotes.AddRange(x.Lots); });
+                listLotes.ForEach(i => { listTickets.AddRange(i.Tickets); });
             }
 
             //get tickets transactions
             List<Transaction> listTransactions = new List<Transaction>();
-            eventDataTransaction.ForEach(x => { listTransactions.AddRange(x.Transaction); });
+            eventDataTransaction.ForEach(x => { listTransactions.AddRange(x.Transactions); });
             List<TransactionIten> listTransactionItens = new List<TransactionIten>();
             listTransactions.ForEach(x => { listTransactionItens.AddRange(x.TransactionItens); });
 
