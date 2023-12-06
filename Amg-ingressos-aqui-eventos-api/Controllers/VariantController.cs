@@ -55,7 +55,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [Route("save/variants")]
         [HttpPost]
-        public async Task<IActionResult> SaveVariantAsync([FromBody] List<Variant> variants)
+        public async Task<IActionResult> SaveVariantAsync([FromBody] List<VariantWithLotDto> variants)
         {
             try
             {

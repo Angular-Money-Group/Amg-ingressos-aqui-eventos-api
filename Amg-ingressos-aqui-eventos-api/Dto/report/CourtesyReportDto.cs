@@ -8,6 +8,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
         {
             Entregues = new DeliveredReportDto();
             Restantes = new RemainingDto();
+            IdVariant = string.Empty;
         }
 
         [JsonPropertyName("Entregues")]
@@ -15,5 +16,6 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
 
         [JsonPropertyName("Restantes")]
         public RemainingDto Restantes { get; set; }
+        public string IdVariant { get; set; }
     }
 }

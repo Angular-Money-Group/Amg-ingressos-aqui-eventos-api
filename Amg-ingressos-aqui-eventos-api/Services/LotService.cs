@@ -4,6 +4,7 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -25,7 +26,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _messageReturn = new MessageReturn();
         }
 
-        public async Task<MessageReturn> SaveAsync(Lot lot)
+        public async Task<MessageReturn> SaveAsync(LotWithTicketDto lot)
         {
             try
             {
@@ -62,12 +63,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> SaveManyAsync(List<Lot> listLot)
+        public async Task<MessageReturn> SaveManyAsync(List<LotWithTicketDto> listLot)
         {
             try
             {
                 listLot.ForEach(i => { ValidateModelSave(i); });
-                _messageReturn.Data = await _lotRepository.SaveMany<object>(listLot);
+                var listLotModel = new LotWithTicketDto().ListDtoToListModel(listLot);
+                _messageReturn.Data = await _lotRepository.SaveMany<Lot>(listLotModel);
                 listLot.ForEach(x =>
                 {
                     List<Ticket> listTicket = new List<Ticket>();

@@ -5,7 +5,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
 {
     public interface IEventService
     {
-        Task<MessageReturn> SaveAsync(Event eventObject);
+        Task<MessageReturn> SaveAsync(EventCompletDto eventObject);
         Task<MessageReturn> GetByIdAsync(string id);
         Task<MessageReturn> SetHighlightEventAsync(string id);
         Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventDto);

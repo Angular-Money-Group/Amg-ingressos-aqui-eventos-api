@@ -19,13 +19,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public List<Ticket> Tickets { get; set; }
         public List<Transaction> Transactions { get; set; }
 
-        public List<EventCompletDto> ModelListToDtoList(List<EventComplet> listEventData)
+        public List<EventCompletWithTransactionDto> ModelListToDtoList(List<EventComplet> listEventData)
         {
             return listEventData.Select(ModelToDto).ToList();
         }
-        public EventCompletDto ModelToDto(EventComplet eventData)
+        public EventCompletWithTransactionDto ModelToDto(EventComplet eventData)
         {
-            return new EventCompletDto()
+            return new EventCompletWithTransactionDto()
             {
                 Address = eventData.Address,
                 Courtesy = eventData.Courtesy,

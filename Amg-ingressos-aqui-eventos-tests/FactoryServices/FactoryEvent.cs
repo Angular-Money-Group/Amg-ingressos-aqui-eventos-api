@@ -1,3 +1,4 @@
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
@@ -5,9 +6,9 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
 {
     public static class FactoryEvent
     {
-        internal static Event SimpleEvent()
+        internal static EventCompletWithTransactionDto SimpleEvent()
         {
-            return new Event()
+            return new EventCompletWithTransactionDto()
             {
                 Id = "1b111101-e2bb-4255-8caf-4136c566a962",
                 Name = "Gustavo Lima",
@@ -31,13 +32,13 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 IdMeansReceipt = "3b241101-e2bb-4255-8caf-4136c566a962",
                 IdOrganizer = "3b241101-e2bb-4255-8caf-4136c566a962",
                 Highlighted = true,
-                Variant = FactoryVariant.ListSimpleVariant().ToList()
+                Variants = FactoryVariant.ListSimpleVariant().ToList()
             };
         }
 
-        internal static Event SimpleEventWithPosition()
+        internal static EventCompletWithTransactionDto SimpleEventWithPosition()
         {
-            return new Event()
+            return new EventCompletWithTransactionDto()
             {
                 Id = "2b222202-e2bb-4255-8caf-4136c566a962",
                 Name = "CBLOL",
@@ -62,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 EndDate = new DateTime(2024, 02, 01, 22, 00, 00, DateTimeKind.Local),
                 IdMeansReceipt = "3b241101-e2bb-4255-8caf-4136c566a962",
                 IdOrganizer = "3b241101-e2bb-4255-8caf-4136c566a962",
-                Variant = FactoryVariant.ListSimpleVariantWithPosition().ToList(),
+                Variants = FactoryVariant.ListSimpleVariantWithPosition().ToList(),
             };
         }
 

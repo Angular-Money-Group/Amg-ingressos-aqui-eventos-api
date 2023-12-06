@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -13,7 +14,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
             Name = string.Empty;
             Description = string.Empty;
             IdEvent = string.Empty;
-            Lot = new List<Lot>();
             Positions = new Positions();
             LocaleImage = string.Empty;
         }
@@ -64,12 +64,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [JsonProperty("quantityCourtesy")]
         public int QuantityCourtesy { get; set; }
 
-        /// <summary>
-        /// Lista de lotes
-        /// </summary>
-        [BsonIgnore]
-        [JsonProperty("Lot")]
-        public List<Lot> Lot { get; set; }
         /// <summary>
         /// Permitir venda de restante no proximo lote
         /// </summary>

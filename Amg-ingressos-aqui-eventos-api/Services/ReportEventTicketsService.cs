@@ -3,7 +3,6 @@ using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Dto.report;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventwithTicket;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
@@ -170,9 +169,16 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private ReportEventOrganizerDetailDto ProcessEvent(EventCompletDto eventData, string? idVariant)
+        private ReportEventOrganizerDetailDto ProcessEvent(EventCompletWithTransactionDto eventData, string? idVariant)
         {
-            var variants = ProcessVariant(eventData, string.Empty);
+            //filtra variante a pser processada
+            var listVariantProcess = string.IsNullOrEmpty(idVariant) ? 
+                eventData.Variants :
+                eventData.Variants.Where(i=> i.Id == idVariant).ToList();
+            eventData.Variants = listVariantProcess;
+
+            var variants = ProcessVariant(eventData);
+
             return new ReportEventOrganizerDetailDto()
             {
                 Name = eventData.Name,
@@ -205,11 +211,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 },
                 Cortesy = VerifyCortesy(variants, eventData),
                 Variant = string.IsNullOrEmpty(idVariant) ? new VariantReportDto()
-                    : variants?.Find(x => x.Name == eventData?.Variant?.Find(i => i.Id == idVariant)?.Name) ?? new VariantReportDto()
+                    : variants?.Find(x => x.Name == eventData?.Variants?.Find(i => i.Id == idVariant)?.Name) ?? new VariantReportDto()
             };
         }
 
-        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, EventCompletDto eventData)
+        private CourtesyReportDto VerifyCortesy(List<VariantReportDto> variants, EventCompletWithTransactionDto eventData)
         {
             if (eventData.Courtesy.RemainingCourtesy.Count == 0) return new CourtesyReportDto();
             return new CourtesyReportDto()
@@ -237,15 +243,22 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             };
         }
 
-        private List<VariantReportDto> ProcessVariant(EventCompletDto eventData, string idVariant)
+        private List<VariantReportDto> ProcessVariant(EventCompletWithTransactionDto eventData)
         {
             List<VariantReportDto> variantList = new List<VariantReportDto>();
-            var variant = string.IsNullOrEmpty(idVariant)
-                ? eventData.Variants
-                : eventData.Variants.Where(i => i.Id == idVariant).ToList();
-            variant.ForEach(x =>
+
+            eventData.Variants.ForEach(x =>
             {
-                var lots = ProcessLotes(x);
+                var cortesyHistory = eventData.Courtesy.CourtesyHistory
+                .Where(i => i.Variant == x.Name)
+                .ToList();
+                var cortesyRemaining = eventData.Courtesy.RemainingCourtesy
+                .Where(i => i.VariantId == x.Id)
+                .ToList();
+                var reportCortesia = ProcessCortesy(cortesyHistory, cortesyRemaining);
+                var lots = ProcessLotes(x.Lots);
+
+
                 var variantDto = new VariantReportDto()
                 {
                     Name = x.Name,
@@ -278,7 +291,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             TotalValue = lots.Sum(i => i.Tickets.Remaining.TotalValue)
                         }
                     },
-                    Cortesys = ProcessCortesy(eventData, x),
+                    Cortesys = reportCortesia,
                     Lots = lots
                 };
                 variantList.Add(variantDto);
@@ -287,16 +300,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         }
 
         private CourtesyReportDto ProcessCortesy(
-            EventCompletDto eventData,
-            Model.Variant x
+            List<CourtesyHistory> cortesyHistory,
+            List<RemainingCourtesy> cortesyRemaining
         )
         {
-            var cortesyHistory = eventData.Courtesy.CourtesyHistory
-                .Where(i => i.Variant == x.Name)
-                .ToList();
-            var cortesyRemaining = eventData.Courtesy.RemainingCourtesy
-                .Where(i => i.VariantId == x.Id)
-                .ToList();
             return new CourtesyReportDto()
             {
                 Entregues =
@@ -345,10 +352,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             };
         }
 
-        private List<LotReportDto> ProcessLotes(VariantWithLotDto? variant)
+        private List<LotReportDto> ProcessLotes(List<LotWithTicketDto> LotData)
         {
             var listLot = new List<LotReportDto>();
-            variant?.Lots.ForEach(i =>
+            LotData.ForEach(i =>
             {
                 listLot.Add(
                     new LotReportDto()

@@ -80,7 +80,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> SaveAsync(Event eventObject)
+        public async Task<MessageReturn> SaveAsync(EventCompletDto eventObject)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 var variantId = "";
 
-                eventObject.Variant
+                eventObject.Variants
                     .ToList()
                     .ForEach(i =>
                     {
@@ -333,7 +333,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        private void ValidateModelSave(Event eventSave)
+        private void ValidateModelSave(EventCompletDto eventSave)
         {
             if (eventSave.Name == "")
                 throw new SaveException("Nome é Obrigatório.");
@@ -361,7 +361,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveException("Data Inicio é Obrigatório.");
             if (eventSave.EndDate == DateTime.MinValue)
                 throw new SaveException("Data Fim é Obrigatório.");
-            if (!eventSave.Variant.Any())
+            if (!eventSave.Variants.Any())
                 throw new SaveException("Variante é Obrigatório.");
         }
 

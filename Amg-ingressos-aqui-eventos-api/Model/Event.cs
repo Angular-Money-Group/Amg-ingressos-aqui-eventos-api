@@ -18,7 +18,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
             Description = string.Empty;
             Address = new Address();
             Courtesy = new Courtesy();
-            Variant = new List<Variant>();
             IdMeansReceipt = string.Empty;
             IdOrganizer = string.Empty;
         }
@@ -80,14 +79,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [Required]
         public Address Address { get; set; }
-
-        /// <summary>
-        /// Lista de Variants
-        /// </summary>
-        [BsonIgnore]
-        [Required]
-        [JsonProperty("Variant")]
-        public List<Variant> Variant { get; set; }
 
         /// <summary>
         /// Lista de Variants

@@ -70,7 +70,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             var id = "6462946db12323abeff9253f";
 
-            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).Returns(Task.FromResult(messageReturn));
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).Returns(Task.FromResult(new Event()));
 
             // Act
             var result = (OkObjectResult)await _eventController.SetHighlightEventAsync(id);
@@ -248,7 +248,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var eventSave = FactoryEvent.SimpleEvent();
             _eventRepositoryMock.Setup(x => x.Save<object>(eventSave))
                 .Returns(Task.FromResult(messageReturn));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<VariantWithLotDto>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             // Act

@@ -31,7 +31,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _logger = logger;
             _messageReturn = new MessageReturn();
         }
-        public async Task<MessageReturn> SaveAsync(Variant variant)
+        public async Task<MessageReturn> SaveAsync(VariantWithLotDto variant)
         {
             try
             {
@@ -43,14 +43,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 variant.Status = Enum.EnumStatusVariant.Active;
                 var idVariant = await _variantRepository.Save<object>(variant) ?? throw new RuleException("Id nao pode ser null");
                 var IdentificateLot = 1;
-                variant.Lot
+                variant.Lots
                     .ToList()
                     .ForEach(i =>
                     {
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
                         i.IdVariant = idVariant.ToString() ?? string.Empty;
-                        i.Id = _lotService.SaveAsync(i).Result.Data.ToString()??string.Empty;
+                        i.Id = _lotService.SaveAsync(i).Result.Data.ToString() ?? string.Empty;
                         IdentificateLot++;
                     });
             }
@@ -134,13 +134,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task<MessageReturn> DeleteManyAsync(List<Variant> listVariant)
+        public async Task<MessageReturn> DeleteManyAsync(List<VariantWithLotDto> listVariant)
         {
             try
             {
                 listVariant.ForEach(async variant =>
                 {
-                    List<string> LotsId = variant.Lot.Select(d => d.Id).ToList();
+                    List<string> LotsId = variant.Lots.Select(d => d.Id).ToList();
 
                     await _lotService.DeleteManyAsync(LotsId);
                 });
@@ -162,11 +162,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        private void ValidateModelSave(Variant variant)
+        private void ValidateModelSave(VariantWithLotDto variant)
         {
             if (variant.Name == "")
                 throw new SaveException("Nome é Obrigatório.");
-            if (!variant.Lot.Any())
+            if (!variant.Lots.Any())
                 throw new SaveException("Lote é Obrigatório.");
             if (variant.HasPositions)
             {
@@ -179,7 +179,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        public async Task<MessageReturn> SaveManyAsync(List<Variant> listVariant)
+        public async Task<MessageReturn> SaveManyAsync(List<VariantWithLotDto> listVariant)
         {
             try
             {
@@ -192,12 +192,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     }
                     v.Status = Enum.EnumStatusVariant.Active;
                 });
-                _messageReturn.Data = await _variantRepository.SaveMany<Variant>(listVariant);
+
+                var listVariantModel = new VariantWithLotDto().ListDtoToListModel(listVariant);
+                _messageReturn.Data = await _variantRepository.SaveMany<Variant>(listVariantModel);
 
                 listVariant.ForEach(i =>
                 {
                     var IdentificateLot = 1;
-                    i.Lot.ForEach(l =>
+                    i.Lots.ForEach(l =>
                     {
                         l.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
                         l.Identificate = IdentificateLot;
@@ -206,7 +208,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdentificateLot++;
                         IdentificateLot++;
                     });
-                    _ = _lotService.SaveManyAsync(i.Lot);
+                    _ = _lotService.SaveManyAsync(i.Lots);
                 });
             }
             catch (SaveException ex)
@@ -251,7 +253,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format("{0}:{1} - Erro ao gerar link imagem variante.", this.GetType().Name, nameof(StoreImageAndGenerateLinkToAccess)),image);
+                _logger.LogError(ex, string.Format("{0}:{1} - Erro ao gerar link imagem variante.", this.GetType().Name, nameof(StoreImageAndGenerateLinkToAccess)), image);
                 throw;
             }
         }
