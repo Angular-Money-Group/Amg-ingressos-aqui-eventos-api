@@ -6,8 +6,6 @@ using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
-using Amg_ingressos_aqui_eventos_api.Repository.Querys;
-using Amg_ingressos_aqui_eventos_api.Model.Querys.GetEventTransactions;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -297,6 +295,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
                     .Lookup("tickets", "Lots._id", "IdLot", "Tickets")
                     .Lookup("user", "IdOrganizer", "_id", "User")
+                    .Lookup("transaction", "_id", "IdEvent", "Transactions")
                     .As<T1>()
                     .ToListAsync();
 

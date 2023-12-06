@@ -103,7 +103,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private ReportTransactionsDto ProcessEvent(List<EventCompletDto> eventDataTickets, List<EventCompletDto> eventDataTransaction, string idVariant)
+        private ReportTransactionsDto ProcessEvent(List<EventCompletWithTransactionDto> eventDataTickets, List<EventCompletWithTransactionDto> eventDataTransaction, string idVariant)
         {
             List<Transaction> listTransaction = GerenateJoinLists(eventDataTickets, eventDataTransaction, idVariant);
 
@@ -152,7 +152,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return report;
         }
 
-        private static List<Transaction> GerenateJoinLists(List<EventCompletDto> eventDataTickets, List<EventCompletDto> eventDataTransaction, string idVariant)
+        private static List<Transaction> GerenateJoinLists(List<EventCompletWithTransactionDto> eventDataTickets, List<EventCompletWithTransactionDto> eventDataTransaction, string idVariant)
         {
             //get tickets de lotes do evento e variante de filtro
             List<Ticket> listTickets = new();

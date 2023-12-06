@@ -7,6 +7,7 @@ using Amg_ingressos_aqui_eventos_tests.FactoryServices;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Prime.UnitTests.Services
 {
@@ -32,7 +33,7 @@ namespace Prime.UnitTests.Services
             var variantComplet = FactoryVariant.SimpleVariant();
             var messageReturn = "OK";
             _variantRepositoryMock.Setup(x => x.Save<object>(variantComplet)).Returns(Task.FromResult(messageReturn as object));
-            _lotServiceMock.Setup(x => x.SaveAsync(It.IsAny<Lot>()))
+            _lotServiceMock.Setup(x => x.SaveAsync(It.IsAny<LotWithTicketDto>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             //Act
@@ -62,7 +63,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var variantComplet = FactoryVariant.SimpleVariant();
-            variantComplet.Lot = new List<Lot>();
+            variantComplet.Lots = new List<LotWithTicketDto>();
             var expectedMessage = new MessageReturn() { Message = "Lote é Obrigatório." };
 
             //Act
@@ -127,7 +128,7 @@ namespace Prime.UnitTests.Services
             var variantComplet = FactoryVariant.SimpleVariant();
             _variantRepositoryMock.Setup(x => x.Save<object>(variantComplet))
                 .Throws(new Exception("erro ao conectar na base de dados"));
-            _lotServiceMock.Setup(x => x.SaveAsync(It.IsAny<Lot>()))
+            _lotServiceMock.Setup(x => x.SaveAsync(It.IsAny<LotWithTicketDto>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
             //Act

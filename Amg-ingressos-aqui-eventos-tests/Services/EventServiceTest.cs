@@ -8,6 +8,7 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Hosting;
 using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Microsoft.Extensions.Logging;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Prime.UnitTests.Services
 {
@@ -165,7 +166,7 @@ namespace Prime.UnitTests.Services
         public void Given_event_without_city_When_save_Then_return_message_miss_city()
         {
             //Arrange
-            Event eventComplet = FactoryEvent.SimpleEvent();
+            var eventComplet = FactoryEvent.SimpleEvent();
             eventComplet.Address.City = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Cidade é Obrigatório." };
 
@@ -229,7 +230,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Variant = new List<Variant>();
+            eventComplet.Variants = new List<VariantWithLotDto>();
             var expectedMessage = new MessageReturn() { Message = "Variante é Obrigatório." };
 
             //Act
@@ -336,7 +337,7 @@ namespace Prime.UnitTests.Services
             var eventComplet = FactoryEvent.SimpleEvent();
             _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).
                 Throws(new Exception("Erro ao conectar a base de dados"));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Amg_ingressos_aqui_eventos_api.Model.Variant>()))
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<VariantWithLotDto>()))
                 .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
 
             //Act
