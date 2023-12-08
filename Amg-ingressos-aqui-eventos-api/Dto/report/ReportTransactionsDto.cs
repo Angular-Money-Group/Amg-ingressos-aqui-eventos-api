@@ -12,16 +12,16 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
             Total = new TransactionsDto();
         }
 
-        [JsonPropertyName("Credito")]
+        [JsonPropertyName("credito")]
         public TransactionsDto Credit { get; set; }
 
-        [JsonPropertyName("Debito")]
+        [JsonPropertyName("debito")]
         public TransactionsDto Debit { get; set; }
 
-        [JsonPropertyName("Pix")]
+        [JsonPropertyName("pix")]
         public TransactionsDto Pix { get; set; }
 
-        [JsonPropertyName("Total")]
+        [JsonPropertyName("total")]
         public TransactionsDto Total { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -28,7 +27,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         [JsonProperty("_id")]
-        [JsonPropertyName("id")]
         public string Id { get; set; }
 
         /// <summary>
@@ -71,7 +69,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// status Lot
         /// </summary>
-        [JsonProperty("Status")]
         public Enum.EnumStatusEvent Status { get; set; }
 
         /// <summary>
@@ -83,7 +80,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Lista de Variants
         /// </summary>
-        [JsonProperty("courtesy")]
         public Courtesy Courtesy { get; set; }
 
         /// <summary>

@@ -555,7 +555,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 Id = variantToGenerateTicket.Id,
                 IdLot = lotToGenerateTicket.Id!,
                 IdUser = ticketId,
-                Position = new object(),
+                Position = string.Empty,
                 Value = lotToGenerateTicket.ValueTotal,
                 IsSold = true,
                 ReqDocs = false,

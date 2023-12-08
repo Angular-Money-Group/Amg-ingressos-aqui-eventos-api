@@ -11,13 +11,13 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
             Tickets = new TicketsReportDto();
         }
 
-        [JsonPropertyName("Nome")]
+        [JsonPropertyName("nome")]
         public string Name { get; set; }
 
-        [JsonPropertyName("QuantidadeIngressos")]
+        [JsonPropertyName("quantidadeIngressos")]
         public int AmountTicket { get; set; }
 
-        [JsonPropertyName("Ingressos")]
+        [JsonPropertyName("ingressos")]
         public TicketsReportDto Tickets { get; set; }
     }
 }

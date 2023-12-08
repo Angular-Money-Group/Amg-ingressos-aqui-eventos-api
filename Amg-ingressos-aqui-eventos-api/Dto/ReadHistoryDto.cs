@@ -5,10 +5,10 @@
         public ReadHistoryDto()
         {
             Id = string.Empty;
-            idEvent = string.Empty;
-            idColab = string.Empty;
-            idTicket = string.Empty;
-            reason = string.Empty;
+            IdEvent = string.Empty;
+            IdColab = string.Empty;
+            IdTicket = string.Empty;
+            Reason = string.Empty;
         }
 
         /// <summary>
@@ -19,29 +19,29 @@
         /// <summary>
         /// Id do evento
         /// </summary>
-        public string idEvent { get; set; }
+        public string IdEvent { get; set; }
 
         /// <summary>
         /// Id Colab que leu o ticket
         /// </summary>
-        public string idColab { get; set; }
+        public string IdColab { get; set; }
         /// <summary>
         /// Id do ticket (qrcode)
         /// </summary>
-        public string idTicket { get; set; }
+        public string IdTicket { get; set; }
 
         /// <summary>
         /// Data leitura
         /// </summary>
-        public DateTime date { get; set; }
+        public DateTime Date { get; set; }
         /// <summary>
         /// Status do ticket
         /// </summary>
-        public int status { get; set; }
+        public int Status { get; set; }
         /// <summary>
         /// Observação leitura
         /// </summary>
-        public string reason { get; set; }
+        public string Reason { get; set; }
 
     }
 }

@@ -15,7 +15,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Remaining courtesy quantity
         /// </summary>
         [BsonElement("RemainingCourtesy")]
-        [JsonPropertyName("RemainingCourtesy")]
+        [JsonPropertyName("remainingCourtesy")]
         public List<RemainingCourtesy> RemainingCourtesy { get; set; }
 
         /// <summary>

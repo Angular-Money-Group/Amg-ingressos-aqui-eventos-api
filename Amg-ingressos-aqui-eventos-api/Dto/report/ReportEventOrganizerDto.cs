@@ -12,16 +12,16 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
             Cortesys = new CourtesyReportDto();
         }
 
-        [JsonPropertyName("Nome")]
+        [JsonPropertyName("nome")]
         public string Name { get; set; }
 
-        [JsonPropertyName("QuantidadeIngressos")]
+        [JsonPropertyName("quantidadeIngressos")]
         public int AmountTicket { get; set; }
 
-        [JsonPropertyName("Ingressos")]
+        [JsonPropertyName("ingressos")]
         public TicketsReportDto Tickets { get; set; }
 
-        [JsonPropertyName("Cortesias")]
+        [JsonPropertyName("cortesias")]
         public CourtesyReportDto Cortesys { get; set; }
     }
 }

@@ -11,10 +11,10 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
             IdVariant = string.Empty;
         }
 
-        [JsonPropertyName("Entregues")]
+        [JsonPropertyName("entregues")]
         public DeliveredReportDto Entregues { get; set; }
 
-        [JsonPropertyName("Restantes")]
+        [JsonPropertyName("restantes")]
         public RemainingDto Restantes { get; set; }
         public string IdVariant { get; set; }
     }

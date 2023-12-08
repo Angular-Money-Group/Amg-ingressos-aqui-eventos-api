@@ -10,10 +10,10 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
             Remaining = new RemainingDto();
         }
 
-        [JsonPropertyName("Vendidos")]
+        [JsonPropertyName("vendidos")]
         public SoldDto Sold { get; set; }
 
-        [JsonPropertyName("Restantes")]
+        [JsonPropertyName("restantes")]
         public RemainingDto Remaining { get; set; }
     }
 }

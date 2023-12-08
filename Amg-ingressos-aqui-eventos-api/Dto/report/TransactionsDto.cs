@@ -4,19 +4,19 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
 {
     public class TransactionsDto
     {
-        [JsonPropertyName("Quantidade")]
+        [JsonPropertyName("quantidade")]
         public int Amount { get; set; }
 
-        [JsonPropertyName("ValorTotal")]
+        [JsonPropertyName("valorTotal")]
         public double TotalValue { get; set; }
 
-        [JsonPropertyName("ValorTaxas")]
+        [JsonPropertyName("valorTaxas")]
         public double TaxValue { get; set; }
 
-        [JsonPropertyName("ValorEvento")]
+        [JsonPropertyName("valorEvento")]
         public double EventValue { get; set; }
 
-        [JsonPropertyName("ValorLiquido")]
+        [JsonPropertyName("valorLiquido")]
         public double LiquidValue { get; set; }
     }
 }

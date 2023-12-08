@@ -4,19 +4,19 @@ namespace Amg_ingressos_aqui_eventos_api.Dto.report
 {
     public class RemainingDto
     {
-        [JsonPropertyName("Quantidade")]
+        [JsonPropertyName("quantidade")]
         public int Amount { get; set; }
 
-        [JsonPropertyName("Percent")]
+        [JsonPropertyName("percent")]
         public double Percent { get; set; }
 
-        [JsonPropertyName("ValorTotal")]
+        [JsonPropertyName("valorTotal")]
         public decimal TotalValue { get; set; }
 
-        [JsonPropertyName("Taxa")]
+        [JsonPropertyName("taxa")]
         public decimal Tax { get; set; }
 
-        [JsonPropertyName("ValorReceber")]
+        [JsonPropertyName("valorReceber")]
         public decimal ReceiveValue { get; set; }
     }
 }
