@@ -5,8 +5,6 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
-using Amg_ingressos_aqui_eventos_api.Repository.Querys;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Consts;
 
 
@@ -24,83 +22,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _ticketCollection = dbConnection.GetConnection("tickets");
         }
 
-        public async Task<List<GetTicketDataEvent>> GetByUser<T1>(string idUser)
+        public async Task<List<T1>> GetByUser<T1>(string idUser)
         {
-            BsonDocument documentFilter = BsonDocument.Parse(
-                @"{$addFields:{'IdUser': { '$toString': '$IdUser' }}}"
-            );
-            BsonDocument documentFilter1 = BsonDocument.Parse(
-                @"{ $match: { '$and': [{ 'IdUser': '" + idUser.ToString() + "' }] }}"
-            );
+            BsonDocument documentFilter = new BsonDocument { { "IdUser", ObjectId.Parse(idUser) } };
+            var ticket = await _ticketCollection.Aggregate()
+                    .Match(documentFilter)
+                    .Lookup("lots", "IdLot", "_id", "Lots")
+                    .Lookup("variants", "Lots.IdVariant", "_id", "Variants")
+                    .Lookup("events", "Variants.IdEvent", "_id", "Events")
+                    .As<T1>()
+                    .ToListAsync();
 
-            BsonDocument lookupLots = BsonDocument.Parse(
-                @"{
-                                                                    $lookup:
-                                                                        {
-                                                                            from: 'lots',
-                                                                            localField: 'IdLot',
-                                                                            foreignField: '_id',
-                                                                            as: 'Lot'
-                                                                        }
-                                                                }"
-            );
-            BsonDocument lookupVariants = BsonDocument.Parse(
-                @"{
-                                                                    $lookup:
-                                                                        {
-                                                                            from: 'variants',
-                                                                            localField: 'Lot.IdVariant',
-                                                                            foreignField: '_id',
-                                                                            as: 'Variant'
-                                                                        }
-                                                                }"
-            );
-            BsonDocument lookupEvents = BsonDocument.Parse(
-                @"{
-                                                                    $lookup:
-                                                                        {
-                                                                            from: 'events',
-                                                                            localField: 'Variant.IdEvent',
-                                                                            foreignField: '_id',
-                                                                            as: 'Event'
-                                                                        }
-                                                                }"
-            );
-            BsonDocument uniwindLot = BsonDocument.Parse(
-                @"{
-                                                                    $unwind: '$Lot'
-                                                                }"
-            );
-            BsonDocument uniwindVariant = BsonDocument.Parse(
-                @"{
-                                                                    $unwind: '$Variant'
-                                                                }"
-            );
-            BsonDocument uniwindEvent = BsonDocument.Parse(
-                @"{
-                                                                    $unwind: '$Event'
-                                                                }"
-            );
-
-            BsonDocument[] pipeline = new BsonDocument[]
-            {
-                    documentFilter,
-                    documentFilter1,
-                    lookupLots,
-                    lookupVariants,
-                    lookupEvents,
-                    uniwindLot,
-                    uniwindVariant,
-                    uniwindEvent
-            };
-
-            // Execute a agregação na coleção de ingressos
-            var result = await _ticketCollection
-                .AggregateAsync<GetTicketDataEvent>(pipeline)
-                .Result
-                .ToListAsync();
-
-            return result;
+            return ticket;
         }
 
         public async Task<object> SaveAsync<T1>(object ticket)
@@ -193,109 +126,29 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return await _ticketCollection.Find(filter).ToListAsync();
         }
 
-        public async Task<object> GetByIdWithDataUser<T1>(string id)
+        public async Task<List<T1>> GetByIdWithDataUser<T1>(string id)
         {
-            var json = QuerysMongo.GetTicketByIdDataUser;
-            var json1 = QuerysMongo.GetTicketByIdDataLot;
-            BsonDocument document = BsonDocument.Parse(json);
-            BsonDocument document1 = BsonDocument.Parse(json1);
+            BsonDocument documentFilter = new BsonDocument { { "_id", ObjectId.Parse(id) } };
 
-            BsonDocument documentFilter = BsonDocument.Parse(
-                @"{$addFields:{'_id': { '$toString': '$_id' }}}"
-            );
-            BsonDocument documentFilter1 = BsonDocument.Parse(
-                @"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}"
-            );
-            BsonDocument[] pipeline = new BsonDocument[]
-            {
-                    documentFilter,
-                    documentFilter1,
-                    document,
-                    document1,
-            };
-            GetTicketDataUser pResults =
-                await _ticketCollection
-                    .AggregateAsync<GetTicketDataUser>(pipeline)
-                    .Result
-                    .FirstOrDefaultAsync()
-                ?? throw new GetException("Evento não encontrado");
-            return pResults;
+            var ticket = await _ticketCollection.Aggregate()
+                    .Match(documentFilter)
+                    .Lookup("user", "idUser", "_id", "User")
+                    .As<T1>()
+                    .ToListAsync();
+            return ticket;
         }
 
-        public async Task<object> GetByIdWithDataEvent<T1>(string id)
+        public async Task<List<T1>> GetByIdWithDataEvent<T1>(string id)
         {
-            BsonDocument documentFilter = BsonDocument.Parse(
-                @"{$addFields:{'_id': { '$toString': '$_id' }}}"
-            );
-            BsonDocument documentFilter1 = BsonDocument.Parse(
-                @"{ $match: { '$and': [{ '_id': '" + id.ToString() + "' }] }}"
-            );
-            BsonDocument lookupLots = BsonDocument.Parse(
-                @"{
-                                                                    $lookup:
-                                                                        {
-                                                                            from: 'lots',
-                                                                            localField: 'IdLot',
-                                                                            foreignField: '_id',
-                                                                            as: 'Lot'
-                                                                        }
-                                                                }"
-            );
-            BsonDocument lookupVariants = BsonDocument.Parse(
-                @"{
-                                                                    $lookup:
-                                                                        {
-                                                                            from: 'variants',
-                                                                            localField: 'Lot.IdVariant',
-                                                                            foreignField: '_id',
-                                                                            as: 'Variant'
-                                                                        }
-                                                                }"
-            );
-            BsonDocument lookupEvents = BsonDocument.Parse(
-                @"{
-                                                                    $lookup:
-                                                                        {
-                                                                            from: 'events',
-                                                                            localField: 'Variant.IdEvent',
-                                                                            foreignField: '_id',
-                                                                            as: 'Event'
-                                                                        }
-                                                                }"
-            );
-            BsonDocument uniwindLot = BsonDocument.Parse(
-                @"{
-                                                                    $unwind: '$Lot'
-                                                                }"
-            );
-            BsonDocument uniwindVariant = BsonDocument.Parse(
-                @"{
-                                                                    $unwind: '$Variant'
-                                                                }"
-            );
-            BsonDocument uniwindEvent = BsonDocument.Parse(
-                @"{
-                                                                    $unwind: '$Event'
-                                                                }"
-            );
-            BsonDocument[] pipeline = new BsonDocument[]
-            {
-                    documentFilter,
-                    documentFilter1,
-                    lookupLots,
-                    lookupVariants,
-                    lookupEvents,
-                    uniwindLot,
-                    uniwindVariant,
-                    uniwindEvent
-            };
-            GetTicketDataEvent pResults =
-                await _ticketCollection
-                    .AggregateAsync<GetTicketDataEvent>(pipeline)
-                    .Result
-                    .FirstOrDefaultAsync()
-                ?? throw new GetException("Ticket não encontrado");
-            return pResults;
+            BsonDocument documentFilter = new BsonDocument { { "_id", ObjectId.Parse(id) } };
+            var tickets = await _ticketCollection.Aggregate()
+                    .Match(documentFilter)
+                    .Lookup("lots", "IdLot", "_id", "Lots")
+                    .Lookup("variants", "Lots.IdVariant", "_id", "Variants")
+                    .Lookup("events", "Variants.IdEvent", "_id", "Events")
+                    .As<T1>()
+                    .ToListAsync();
+            return tickets;
         }
 
         public async Task<object> SaveMany(List<Ticket> lstTicket)

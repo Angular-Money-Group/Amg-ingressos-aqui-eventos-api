@@ -33,7 +33,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 idOrganizer.ValidateIdMongo();
                 List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(string.Empty, idOrganizer);
-                var dataDto = new EventComplet().ModelListToDtoList(dataTickets);
+                var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
 
 
                 List<ReportEventOrganizerDetailDto> reports = new();
@@ -125,7 +125,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idVariant.ValidateIdMongo();
 
                 List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
-                var dataDto = new EventComplet().ModelListToDtoList(dataTickets);
+                var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
 
                 var eventDataProcess = dataDto.Find(i => i.Id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, idVariant);
@@ -152,7 +152,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
                 List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
-                var dataDto = new EventComplet().ModelListToDtoList(dataTickets);
+                var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
                 var eventDataProcess = dataDto.Find(i => i.Id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, string.Empty);
                 return _messageReturn;

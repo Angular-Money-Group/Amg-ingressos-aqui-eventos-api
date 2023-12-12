@@ -5,8 +5,9 @@ using Amg_ingressos_aqui_eventos_api.Enum;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
+    [BsonIgnoreExtraElements]
     public class User
-    {
+    {  
         public User()
         {
             Id = string.Empty;

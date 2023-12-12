@@ -2,7 +2,6 @@
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 
@@ -41,7 +40,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new GetException("Colaborador da leitura do ingresso inválido");
 
                 //Consulta os dados do evento, do qrcode (ticket) que acabou de ser lido
-                var evento = (GetTicketDataEvent)_ticketRepository.GetByIdWithDataEvent<GetTicketDataEvent>(entranceDTO.IdTicket).Result;
+                var data = await _ticketRepository.GetByIdWithDataEvent<TicketComplet>(entranceDTO.IdTicket);
+                var evento = new TicketCompletDto().ModelToDto(data[0]);
+                //var evento = _ticketRepository.GetByIdWithDataEvent<GetTicketDataEvent>(entranceDTO.IdTicket).Result;
 
                 //Se for null, é um qrcode (ticket) inexistente
                 if (evento == null)
@@ -52,7 +53,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new RuleException("Ingresso não pertencente ao evento");
 
                 //Consulta os dados do usuários do qrcode (ticket) que acabou de ser lido
-                var userTicket = (GetTicketDataUser)_ticketRepository.GetByIdWithDataUser<GetTicketDataUser>(entranceDTO.IdTicket).Result;
+                var dataUser = await _ticketRepository.GetByIdWithDataUser<TicketComplet>(entranceDTO.IdTicket);
+                var userTicket = new TicketCompletDto().ModelToDto(dataUser[0]);
+                //var userTicket = (GetTicketDataUser)_ticketRepository.GetByIdWithDataUser<GetTicketDataUser>(entranceDTO.IdTicket).Result;
 
                 //Se não encontrar dados de usúario é um qrcode(ticket) inválido
                 if (userTicket == null)
@@ -192,13 +195,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                if (readHistory == null){
+                if (readHistory == null)
+                {
                     throw new SaveException("ticket readHistory é obrigatório");
                 }
 
                 _entranceRepository.SaveReadyHistories<object>(readHistory).GetAwaiter().GetResult();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveReadyHistories), "ReadyHisotory"), readHistory);
                 throw;
@@ -243,12 +247,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 return eventQrReads;
             }
-            catch(SaveException ex)
+            catch (SaveException ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveEventQrReads), "Event QrRead"), entranceDTO);
                 throw;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveEventQrReads), "Event QrRead"), entranceDTO);
                 throw;

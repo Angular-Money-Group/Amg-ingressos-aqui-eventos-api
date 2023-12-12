@@ -4,8 +4,6 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using Amg_ingressos_aqui_eventos_api.Dto;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
-using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Enum;
 using Amg_ingressos_aqui_eventos_api.Consts;
@@ -229,7 +227,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 if (!isEmailSend)
                 {
-                    HandleEmailSendingFailure(0,rowId, ticketsRow);
+                    HandleEmailSendingFailure(0, rowId, ticketsRow);
                 }
             }
             catch (Exception ex)
@@ -447,7 +445,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
         private Ticket CreateTicketToSend(string idUser, Lot lotToGenerateTicket)
         {
-            if(lotToGenerateTicket == null)
+            if (lotToGenerateTicket == null)
                 throw new RuleException("Lote Nao pode ser null");
 
             return new Ticket()
@@ -568,9 +566,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idUser.ValidateIdMongo();
-                var list = await _ticketRepository.GetByUser<
-                    List<GetTicketDataEvent>
-                >(idUser);
+                var data = await _ticketRepository.GetByUser<TicketComplet>(idUser);
+                var list = new TicketCompletDto().ModelListToDtoList(data);
                 _messageReturn.Data = list.Where(x => x.IsSold);
             }
             catch (GetException ex)
@@ -599,8 +596,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idUser.ValidateIdMongo();
-                var list = await _ticketRepository.GetByUser<
-                    List<GetTicketDataEvent>>(idUser);
+                var data = await _ticketRepository.GetByUser<TicketComplet>(idUser);
+                var list = new TicketCompletDto().ModelListToDtoList(data);
                 _messageReturn.Data = list.Where(x => x.IsSold && x.Event.Id == idEvent);
             }
             catch (GetException ex)
@@ -718,24 +715,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                GetTicketDataUser ticketUserData = (GetTicketDataUser)await _ticketRepository.GetByIdWithDataUser<GetTicketDataUser>(id);
-
-                _messageReturn.Data = new TicketUserDto()
-                {
-                    Id = ticketUserData.Id,
-                    IdLot = ticketUserData.IdLot,
-                    IdUser = ticketUserData.IdUser,
-                    IsSold = ticketUserData.IsSold,
-                    QrCode = ticketUserData.QrCode,
-                    Value = ticketUserData.Value,
-                    User = new UserDto()
-                    {
-                        Id = ticketUserData.User.FirstOrDefault()?.Id ?? string.Empty,
-                        Cpf = ticketUserData.User.FirstOrDefault()?.DocumentId ?? string.Empty,
-                        Email = ticketUserData.User.FirstOrDefault()?.Contact.Email ?? string.Empty,
-                        Name = ticketUserData.User.FirstOrDefault()?.Name ?? string.Empty
-                    },
-                };
+                var data = await _ticketRepository.GetByIdWithDataUser<TicketComplet>(id);
+                _messageReturn.Data = data.Any() ? new TicketUserDto().ModelToDto(data[0]) : new TicketUserDto();
             }
             catch (GetException ex)
             {
@@ -763,7 +744,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = (GetTicketDataEvent)await _ticketRepository.GetByIdWithDataEvent<GetTicketDataEvent>(id);
+                var data = await _ticketRepository.GetByIdWithDataEvent<TicketComplet>(id);
+                _messageReturn.Data = new TicketCompletDto().ModelToDto(data[0]);
             }
             catch (GetException ex)
             {

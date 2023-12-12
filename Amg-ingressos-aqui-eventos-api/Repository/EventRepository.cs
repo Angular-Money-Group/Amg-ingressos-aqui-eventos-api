@@ -5,7 +5,6 @@ using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -114,7 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return eventData;
         }
 
-        public async Task<List<GetEventsWithNames>> GetWithUserData<T1>()
+        public async Task<List<T1>> GetWithUserData<T1>()
         {
             List<BsonDocument> pipeline = new List<BsonDocument>
                 {
@@ -147,13 +146,13 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     BsonDocument.Parse("{ $sort: { 'Highlighted': -1, 'Status': 1, 'StartDate': 1 } }")
                 };
 
-            List<GetEventsWithNames> pResults = await _eventCollection
-                .AggregateAsync<GetEventsWithNames>(pipeline).Result.ToListAsync();
+            List<T1> pResults = await _eventCollection
+                .AggregateAsync<T1>(pipeline).Result.ToListAsync();
 
             if (!pResults.Any())
                 throw new GetException("Eventos não encontrados");
 
-            List<GetEventsWithNames> pagedResults = pResults.ToList();
+            List<T1> pagedResults = pResults.ToList();
             return pagedResults;
         }
 
@@ -259,10 +258,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return eventObj;
         }
 
-        public async Task<List<T1>> GetAllEventsWithTickets<T1>(
-            string idEvent,
-            string idOrganizer
-        )
+        public async Task<List<T1>> GetAllEventsWithTickets<T1>(string idEvent, string idOrganizer)
         {
             BsonDocument documentFilter = !string.IsNullOrEmpty(idEvent)
                 ? new BsonDocument { { "_id", ObjectId.Parse(idEvent) } }
