@@ -6,7 +6,6 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Microsoft.AspNetCore.Hosting;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Microsoft.Extensions.Logging;
 using Amg_ingressos_aqui_eventos_api.Dto;
 

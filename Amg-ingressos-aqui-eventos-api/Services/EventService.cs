@@ -2,7 +2,6 @@ using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
@@ -38,7 +37,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 id.ValidateIdMongo();
                 var data = await _eventRepository.GetById<EventComplet>(id);
-                _messageReturn.Data = new EventComplet().ModelToDto(data);
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data);
 
                 return _messageReturn;
             }
@@ -185,7 +184,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
                     data = data.Where(x => x.Highlighted && x.Status == Enum.EnumStatusEvent.Active).ToList();
-                    _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
+                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
                 }
                 else if (weekly)
                 {
@@ -197,12 +196,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
                     data = data.Where(x => x.Status == Enum.EnumStatusEvent.Active &&
                     x.StartDate >= startOfRange && x.StartDate <= endOfRange).ToList();
-                    _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
+                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
                 }
                 else
                 {
                     var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
-                    _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
+                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
                 }
             }
             catch (GetException ex)
@@ -223,7 +222,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.GetWithUserData<List<GetEventsWithNames>>();
+                var data = await _eventRepository.GetAllEvents<EventComplet>(new Pagination());
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
             }
             catch (GetException ex)
             {
@@ -312,7 +312,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 idEvent.ValidateIdMongo();
                 var data = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
-                _messageReturn.Data = new EventComplet().ModelListToDtoList(data);
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
                 return _messageReturn;
             }
             catch (IdMongoException ex)

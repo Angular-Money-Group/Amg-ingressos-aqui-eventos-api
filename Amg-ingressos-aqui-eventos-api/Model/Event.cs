@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
+    [BsonIgnoreExtraElements]
     public class Event
     {
         public Event()

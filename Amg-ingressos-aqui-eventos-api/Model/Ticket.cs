@@ -61,6 +61,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Colaborador que realizou a leitura
         /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
         public string IdColab { get; set; }
 
         /// <summary>

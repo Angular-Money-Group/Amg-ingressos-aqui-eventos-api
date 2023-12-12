@@ -1,6 +1,5 @@
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
-using Amg_ingressos_aqui_eventos_api.Model.Querys;
 
 namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
 {
@@ -67,9 +66,9 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
             };
         }
 
-        internal static GetEventsWithNames SimpleEventWithPositionNames()
+        internal static EventComplet SimpleEventWithPositionNames()
         {
-            return new GetEventsWithNames()
+            return new EventComplet()
             {
                 Name = "CBLOL",
                 Local = "Parque Sabiázinho",
@@ -93,7 +92,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 EndDate = new DateTime(2024, 02, 01, 22, 00, 00, DateTimeKind.Local),
                 IdMeansReceipt = "3b241101-e2bb-4255-8caf-4136c566a962",
                 IdOrganizer = "3b241101-e2bb-4255-8caf-4136c566a962",
-                User = new Producer()
+                User = new List<User>()
             };
         }
 
@@ -108,9 +107,9 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
             return listEvent;
         }
 
-        internal static IEnumerable<GetEventsWithNames> ListSimpleEventWithNames()
+        internal static IEnumerable<EventComplet> ListSimpleEventWithNames()
         {
-            List<GetEventsWithNames> listEvent = new List<GetEventsWithNames>
+            List<EventComplet> listEvent = new List<EventComplet>
             {
                 SimpleEventWithPositionNames()
             };
