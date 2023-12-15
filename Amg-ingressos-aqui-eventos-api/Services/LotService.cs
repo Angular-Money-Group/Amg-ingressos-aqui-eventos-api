@@ -32,14 +32,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 ValidateModelSave(lot);
                 lot.Status = Enum.EnumStatusLot.Open;
-                var idLot = await _lotRepository.Save<object>(lot) ?? throw new RuleException("id Lot é obrigatório");
+                var lotModel= new LotWithTicketDto().DtoToModel(lot);
+                await _lotRepository.Save<object>(lotModel);
                 List<Ticket> listTicket = new List<Ticket>();
                 for (int i = 0; i < lot.TotalTickets; i++)
                 {
                     listTicket.Add(new Ticket()
                     {
                         ReqDocs = lot.ReqDocs,
-                        IdLot = idLot.ToString() ?? string.Empty,
+                        IdLot = lotModel?.Id ?? string.Empty,
                         Value = lot.ValueTotal,
                         TicketCortesia = false
                     });
