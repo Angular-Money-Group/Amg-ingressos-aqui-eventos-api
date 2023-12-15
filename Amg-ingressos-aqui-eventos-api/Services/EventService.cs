@@ -183,7 +183,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
                     data = data.Where(x => x.Highlighted && x.Status == Enum.EnumStatusEvent.Active).ToList();
-                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
+                    _messageReturn.Data = new CardDto().ModelListToDtoList(data);
                 }
                 else if (weekly)
                 {
@@ -195,12 +195,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
                     data = data.Where(x => x.Status == Enum.EnumStatusEvent.Active &&
                     x.StartDate >= startOfRange && x.StartDate <= endOfRange).ToList();
-                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
+                    _messageReturn.Data = new CardDto().ModelListToDtoList(data);
                 }
                 else
                 {
                     var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
-                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
+                    _messageReturn.Data = new CardDto().ModelListToDtoList(data);
                 }
             }
             catch (GetException ex)
