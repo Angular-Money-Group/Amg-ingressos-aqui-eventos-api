@@ -23,7 +23,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         [JsonPropertyName("state")]
         public string State { get; set; }
 
-        [JsonPropertyName("desciption")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
 
         [JsonPropertyName("image")]
