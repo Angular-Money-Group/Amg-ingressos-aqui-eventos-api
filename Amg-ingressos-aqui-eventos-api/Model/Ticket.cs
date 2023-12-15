@@ -22,8 +22,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// Id mongo
         /// </summary>
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         [JsonProperty("_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
         /// <summary>
@@ -35,8 +35,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Id mongo Usuário
         /// </summary>
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string IdUser { get; set; }
+        public string? IdUser { get; set; }
 
         /// <summary>
         /// Posicao
@@ -61,7 +60,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Colaborador que realizou a leitura
         /// </summary>
-        [BsonRepresentation(BsonType.ObjectId)]
         public string IdColab { get; set; }
 
         /// <summary>

@@ -41,7 +41,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     variant.LocaleImage = StoreImageAndGenerateLinkToAccess(variant.LocaleImage!);
                 }
                 variant.Status = Enum.EnumStatusVariant.Active;
-                var idVariant = await _variantRepository.Save<object>(variant) ?? throw new RuleException("Id nao pode ser null");
+                Variant modelVariant = new VariantWithLotDto().DtoToModel(variant);
+                var idVariant = await _variantRepository.Save<object>(modelVariant) ?? throw new RuleException("Id nao pode ser null");
                 var IdentificateLot = 1;
                 variant.Lots
                     .ToList()

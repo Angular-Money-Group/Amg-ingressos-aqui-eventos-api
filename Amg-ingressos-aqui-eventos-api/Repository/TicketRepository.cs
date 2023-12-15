@@ -15,9 +15,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<Ticket> _ticketCollection;
 
-        public TicketRepository(
-            IDbConnection<Ticket> dbConnection
-        )
+        public TicketRepository(IDbConnection<Ticket> dbConnection)
         {
             _ticketCollection = dbConnection.GetConnection("tickets");
         }

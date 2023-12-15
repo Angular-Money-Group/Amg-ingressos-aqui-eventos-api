@@ -92,16 +92,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     RemainingCourtesy = new List<RemainingCourtesy>(),
                     CourtesyHistory = new List<CourtesyHistory>()
                 };
-                _messageReturn.Data = await _eventRepository.Save<object>(eventObject);
-
-                var variantId = "";
+                Event modelEvent = new EventCompletDto().DtoToModel(eventObject);
+                await _eventRepository.Save<object>(modelEvent);
 
                 eventObject.Variants
                     .ToList()
                     .ForEach(i =>
                     {
-                        i.IdEvent = _messageReturn.Data.ToString() ?? string.Empty;
-                        variantId = _variantService.SaveAsync(i).Result.Data.ToString();
+                        i.IdEvent = modelEvent.Id ?? string.Empty;
+                        _ = _variantService.SaveAsync(i);
 
                         if (i.QuantityCourtesy > 0)
                         {
@@ -112,11 +111,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 Quantity = i.QuantityCourtesy
                             };
 
-                            eventObject.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
+                            modelEvent.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
                         }
                     });
 
-                _messageReturn.Data = await _eventRepository.Edit<object>(eventObject.Id, eventObject);
+                _messageReturn.Data = await _eventRepository.Edit<object>(modelEvent.Id, modelEvent);
             }
             catch (SaveException ex)
             {
