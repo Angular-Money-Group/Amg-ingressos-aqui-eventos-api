@@ -177,7 +177,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>200 Evento criado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
-        [Route("createEvent")]
         public async Task<IActionResult> SaveEventAsync([FromBody] EventCompletDto eventObject)
         {
             try
