@@ -12,7 +12,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         {
             Id = string.Empty;
             IdLot = string.Empty;
-            IdUser = string.Empty;
+            IdUser = null;
             QrCode = string.Empty;
             Position = string.Empty;
             IdColab = string.Empty;
@@ -35,6 +35,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Id mongo Usuário
         /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
         public string? IdUser { get; set; }
 
         /// <summary>
