@@ -17,6 +17,9 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         [JsonPropertyName("month")]
         public string Month { get; set; }
 
+        [JsonPropertyName("year")]
+        public string Year { get; set; }
+
         [JsonPropertyName("city")]
         public string City { get; set; }
 
@@ -39,10 +42,11 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
             State = string.Empty;
             Description = string.Empty;
             Image = string.Empty;
+            Year = string.Empty;
         }
         public List<CardDto> ModelListToDtoList(List<EventComplet> listEvent)
         {
-            return listEvent.Select(e => ModelToDto(e)).ToList();
+            return listEvent.Select(ModelToDto).ToList();
         }
         public CardDto ModelToDto(EventComplet eventData)
         {
@@ -52,6 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
                 Id = eventData.Id,
                 Day = eventData.EndDate.Day.ToString(),
                 Month = eventData.EndDate.Month.ToString(),
+                Year = eventData.EndDate.Year.ToString(),
                 City = eventData.Address.City,
                 State = eventData.Address.State,
                 Description = eventData.Description,

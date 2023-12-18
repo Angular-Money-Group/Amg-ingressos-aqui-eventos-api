@@ -1,3 +1,4 @@
+using System.Data;
 using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
@@ -37,6 +38,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             try
             {
+                if(!ModelState.IsValid)
+                    throw new RuleException("Dados inválidos");
+                
                 var result = await _eventService.GetEventsAsync(highlights, weekly, paginationOptions);
                 if (result.Message != null && result.Message.Any())
                 {
