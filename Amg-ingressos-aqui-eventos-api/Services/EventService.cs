@@ -223,7 +223,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                var data = await _eventRepository.GetAllEvents<EventComplet>(new Pagination(),null);
+                var data = await _eventRepository.GetAllEvents<EventComplet>(new Pagination(){Page=0,PageSize=10},null);
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
             }
             catch (GetException ex)

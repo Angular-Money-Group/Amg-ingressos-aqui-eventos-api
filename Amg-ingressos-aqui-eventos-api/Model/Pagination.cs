@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class Pagination
@@ -5,11 +7,13 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// Pagina atual
         /// </summary>
-        public int Page { get; set; }
+        [Required]
+        public int Page { get; set; } = 1;
 
         /// <summary>
         /// Tamanho da Pagina
         /// </summary>
-        public int PageSize { get; set; }
+        [Required]
+        public int PageSize { get; set; } = 10;
     }
 }
