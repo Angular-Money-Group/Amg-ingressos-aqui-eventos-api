@@ -1,5 +1,6 @@
 using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
+using Amg_ingressos_aqui_eventos_api.Enum;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
@@ -181,25 +182,26 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 if (highlights)
                 {
-                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
-                    data = data.Where(x => x.Highlighted && x.Status == Enum.EnumStatusEvent.Active).ToList();
+                    var eventModel= new Event(){Highlighted = true, Status= EnumStatusEvent.Active};
+                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions,eventModel);
                     _messageReturn.Data = new CardDto().ModelListToDtoList(data);
                 }
                 else if (weekly)
                 {
-                    DateTime now = DateTime.Now;
-                    DateTime startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
+                    DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
                     DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
                     DateTime endOfRange = startOfWeek.AddDays(7); // sábado
 
-                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
-                    data = data.Where(x => x.Status == Enum.EnumStatusEvent.Active &&
-                    x.StartDate >= startOfRange && x.StartDate <= endOfRange).ToList();
+                    var eventModel= new Event(){StartDate = startOfRange, Status= EnumStatusEvent.Active};
+                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions,eventModel);
+                    data = data.Where(x =>  x.StartDate <= endOfRange).ToList();
                     _messageReturn.Data = new CardDto().ModelListToDtoList(data);
                 }
                 else
                 {
-                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions);
+                    DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
+                    var eventModel= new Event(){StartDate = startOfWeek, Status= EnumStatusEvent.Active};
+                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions,eventModel);
                     _messageReturn.Data = new CardDto().ModelListToDtoList(data);
                 }
             }
@@ -221,7 +223,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                var data = await _eventRepository.GetAllEvents<EventComplet>(new Pagination());
+                var data = await _eventRepository.GetAllEvents<EventComplet>(new Pagination(),null);
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
             }
             catch (GetException ex)

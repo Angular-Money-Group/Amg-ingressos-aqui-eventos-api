@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
+using Amg_ingressos_aqui_eventos_api.Enum;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -101,9 +102,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return eventDoc;
         }
 
-        public async Task<List<T1>> GetAllEvents<T1>(Pagination paginationOptions)
+        public async Task<List<T1>> GetAllEvents<T1>(Pagination paginationOptions, Event? eventModel)
         {
             var eventData = await _eventCollection.Aggregate()
+                    .Match(GenerateFilterGetEvents(eventModel))
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
                     .Lookup("user", "IdOrganizer", "_id", "User")
@@ -111,6 +113,21 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .ToListAsync();
 
             return eventData;
+        }
+        public FilterDefinition<Event> GenerateFilterGetEvents(Event? eventModel)
+        {
+            FilterDefinition<Event> arrayFilter =
+                Builders<Event>.Filter.Eq("Highlighted", eventModel?.Highlighted ?? false);
+            
+            if (eventModel != null)
+            {
+                arrayFilter = arrayFilter & Builders<Event>.Filter.Eq("Status", eventModel.Status);
+                if (!string.IsNullOrEmpty(eventModel.Id))
+                    arrayFilter = arrayFilter & Builders<Event>.Filter.Eq("_Id", eventModel.Id);
+                else if (eventModel.StartDate != DateTime.MinValue)
+                    arrayFilter = arrayFilter & Builders<Event>.Filter.Gte("StartDate", eventModel.StartDate);
+            }
+            return arrayFilter;
         }
 
         public async Task<List<T1>> GetWithUserData<T1>()
