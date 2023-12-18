@@ -52,7 +52,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             weekly = false;
 
             var messageReturn = FactoryEvent.ListSimpleEventWithNames();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination)).Returns(Task.FromResult(new List<EventComplet>()));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination,new Event())).Returns(Task.FromResult(new List<EventComplet>()));
 
             // Act
             var result = (OkObjectResult)await _eventController.GetEventsAsync(highlights, weekly, pagination);

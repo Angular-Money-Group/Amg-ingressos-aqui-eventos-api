@@ -320,7 +320,7 @@ namespace Prime.UnitTests.Services
             };
             var highlights = false;
             var weekly = false;
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination)).Returns(Task.FromResult(new List<EventComplet>()));
+            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination,null)).Returns(Task.FromResult(new List<EventComplet>()));
 
             //Act
             var resultTask = _eventService.GetEventsAsync(highlights, weekly, pagination);
