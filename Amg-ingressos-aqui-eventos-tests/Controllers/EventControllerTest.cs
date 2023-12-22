@@ -24,9 +24,6 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private readonly Mock<ILogger<EventService>> _loggerServiceMock = new Mock<ILogger<EventService>>();
         private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
-        private bool highlights;
-        private bool weekly;
-
         [SetUp]
         public void Setup()
         {
@@ -48,14 +45,12 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
                 Page = 1,
                 PageSize = 10
             };
-            highlights = false;
-            weekly = false;
 
             var messageReturn = FactoryEvent.ListSimpleEventWithNames();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination,new Event())).Returns(Task.FromResult(new List<EventComplet>()));
+            _eventRepositoryMock.Setup(x => x.GetByFilterComplet<EventComplet>(pagination,new Event())).Returns(Task.FromResult(new List<EventComplet>()));
 
             // Act
-            var result = (OkObjectResult)await _eventController.GetEventsAsync(highlights, weekly, pagination);
+            var result = (OkObjectResult)await _eventController.GetEventsAsync(new FilterOptions(), pagination);
 
             // Assert
             Assert.AreEqual(messageReturn, result.Value);
@@ -69,7 +64,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
 
             var id = "6462946db12323abeff9253f";
 
-            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).Returns(Task.FromResult(new Event()));
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent(id)).Returns(Task.FromResult(true));
 
             // Act
             var result = (OkObjectResult)await _eventController.SetHighlightEventAsync(id);
@@ -84,7 +79,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var expectedMessage = "Maximo de Eventos destacados atingido";
 
             var id = "6462946db12323abeff9253f";
-            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).ThrowsAsync(new GetException("Maximo de Eventos destacados atingido"));
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent(id)).ThrowsAsync(new GetException("Maximo de Eventos destacados atingido"));
 
             // Act
             var result = (ObjectResult)await _eventController.SetHighlightEventAsync(id);
@@ -101,7 +96,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var expectedMessage = MessageLogErrors.EditController;
 
             var id = "6462946db12323abeff9253f";
-            _eventRepositoryMock.Setup(x => x.SetHighlightEvent<Event>(id)).ThrowsAsync(new Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.SetHighlightEvent(id)).ThrowsAsync(new Exception("error conection database"));
 
             // Act
             var result = (ObjectResult)await _eventController.SetHighlightEventAsync(id);
@@ -116,9 +111,9 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         {
             // Arrange
             var name = "CBLOL";
-
+            var dic = new Dictionary<string,object>(){{"Name",name}};
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetByName<List<Event>>(name)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.GetByFilter<Event>(dic,null)).Returns(Task.FromResult(messageReturn as List<Event>)!);
 
             // Act
             var result = (OkObjectResult)await _eventController.GetByNameAsync(name);
@@ -133,7 +128,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var name = "descricao";
             // Arrange
             var expectedMessage = MessageLogErrors.GetController;
-            _eventRepositoryMock.Setup(x => x.GetByName<List<Event>>(name)).Throws(new Exception("error coxcnection database"));
+            var dic = new Dictionary<string,object>(){{"Name",name}};
+            _eventRepositoryMock.Setup(x => x.GetByFilter<Event>(dic,null)).Throws(new Exception("error coxcnection database"));
 
             // Act
             var result = (NoContentResult)await _eventController.GetByNameAsync(name);
@@ -150,7 +146,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var name = "3b241101-e2bb-4255-8caf-4136c566a962";
 
             var expectedMessage = "Lista vazia";
-            _eventRepositoryMock.Setup(x => x.GetByName<List<Event>>(name)).Throws(new GetException(expectedMessage));
+            var dic = new Dictionary<string,object>(){{"Name",name}};
+            _eventRepositoryMock.Setup(x => x.GetByFilter<Event>(dic,null)).Throws(new GetException(expectedMessage));
 
             // Act
             var result = (NoContentResult)await _eventController.GetByNameAsync(name);
@@ -214,7 +211,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var messageReturn = "Evento deletado";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Delete(id)).Returns(Task.FromResult(true));
 
             // Act
             var result = (OkObjectResult)await _eventController.DeleteEventAsync(id);
@@ -229,7 +226,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
             var espectedReturn = MessageLogErrors.DeleteController;
-            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Throws(new Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.Delete(id)).Throws(new Exception("error conection database"));
 
             // Act
             var result = (ObjectResult)await _eventController.DeleteEventAsync(id);
@@ -245,8 +242,8 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             object messageReturn = string.Empty;
             var eventSave = FactoryEvent.SimpleEvent();
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventSave))
-                .Returns(Task.FromResult(messageReturn));
+            _eventRepositoryMock.Setup(x => x.Save(eventSave))
+                .Returns(Task.FromResult(new Event()));
             _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<VariantWithLotDto>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
@@ -263,7 +260,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             // Arrange
             var eventSave = FactoryEvent.SimpleEvent();
             var espectedReturn = MessageLogErrors.SaveController;
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventSave)).Throws(new Exception("error conection database"));
+            _eventRepositoryMock.Setup(x => x.Save(eventSave)).Throws(new Exception("error conection database"));
 
             // Act
             var result = (ObjectResult)await _eventController.SaveEventAsync(eventSave);

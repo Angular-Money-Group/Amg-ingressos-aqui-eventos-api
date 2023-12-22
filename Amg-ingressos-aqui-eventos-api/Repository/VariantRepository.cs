@@ -91,7 +91,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw new DeleteException("Algo deu errado ao deletar");
         }
 
-        public async Task<List<Variant>> FindById<T1>(string id)
+        public async Task<List<Variant>> GetById<T1>(string id)
         {
             if (id == null || string.IsNullOrEmpty(id.ToString()))
                 throw new GetException("id é obrigatório");

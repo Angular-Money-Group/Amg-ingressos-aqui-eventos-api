@@ -287,7 +287,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var messageReturn = "Evento deletado";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Delete(id)).Returns(Task.FromResult(true));
 
             //Act
             var result = _eventService.DeleteAsync(id);
@@ -318,12 +318,10 @@ namespace Prime.UnitTests.Services
                 Page = 1,
                 PageSize = 10
             };
-            var highlights = false;
-            var weekly = false;
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<EventComplet>(pagination,null)).Returns(Task.FromResult(new List<EventComplet>()));
+            _eventRepositoryMock.Setup(x => x.GetByFilterComplet<EventComplet>(pagination,new Event())).Returns(Task.FromResult(new List<EventComplet>()));
 
             //Act
-            var resultTask = _eventService.GetEventsAsync(highlights, weekly, pagination);
+            var resultTask = _eventService.GetEventsAsync(new FilterOptions(), pagination);
 
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);
@@ -334,7 +332,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).
+            _eventRepositoryMock.Setup(x => x.Save(eventComplet)).
                 Throws(new Exception("Erro ao conectar a base de dados"));
             _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<VariantWithLotDto>()))
                 .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));

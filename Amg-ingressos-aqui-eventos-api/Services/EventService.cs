@@ -37,47 +37,16 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                var data = await _eventRepository.GetById<EventComplet>(id);
-                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data);
-
+                var dic = new Dictionary<string, object>() { { "_id", id } };
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data[0]);
                 return _messageReturn;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdAsync), "Evento"), id);
-                _messageReturn.Message = ex.Message;
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdAsync), "Evento"), id);
-                _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdAsync), "Evento"), id);
-                _messageReturn.Message = ex.Message;
+                throw;
             }
-            return _messageReturn;
-        }
-
-        public async Task<MessageReturn> GetByNameAsync(string name)
-        {
-            try
-            {
-                _messageReturn.Data = await _eventRepository.GetByName<List<Event>>(name);
-                return _messageReturn;
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Evento"), name);
-                _messageReturn.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Evento"), name);
-                _messageReturn.Message = ex.Message;
-            }
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> SaveAsync(EventCompletDto eventObject)
@@ -94,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     CourtesyHistory = new List<CourtesyHistory>()
                 };
                 Event modelEvent = new EventCompletDto().DtoToModel(eventObject);
-                await _eventRepository.Save<object>(modelEvent);
+                await _eventRepository.Save(modelEvent);
 
                 eventObject.Variants
                     .ToList()
@@ -116,40 +85,28 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         }
                     });
 
-                _messageReturn.Data = await _eventRepository.Edit<object>(modelEvent.Id, modelEvent);
-            }
-            catch (SaveException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Evento"), eventObject);
-                _messageReturn.Message = ex.Message;
+                _messageReturn.Data = await _eventRepository.Edit(modelEvent.Id, modelEvent);
+                return _messageReturn;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Evento"), eventObject);
                 throw;
             }
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> SetHighlightEventAsync(string id)
         {
             try
             {
-                _messageReturn.Data = await _eventRepository.SetHighlightEvent<Event>(id);
+                _messageReturn.Data = await _eventRepository.SetHighlightEvent(id);
                 return _messageReturn;
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), id);
-                _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), id);
                 throw;
             }
-
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> DeleteAsync(string id)
@@ -157,113 +114,89 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = (string)await _eventRepository.Delete<object>(id);
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Evento"), id);
-                _messageReturn.Message = ex.Message;
+                var result = await _eventRepository.Delete(id);
+                if (result)
+                    _messageReturn.Data = "evento deletado";
+                else
+                    _messageReturn.Message = "evento não deletado";
+                return _messageReturn;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Evento"), id);
                 throw;
             }
-            return _messageReturn;
         }
 
-        public async Task<MessageReturn> GetEventsAsync(
-            bool highlights,
-            bool weekly,
-            Pagination paginationOptions
-        )
+        public async Task<MessageReturn> GetEventsAsync(FilterOptions filters, Pagination paginationOptions)
         {
             try
             {
-                if (highlights)
-                {
-                    var eventModel= new Event(){Highlighted = true, Status= EnumStatusEvent.Active};
-                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions,eventModel);
-                    _messageReturn.Data = new CardDto().ModelListToDtoList(data);
-                }
-                else if (weekly)
-                {
-                    DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
-                    DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
-                    DateTime endOfRange = startOfWeek.AddDays(7); // sábado
-
-                    var eventModel= new Event(){StartDate = startOfRange, Status= EnumStatusEvent.Active};
-                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions,eventModel);
-                    data = data.Where(x =>  x.StartDate <= endOfRange).ToList();
-                    _messageReturn.Data = new CardDto().ModelListToDtoList(data);
-                }
-                else
-                {
-                    DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
-                    var eventModel= new Event(){StartDate = startOfWeek, Status= EnumStatusEvent.Active};
-                    var data = await _eventRepository.GetAllEvents<EventComplet>(paginationOptions,eventModel);
-                    _messageReturn.Data = new CardDto().ModelListToDtoList(data);
-                }
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
-                _messageReturn.Message = ex.Message;
-                throw;
+                Dictionary<string, object> dic = GenerateFilters(filters);
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
+                return _messageReturn;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"));
                 throw;
             }
-            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> GetCardEventsHighligth()
+        {
+            try
+            {
+                var dic = GenerateFilters(new FilterOptions() { Highlights = true });
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                return _messageReturn;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"));
+                throw;
+            }
+        }
+
+        public async Task<MessageReturn> GetCardEventsWeekly()
+        {
+            try
+            {
+                var dic = new Dictionary<string, object>();
+                DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
+                DateTime startOfRange = startOfWeek.AddDays(-1); // domingo
+                DateTime endOfRange = startOfWeek.AddDays(7); // sábado
+
+                dic.Add("StartDate", startOfRange.ToUniversalTime());
+                dic.Add("Status", (int)EnumStatusEvent.Active);
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
+                data = data.Where(x => x.StartDate.Date <= endOfRange.Date).ToList();
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                return _messageReturn;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"));
+                throw;
+            }
         }
 
         public async Task<MessageReturn> GetWithUserData()
         {
             try
             {
-                var data = await _eventRepository.GetAllEvents<EventComplet>(new Pagination(){Page=0,PageSize=10},null);
+                var data = await _eventRepository
+                    .GetByFilterComplet<EventComplet>(new Pagination() { Page = 0, PageSize = 10 }, null);
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"));
-                _messageReturn.Message = ex.Message;
+                return _messageReturn;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"));
                 throw;
             }
-            return _messageReturn;
-        }
-
-        public async Task<MessageReturn> GetByOrganizerAsync(
-            string idOrganizer,
-            Pagination paginationOptions,
-            FilterOptions? filter
-        )
-        {
-            try
-            {
-                _messageReturn.Data = await _eventRepository.GetByProducer<List<Event>>(
-                    idOrganizer,
-                    paginationOptions,
-                    filter
-                );
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
-                _messageReturn.Message = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByNameAsync), "Eventos"));
-                throw;
-            }
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> EditEventsAsync(string id, EventEditDto eventDto)
@@ -291,20 +224,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     IsBase64Image(eventEdit.Image!);
                     eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
                 }
-
-                _messageReturn.Data = await _eventRepository.Edit<Event>(id, eventEdit);
-            }
-            catch (EditException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditEventsAsync), "Evento"));
-                _messageReturn.Message = ex.Message;
+                _messageReturn.Data = await _eventRepository.Edit(id, eventEdit);
+                return _messageReturn;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditEventsAsync), "Evento"));
                 throw;
             }
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> GetAllEventsWithTickets(string idEvent)
@@ -312,26 +239,31 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idEvent.ValidateIdMongo();
-                var data = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
+                var data = await _eventRepository.GetFilterWithTickets<EventComplet>(idEvent, string.Empty);
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
                 return _messageReturn;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"));
-                _messageReturn.Message = ex.Message;
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"));
-                _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"));
                 throw;
             }
-            return _messageReturn;
+        }
+
+        public async Task<MessageReturn> GetCardEvents(FilterOptions filters, Pagination paginationOptions)
+        {
+            try
+            {
+                Dictionary<string, object> dic = GenerateFilters(filters);
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                return _messageReturn;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEvents), "Eventos"));
+                throw;
+            }
         }
 
         private void ValidateModelSave(EventCompletDto eventSave)
@@ -366,7 +298,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveException("Variante é Obrigatório.");
         }
 
-        public static bool IsBase64String(string base64)
+        private static bool IsBase64String(string base64)
         {
             Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
             return Convert.TryFromBase64String(base64, buffer, out int bytesParsed);
@@ -414,6 +346,41 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 stream.Write(imageBytes, 0, imageBytes.Length);
             }
             return linkImagem;
+        }
+
+        private static Dictionary<string, object> GenerateFilters(FilterOptions filters)
+        {
+            var dic = new Dictionary<string, object>();
+            if (filters.Highlights != null)
+            {
+                dic.Add("Highlighted", filters.Highlights);
+                if (filters.Highlights == true)
+                {
+                    DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
+                    dic.Add("StartDate", startOfWeek);
+                    dic.Add("Status", (int)EnumStatusEvent.Active);
+                }
+            }
+            if (filters.Type != null && !string.IsNullOrEmpty(filters.Type))
+                dic.Add("Type", filters.Type);
+            if (filters.Name != null && !string.IsNullOrEmpty(filters.Name))
+                dic.Add("Name", filters.Name);
+            if (filters.IdOrganizer != null && !string.IsNullOrEmpty(filters.IdOrganizer))
+                dic.Add("IdOrganizer", filters.IdOrganizer);
+            if (filters.StartDate != null && filters.StartDate != DateTime.MinValue)
+                dic.Add("StartDate", filters.StartDate);
+            if (filters.EndDate != null && filters.EndDate != DateTime.MinValue)
+                dic.Add("StartDate", filters.EndDate);
+
+            //filtro default
+            if (dic.Count == 0)
+            {
+                DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
+                dic.Add("StartDate", startOfWeek);
+                dic.Add("Status", (int)EnumStatusEvent.Active);
+            }
+
+            return dic;
         }
     }
 }

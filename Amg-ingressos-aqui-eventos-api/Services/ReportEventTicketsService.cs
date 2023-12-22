@@ -32,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Organizador é Obrigatório.");
 
                 idOrganizer.ValidateIdMongo();
-                List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(string.Empty, idOrganizer);
+                List<EventComplet> dataTickets = await _eventRepository.GetFilterWithTickets<EventComplet>(string.Empty, idOrganizer);
                 var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
 
 
@@ -124,7 +124,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new ReportException("Id Variante é Obrigatório.");
                 idVariant.ValidateIdMongo();
 
-                List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
+                List<EventComplet> dataTickets = await _eventRepository.GetFilterWithTickets<EventComplet>(idEvent, string.Empty);
                 var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
 
                 var eventDataProcess = dataDto.Find(i => i.Id == idEvent) ?? throw new ReportException("Dados não pode ser null");
@@ -151,7 +151,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 if (string.IsNullOrEmpty(idEvent))
                     throw new ReportException("Id Evento é Obrigatório.");
                 idEvent.ValidateIdMongo();
-                List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
+                List<EventComplet> dataTickets = await _eventRepository.GetFilterWithTickets<EventComplet>(idEvent, string.Empty);
                 var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
                 var eventDataProcess = dataDto.Find(i => i.Id == idEvent) ?? throw new ReportException("Dados não pode ser null");
                 _messageReturn.Data = ProcessEvent(eventDataProcess, string.Empty);

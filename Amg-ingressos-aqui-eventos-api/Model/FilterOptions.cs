@@ -18,5 +18,14 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 
         [JsonProperty("endDate")]
         public DateTime? EndDate { get; set; }
+        
+        [JsonProperty("idOrganizer")]
+        public string? IdOrganizer { get; set; }
+
+        [JsonProperty("highlights")]
+        public bool? Highlights { get; set; }
+
+        
+        
     }
 }
