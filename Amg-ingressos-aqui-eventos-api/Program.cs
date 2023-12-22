@@ -40,7 +40,7 @@ builder.Services.AddScoped<IReportEventTickets, ReportEventTicketsService>();
 builder.Services.AddScoped<IReportEventTransactions, ReportEventTransactionsService>();
 builder.Services.AddScoped<IEntranceService, EntranceService>();
 //repository
-builder.Services.AddScoped<IEventRepository, EventRepository<object>>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IVariantRepository, VariantRepository<object>>();
 builder.Services.AddScoped<ILotRepository, LotRepository<object>>();
@@ -74,6 +74,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -90,7 +91,6 @@ app.UseCors(x => x
                 .AllowCredentials());
 
 app.UseAuthorization();
-
 app.MapControllers();
-
+app.UseMiddleware<EventsExceptionHandlerMiddleaware>();
 app.Run();

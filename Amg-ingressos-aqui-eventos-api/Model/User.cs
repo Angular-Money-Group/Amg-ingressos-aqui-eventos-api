@@ -18,6 +18,8 @@ namespace Amg_ingressos_aqui_eventos_api.Model
             UserConfirmation = new UserConfirmation();
             Password = string.Empty;
             IdAssociate = string.Empty;
+            Sex = string.Empty;
+            BirthDate = string.Empty;
         }
 
         /// <summary>
@@ -103,5 +105,16 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonElement("UpdateAt")]
         [JsonPropertyName("UpdateAt")]
         public DateTime? UpdateAt { get; set; }
+         /// <summary>
+        /// Sexo
+        /// </summary>
+        [JsonPropertyName("sex")]
+        public string Sex { get; set; }
+
+        /// <summary>
+        /// data nacimento
+        /// </summary>
+        [JsonPropertyName("birthDate")]
+        public string BirthDate { get; set; }
     }
 }

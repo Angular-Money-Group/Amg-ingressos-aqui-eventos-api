@@ -33,10 +33,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 idOrganizer.ValidateIdMongo();
 
-                List<EventComplet> dataTicket = await _eventRepository.GetAllEventsWithTickets<EventComplet>(string.Empty, idOrganizer);
+                List<EventComplet> dataTicket = await _eventRepository.GetFilterWithTickets<EventComplet>(string.Empty, idOrganizer);
                 var dataDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTicket);
 
-                List<EventComplet> dataTransaction = await _eventRepository.GetAllEventsWithTransactions<EventComplet>(string.Empty, idOrganizer);
+                List<EventComplet> dataTransaction = await _eventRepository.GetFilterWithTransactions<EventComplet>(string.Empty, idOrganizer);
                 var dataTransactionDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTransaction);
                 
                 var ReportTransactionsDto = ProcessEvent(dataDto, dataTransactionDto, string.Empty);
@@ -72,10 +72,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idEvent.ValidateIdMongo();
 
                 
-                List<EventComplet> dataTickets = await _eventRepository.GetAllEventsWithTickets<EventComplet>(idEvent, string.Empty);
+                List<EventComplet> dataTickets = await _eventRepository.GetFilterWithTickets<EventComplet>(idEvent, string.Empty);
                 var dataTicketsDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTickets);
 
-                List<EventComplet> dataTransactions = await _eventRepository.GetAllEventsWithTransactions<EventComplet>(idEvent, idOrganizer);
+                List<EventComplet> dataTransactions = await _eventRepository.GetFilterWithTransactions<EventComplet>(idEvent, idOrganizer);
                 var dataTransactionDto = new EventCompletWithTransactionDto().ModelListToDtoList(dataTransactions);
                 
                 var ReportTransactionsDto = ProcessEvent(dataTicketsDto, dataTransactionDto, idVariant);

@@ -206,13 +206,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 await UpdateTicketStatusAsync(courtesyTicket.Quantity, ticketsRow, rowId);
 
-                var lotToGenerateTicket = await _lotRepository.GetLotByIdVariant<Model.Lot>(
+                var lotToGenerateTicket = await _lotRepository.GetLotByIdVariant<Lot>(
                     courtesyTicket.IdVariant
                 );
-                var variantToGenerateTicket = await _variantRepository.FindById<Model.Variant>(
+                var variantToGenerateTicket = await _variantRepository.GetById<Variant>(
                     courtesyTicket.IdVariant
                 );
-                var eventToGenerateTicket = await _eventRepository.GetByIdVariant<Model.Event>(
+                var eventToGenerateTicket = await _eventRepository.GetById<Event>(
                     variantToGenerateTicket[0].IdEvent
                 );
 
@@ -268,11 +268,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             variantId
                         );
                         var variantToGenerateTicket =
-                            await _variantRepository.FindById<Model.Variant>(variantId);
+                            await _variantRepository.GetById<Variant>(variantId);
                         var eventToGenerateTicket =
-                            await _eventRepository.GetByIdVariant<Model.Event>(
-                                variantToGenerateTicket[0].IdEvent
-                            );
+                            await _eventRepository.GetById<Event>(variantToGenerateTicket[0].IdEvent);
 
                         if (t.TicketId != null)
                         {
@@ -440,7 +438,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             remainingCourtesy.Quantity -= CourtesyTicket.Quantity;
 
-            _eventRepository.Edit<Event>(eventToGenerateTicket.Id, editEvent);
+            _eventRepository.Edit(eventToGenerateTicket.Id, editEvent);
         }
 
         private Ticket CreateTicketToSend(string idUser, Lot lotToGenerateTicket)
