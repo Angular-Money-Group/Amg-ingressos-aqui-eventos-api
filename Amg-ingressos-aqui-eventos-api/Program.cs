@@ -44,7 +44,7 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IVariantRepository, VariantRepository<object>>();
 builder.Services.AddScoped<ILotRepository, LotRepository>();
-builder.Services.AddScoped<ITicketRepository, TicketRepository<object>>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository<object>>();
 builder.Services.AddScoped<IEntranceRepository, EntranceRepository<object>>();
 //infra

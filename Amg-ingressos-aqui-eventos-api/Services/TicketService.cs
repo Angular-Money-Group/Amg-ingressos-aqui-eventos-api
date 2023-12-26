@@ -52,19 +52,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new SaveException("Valor do Ingresso é Obrigatório.");
 
                 ticket.IdLot.ValidateIdMongo();
-                _messageReturn.Data = await _ticketRepository.SaveAsync<object>(ticket!);
-            }
-            catch (SaveException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
+                _messageReturn.Data = await _ticketRepository.Save(ticket!);
             }
             catch (Exception ex)
             {
@@ -81,18 +69,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _ticketRowRepository.GetCourtesyStatusById<StatusTicketsRow>(id);
             }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia"));
@@ -108,18 +84,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 _messageReturn.Data = await _ticketRepository.SaveMany(listTicket);
             }
-            catch (SaveException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SaveManyAsync), "Cortesia"), listTicket);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SaveManyAsync), "Cortesia"), listTicket);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SaveManyAsync), "Cortesia"), listTicket);
@@ -133,13 +97,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                _messageReturn.Data = await _ticketRepository.DeleteMany<object>(tickets);
-            }
-            catch (DeleteException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "tickets"), tickets);
-                _messageReturn.Message = ex.Message;
-                throw;
+                _messageReturn.Data = await _ticketRepository.DeleteMany(tickets);
             }
             catch (Exception ex)
             {
@@ -155,13 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 lotId.ValidateIdMongo();
-                _messageReturn.Data = await _ticketRepository.DeleteByLot<object>(lotId);
-            }
-            catch (DeleteException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteTicketsByLot), "ticket"), lotId);
-                _messageReturn.Message = ex.Message;
-                throw;
+                _messageReturn.Data = await _ticketRepository.DeleteByLot(lotId);
             }
             catch (Exception ex)
             {
@@ -172,7 +124,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public MessageReturn SendCourtesyTickets(GenerateCourtesyTicketDto courtesyTicket)
+        public MessageReturn SendCourtesyTickets(CourtesyTicketDto courtesyTicket)
         {
             _messageReturn = new MessageReturn();
             try
@@ -200,7 +152,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             return _messageReturn;
         }
 
-        public async Task ProcessEmailSending(GenerateCourtesyTicketDto courtesyTicket, string rowId, StatusTicketsRow ticketsRow)
+        public async Task ProcessEmailSending(CourtesyTicketDto courtesyTicket, string rowId, StatusTicketsRow ticketsRow)
         {
             try
             {
@@ -274,7 +226,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                         if (t.TicketId != null)
                         {
-                            var ticket = await _ticketRepository.GetById<Ticket>(t.TicketId);
+                            var ticket = await _ticketRepository.GetById(t.TicketId);
 
                             var ticketEventDataDto = CreateTicketEventDataDto(
                                 t.TicketId,
@@ -331,7 +283,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         }
 
         private async Task<bool> SendEmailAndUpdateStatus(
-            GenerateCourtesyTicketDto courtesyTicket,
+            CourtesyTicketDto courtesyTicket,
             Lot lotToGenerateTicket,
             Variant variantToGenerateTicket,
             Event eventToGenerateTicket,
@@ -401,7 +353,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         }
 
         private bool HasSufficientCourtesyRemaining(
-            GenerateCourtesyTicketDto courtesyTicket,
+            CourtesyTicketDto courtesyTicket,
             Event eventToGenerateTicket
         )
         {
@@ -415,7 +367,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private void UpdateEventCourtesyAndRemainingQuantity(
             Event eventToGenerateTicket,
             Variant variantToGenerateTicket,
-            GenerateCourtesyTicketDto CourtesyTicket,
+            CourtesyTicketDto CourtesyTicket,
             string rowId
         )
         {
@@ -568,18 +520,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var list = new TicketCompletDto().ModelListToDtoList(data);
                 _messageReturn.Data = list.Where(x => x.IsSold);
             }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
@@ -598,18 +538,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var list = new TicketCompletDto().ModelListToDtoList(data);
                 _messageReturn.Data = list.Where(x => x.IsSold && x.Event.Id == idEvent);
             }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
@@ -627,18 +555,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var ticket = new Ticket() { IdLot = idLot };
                 _messageReturn.Data = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
             }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsByLot), "ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsByLot), "ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsByLot), "ticket"));
@@ -654,20 +570,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 idLot.ValidateIdMongo();
                 var ticket = new Ticket() { IdLot = idLot };
-                var result = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
+                var result = await _ticketRepository.GetTickets<Ticket>(ticket);
                 _messageReturn.Data = result.Where(i => i.IdUser == null).ToList();
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), "ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), "ticket"));
-                _messageReturn.Message = ex.Message;
-                throw;
             }
             catch (Exception ex)
             {
@@ -685,19 +589,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var ticket = new Ticket() { Id = id };
                 var ticketResult = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
-                _messageReturn.Data = ticketResult?.FirstOrDefault() ?? new Ticket();
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), id);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), id);
-                _messageReturn.Message = ex.Message;
-                throw;
+                _messageReturn.Data = ticketResult?.FirstOrDefault() ?? new List<Ticket>();
             }
             catch (Exception ex)
             {
@@ -716,18 +608,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var data = await _ticketRepository.GetByIdWithDataUser<TicketComplet>(id);
                 _messageReturn.Data = data.Any() ? new TicketUserDto().ModelToDto(data[0]) : new TicketUserDto();
             }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
@@ -745,18 +625,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var data = await _ticketRepository.GetByIdWithDataEvent<TicketComplet>(id);
                 _messageReturn.Data = new TicketCompletDto().ModelToDto(data[0]);
             }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
@@ -771,19 +639,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = await _ticketRepository.EditAsync<object>(id, ticket);
-            }
-            catch (EditException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ticket);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ticket);
-                _messageReturn.Message = ex.Message;
-                throw;
+                _messageReturn.Data = await _ticketRepository.Edit(id, ticket);
             }
             catch (Exception ex)
             {

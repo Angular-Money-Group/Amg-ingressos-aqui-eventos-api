@@ -177,7 +177,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 };
 
                 //3- Da baixa (queima) no qrcode (ticket), colocando ele como utilizado
-                await _ticketRepository.BurnTicketsAsync<Ticket>(entranceDTO.IdTicket, (int)Enum.EnumStatusTicket.USADO);
+                await _ticketRepository.BurnTicketsAsync(entranceDTO.IdTicket, (int)Enum.EnumStatusTicket.USADO);
                 #endregion
 
                 _messageReturn.Data = eventQrReadsDto;
