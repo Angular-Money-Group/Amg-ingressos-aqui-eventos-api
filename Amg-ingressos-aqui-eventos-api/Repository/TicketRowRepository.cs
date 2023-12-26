@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pResult.FirstOrDefault() ?? throw new GetException("Cortesia não encontrada.");
         }
 
-        public async Task<object> EditTicketsRowAsync(string id, StatusTicketsRow ticketRow)
+        public async Task<StatusTicketsRow> EditTicketsRowAsync(string id, StatusTicketsRow ticketRow)
         {
             if (id == null || string.IsNullOrEmpty(id))
                 throw new GetException("id statusTicketRow é obrigatório");
