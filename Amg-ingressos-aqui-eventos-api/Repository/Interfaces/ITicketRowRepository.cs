@@ -4,8 +4,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
 {
     public interface ITicketRowRepository 
     {
-        Task<string> SaveRowAsync<T>(StatusTicketsRow ticketRow);
-        Task<object> EditTicketsRowAsync<T>(string id, StatusTicketsRow ticketRow);
-        Task<StatusTicketsRow> GetCourtesyStatusById<T>(string id);
+        Task<string> SaveRowAsync(StatusTicketsRow ticketRow);
+        Task<object> EditTicketsRowAsync(string id, StatusTicketsRow ticketRow);
+        Task<StatusTicketsRow> GetCourtesyStatusById(string id);
     }
 }
