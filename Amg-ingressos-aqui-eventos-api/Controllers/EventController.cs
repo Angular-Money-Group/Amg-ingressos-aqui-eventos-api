@@ -32,7 +32,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IActionResult> GetEventsAsync(FilterOptions? filters, Pagination paginationOptions)
+        public async Task<IActionResult> GetEventsAsync(FilterOptions filters, Pagination paginationOptions)
         {
             if (!ModelState.IsValid)
                 throw new RuleException("Dados inválidos");
@@ -61,7 +61,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpGet]
         [Route("Card")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetCardEventsAsync(FilterOptions? filters, Pagination paginationOptions)
+        public async Task<IActionResult> GetCardEventsAsync(FilterOptions filters, Pagination paginationOptions)
         {
 
             if (!ModelState.IsValid)
@@ -171,7 +171,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         public async Task<IActionResult> GetByNameAsync(string name)
         {
             FilterOptions filters = new FilterOptions() { Name = name };
-            var result = await _eventService.GetEventsAsync(filters, null);
+            var result = await _eventService.GetEventsAsync(filters, new Pagination());
             if (result.Message != null && result.Message.Any())
             {
                 _logger.LogInformation(result.Message);

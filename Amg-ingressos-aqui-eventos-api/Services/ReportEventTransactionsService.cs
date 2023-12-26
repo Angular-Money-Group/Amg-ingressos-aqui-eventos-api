@@ -182,7 +182,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             //lista de transacao para report
             var listTransaction = from transactionJoin in listTransactionTicktes
                                   join transactions in listTransactions
-                                  on transactionJoin.IdTransaction equals transactions._id
+                                  on transactionJoin.IdTransaction equals transactions.Id
                                   select transactions;
             //filtro de transacoes finalizadas
             listTransaction = listTransaction.Where(x => x.PaymentMethod != null && x.Stage == Enum.EnumStageTransaction.Finished);

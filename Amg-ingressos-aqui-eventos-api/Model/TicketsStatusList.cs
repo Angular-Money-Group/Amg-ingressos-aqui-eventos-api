@@ -18,6 +18,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         [JsonProperty("_id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
         [BsonElement("Email")]

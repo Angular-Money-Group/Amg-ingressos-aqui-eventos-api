@@ -17,7 +17,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> GetByIdWithDataEvent(string id);
         Task<MessageReturn> DeleteTicketsByLot(string lotId);
         Task<MessageReturn> SaveManyAsync(List<Ticket> listTicket);
-        MessageReturn SendCourtesyTickets(GenerateCourtesyTicketDto courtesyTicket);
+        MessageReturn SendCourtesyTickets(CourtesyTicketDto courtesyTicket);
         MessageReturn ReSendCourtesyTickets(string rowId, string variantId);
     }
 }

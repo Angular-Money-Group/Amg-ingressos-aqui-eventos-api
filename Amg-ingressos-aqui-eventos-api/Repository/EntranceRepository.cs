@@ -9,7 +9,7 @@ using MongoDB.Driver;
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
-    public class EntranceRepository<T> : IEntranceRepository
+    public class EntranceRepository : IEntranceRepository
     {
         private readonly IMongoCollection<User> _userCollection;
         private readonly IMongoCollection<ReadHistory> _readHistoryCollection;
@@ -25,7 +25,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _eventQrCollection = dbEventQrReads.GetConnection("eventqrreads");
         }
 
-        public async Task<User> GetUserColabData<T2>(string idUser)
+        public async Task<User> GetUserColabData(string idUser)
         {
             if (idUser == null || string.IsNullOrEmpty(idUser.ToString()))
                 throw new GetException("id é obrigatório");
@@ -35,17 +35,16 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return user;
         }
 
-        public async Task<object> SaveReadyHistories<T2>(object ticket)
+        public async Task<ReadHistory> SaveReadyHistories(object ticket)
         {
 
             var data = ticket as ReadHistory ?? throw new RuleException("Ticket é obrigatorio");
             await _readHistoryCollection.InsertOneAsync(data);
-            return data.Id;
+            return data;
         }
 
-        public async Task<EventQrReads> GetEventQrReads<T2>(string idEvent, string idUser, DateTime initialDate)
+        public async Task<EventQrReads> GetEventQrReads(string idEvent, string idUser, DateTime initialDate)
         {
-            EventQrReads eventQrs = new EventQrReads();
             //Monta lista de campos para find na collection
             var filter = Builders<EventQrReads>.Filter.And(
                 Builders<EventQrReads>.Filter.Where(eventQr => eventQr.IdColab.Contains(idUser)),
@@ -54,12 +53,12 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 Builders<EventQrReads>.Filter.Lt(eventQr => eventQr.InitialDate, initialDate.Date.AddDays(1).AddSeconds(-1))
                 );
 
-            eventQrs = await _eventQrCollection.Find(filter).FirstOrDefaultAsync();
+            var eventQrs = await _eventQrCollection.Find(filter).FirstOrDefaultAsync();
 
             return eventQrs;
         }
 
-        public async Task<EventQrReads> SaveEventQrReads<T2>(object eventQr)
+        public async Task<EventQrReads> SaveEventQrReads(object eventQr)
         {
 
             var data = eventQr as EventQrReads ?? throw new RuleException("EventQrRead não pode ser null");
@@ -68,7 +67,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return data;
         }
 
-        public async Task<EventQrReads> EditEventQrReads<T2>(object eventQr)
+        public async Task<EventQrReads> EditEventQrReads(object eventQr)
         {
             //tipa o objeto
             var eventLocal = eventQr as EventQrReads ?? throw new EditException("EventQrRead é obrigatório");

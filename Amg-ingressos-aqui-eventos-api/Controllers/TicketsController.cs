@@ -1,4 +1,3 @@
-using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
@@ -30,22 +29,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("user/{idUser}")]
         public async Task<IActionResult> GetByUser([FromRoute] string idUser)
         {
-            try
-            {
-                var result = await _ticketService.GetByUser(idUser);
+            var result = await _ticketService.GetByUser(idUser);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByUserAndEvent),"Ticket"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByUserAndEvent),"Ticket"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
         /// <summary>
         /// Busca todos os ingressos do usuário para o evento
@@ -57,24 +48,16 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("user/{idUser}/event/{idEvent}")]
-        public async Task<IActionResult> GetByUserAndEvent([FromRoute] string idUser,[FromRoute] string idEvent)
+        public async Task<IActionResult> GetByUserAndEvent([FromRoute] string idUser, [FromRoute] string idEvent)
         {
-            try
-            {
-                var result = await _ticketService.GetByUserAndEvent(idUser,idEvent);
+            var result = await _ticketService.GetByUserAndEvent(idUser, idEvent);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByUserAndEvent),"Ticket"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByUserAndEvent),"Ticket"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -88,23 +71,15 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("lote/{idLote}")]
         public async Task<IActionResult> GetRemainingByLot([FromRoute] string idLote)
         {
-            try
-            {
-                var result = await _ticketService.GetRemainingByLot(idLote);
+            var result = await _ticketService.GetRemainingByLot(idLote);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetRemainingByLot),"Tickets"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetRemainingByLot),"Tickets"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -118,23 +93,15 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            try
-            {
-                var result = await _ticketService.GetById(id);
+            var result = await _ticketService.GetById(id);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetById),"Ticket"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetById),"Ticket"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -148,23 +115,15 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("{id}/datauser")]
         public async Task<IActionResult> GetByIdWithDataUser([FromRoute] string id)
         {
-            try
-            {
-                var result = await _ticketService.GetByIdWithDataUser(id);
+            var result = await _ticketService.GetByIdWithDataUser(id);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByIdWithDataUser),"Ticket(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByIdWithDataUser),"Ticket(s)"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -178,23 +137,15 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("{id}/dataevent")]
         public async Task<IActionResult> GetByIdWithDataEvent([FromRoute] string id)
         {
-            try
-            {
-                var result = await _ticketService.GetByIdWithDataEvent(id);
+            var result = await _ticketService.GetByIdWithDataEvent(id);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByIdWithDataEvent),"Ticket(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController,this.GetType().Name, nameof(GetByIdWithDataEvent),"Ticket(s)"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -207,28 +158,17 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> EditAsync(
-            [FromRoute] string id,
-            [FromBody] Ticket ticket
-        )
+        public async Task<IActionResult> EditAsync([FromRoute] string id, [FromBody] Ticket ticket)
         {
-            try
-            {
-                var result = await _ticketService.EditAsync(id, ticket);
+            var result = await _ticketService.EditAsync(id, ticket);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditAsync),"Ticket(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditAsync),"Ticket(s)"));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -241,22 +181,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveAsync([FromBody] Ticket ticket)
         {
-            try
+            var result = await _ticketService.SaveAsync(ticket);
+            if (result.Message != null && result.Message.Any())
             {
-                var result = await _ticketService.SaveAsync(ticket);
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
+                _logger.LogInformation(result.Message);
+                return NoContent();
+            }
 
-                return Ok(result.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(SaveAsync),"Ticket(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(SaveAsync),"Ticket(s)"));
-            }
+            return Ok(result.Message);
         }
 
         /// <summary>
@@ -268,21 +200,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [HttpPost]
         [Route("sendCourtesy")]
-        public IActionResult SendCourtesyTickets(
-            [FromBody] GenerateCourtesyTicketDto courtesyTicketDto
-        )
+        public IActionResult SendCourtesyTickets([FromBody] CourtesyTicketDto courtesyTicketDto)
         {
-            try
-            {
-                var _messageReturn = _ticketService.SendCourtesyTickets(courtesyTicketDto);
-                _messageReturn.Data = "Enviando courtesias";
-                return Ok(_messageReturn);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.SendController, this.GetType().Name, nameof(SendCourtesyTickets), "Cortesia(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.SendController, this.GetType().Name, nameof(SendCourtesyTickets), "Cortesia(s)"));
-            }
+            var _messageReturn = _ticketService.SendCourtesyTickets(courtesyTicketDto);
+            _messageReturn.Data = "Enviando courtesias";
+            return Ok(_messageReturn);
         }
 
         /// <summary>
@@ -297,17 +219,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("reSendCourtesy")]
         public IActionResult ReSendCourtesyTickets(string rowTicketId, string variantId)
         {
-            try
-            {
-                var result = _ticketService.ReSendCourtesyTickets(rowTicketId, variantId);
-                result.Data = "Enviando courtesias";
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.SendController, this.GetType().Name, nameof(ReSendCourtesyTickets), "Cortesia(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.SendController, this.GetType().Name, nameof(ReSendCourtesyTickets), "Cortesia(s)"));
-            }
+            var result = _ticketService.ReSendCourtesyTickets(rowTicketId, variantId);
+            result.Data = "Enviando courtesias";
+            return Ok(result);
         }
 
         /// <summary>
@@ -321,16 +235,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("courtesy/{id}")]
         public async Task<IActionResult> GetCourtesyStatusById([FromRoute] string id)
         {
-            try
-            {
-                var result = await _ticketService.GetCourtesyStatusById(id);
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetController, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia(s)"));
-                return StatusCode(500, string.Format(MessageLogErrors.GetController, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia(s)"));
-            }
+            var result = await _ticketService.GetCourtesyStatusById(id);
+            return Ok(result.Data);
         }
     }
 }

@@ -31,38 +31,25 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpPost]
         public async Task<IActionResult> EntranceAsync([FromBody] EntranceDto entrance)
         {
-            try
+            if (entrance == null)
+                return StatusCode(400, MessageLogErrors.ObjectInvalid);
+            else
             {
-                if (entrance == null)
-                    return StatusCode(400, MessageLogErrors.ObjectInvalid);
-                else
-                {
-                    if (string.IsNullOrEmpty(entrance.IdTicket))
-                        return StatusCode(404, "Ticket não foi informado");
-                    if (string.IsNullOrEmpty(entrance.IdColab))
-                        return StatusCode(404, "Colaborador não foi informado");
-                }
-
-                var result = await _entranceService.EntranceTicket(entrance);
-
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return StatusCode(404, result.Message);
-                }
-
-                return Ok(result.Data);
+                if (string.IsNullOrEmpty(entrance.IdTicket))
+                    return StatusCode(404, "Ticket não foi informado");
+                if (string.IsNullOrEmpty(entrance.IdColab))
+                    return StatusCode(404, "Colaborador não foi informado");
             }
-            catch (RuleException ex)
+
+            var result = await _entranceService.EntranceTicket(entrance);
+
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
-                return StatusCode(400, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
+                _logger.LogInformation(result.Message);
+                return StatusCode(404, result.Message);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
-                return StatusCode(500, string.Format(MessageLogErrors.SaveController,this.GetType().Name, nameof(EntranceAsync),"Entrance"));
-            }
+
+            return Ok(result.Data);
         }
     }
 }

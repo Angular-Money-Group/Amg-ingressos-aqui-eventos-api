@@ -10,7 +10,7 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
-    public class TicketRowRepository<T> : ITicketRowRepository
+    public class TicketRowRepository : ITicketRowRepository
     {
         private readonly IMongoCollection<StatusTicketsRow> _ticketStatusCollection;
 
@@ -21,7 +21,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _ticketStatusCollection = dbConnectionCourtesy.GetConnection("statusCourtesyTickets");
         }
 
-        public async Task<string> SaveRowAsync<T1>(StatusTicketsRow ticketRow)
+        public async Task<string> SaveRowAsync(StatusTicketsRow ticketRow)
         {
             if (ticketRow == null || string.IsNullOrEmpty(ticketRow.ToString()))
                 throw new SaveException("TicketRow é obrigatório");
@@ -30,7 +30,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return ticketRow.Id;
         }
 
-        public async Task<StatusTicketsRow> GetCourtesyStatusById<T1>(string id)
+        public async Task<StatusTicketsRow> GetCourtesyStatusById(string id)
         {
             if (id == null || string.IsNullOrEmpty(id))
                 throw new GetException("id ticketRow é obrigatório");
@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pResult.FirstOrDefault() ?? throw new GetException("Cortesia não encontrada.");
         }
 
-        public async Task<object> EditTicketsRowAsync<T1>(string id, StatusTicketsRow ticketRow)
+        public async Task<StatusTicketsRow> EditTicketsRowAsync(string id, StatusTicketsRow ticketRow)
         {
             if (id == null || string.IsNullOrEmpty(id))
                 throw new GetException("id statusTicketRow é obrigatório");

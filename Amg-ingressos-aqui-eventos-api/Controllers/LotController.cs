@@ -1,5 +1,3 @@
-using Amg_ingressos_aqui_eventos_api.Consts;
-using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +7,11 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     [Route("v1/lot")]
     public class LotController : ControllerBase
     {
-        private readonly ILogger<LotController> _logger;
-        private readonly ILotService _LotService;
+        private readonly ILotService _lotService;
 
-        public LotController(ILogger<LotController> logger, ILotService LotService)
+        public LotController(ILotService lotService)
         {
-            _logger = logger;
-            _LotService = LotService;
+            _lotService = lotService;
         }
 
         /// <summary>
@@ -27,25 +23,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>500 Erro inesperado</returns>
         [Route("{id}")]
         [HttpPatch]
-        public async Task<IActionResult> EditLotAsync([FromRoute] string id, [FromBody]Lot lotEdit)
+        public async Task<IActionResult> EditLotAsync([FromRoute] string id, [FromBody] Lot lotEdit)
         {
-            try
-            {
-                var result = await _LotService.EditAsync(id, lotEdit);
-                return Ok(result.Data);
-            }
-            catch (DeleteException ex)
-            {
-                _logger.LogInformation(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditLotAsync),"Lote"));
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditLotAsync),"Lote"));
-                return StatusCode(500, string.Format(MessageLogErrors.EditController,this.GetType().Name, nameof(EditLotAsync),"Lote"));
-            }
+
+            var result = await _lotService.EditAsync(id, lotEdit);
+            return Ok(result.Data);
         }
-        
+
         /// <summary>
         /// Editar Lot 
         /// </summary>
@@ -56,21 +40,9 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteLotAsync([FromRoute] string id)
         {
-            try
-            {
-                var result = await _LotService.DeleteAsync(id);
-                return Ok(result.Data);
-            }
-            catch (DeleteException ex)
-            {
-                _logger.LogInformation(ex, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteLotAsync),"Lote"));
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteLotAsync),"Lote"));
-                return StatusCode(500, string.Format(MessageLogErrors.DeleteController,this.GetType().Name, nameof(DeleteLotAsync),"Lote"));
-            }
+
+            var result = await _lotService.DeleteAsync(id);
+            return Ok(result.Data);
         }
     }
 }

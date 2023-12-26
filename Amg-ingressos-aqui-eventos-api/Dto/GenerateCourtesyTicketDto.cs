@@ -1,8 +1,8 @@
 namespace Amg_ingressos_aqui_eventos_api.Dto
 {
-    public class GenerateCourtesyTicketDto
+    public class CourtesyTicketDto
     {
-        public GenerateCourtesyTicketDto(){
+        public CourtesyTicketDto(){
             Email = string.Empty;
             IdVariant = string.Empty;
         }

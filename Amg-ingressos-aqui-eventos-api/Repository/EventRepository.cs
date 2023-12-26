@@ -102,7 +102,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             var filters = new List<FilterDefinition<Event>>();
             Type t = eventModel.GetType();
             PropertyInfo[] pi = t.GetProperties();
-            var propertys = pi.Where(p => p.GetValue(eventModel) != default).Select(x => new { Name = x.Name, Valor = x.GetValue(eventModel) });
 
             foreach (PropertyInfo p in pi)
             {

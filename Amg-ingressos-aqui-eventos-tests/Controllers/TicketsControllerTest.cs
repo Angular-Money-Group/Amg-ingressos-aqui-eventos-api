@@ -49,7 +49,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var userID = "644178cb940d123bafb3a4ae";
             var messageReturn = FactoryTicket.ListSimpleTicket();
             _ticketRepositoryMock
-                .Setup(x => x.GetTickets<object>(It.IsAny<Ticket>()))
+                .Setup(x => x.GetTickets<Ticket>(It.IsAny<Ticket>()))
                 .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
             // Act
@@ -68,7 +68,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var lotID = "6451b37d90737f442d2b357a";
             var messageReturn = FactoryTicket.ListSimpleTicketWithoutIdUser();
             _ticketRepositoryMock
-                .Setup(x => x.GetTickets<object>(It.IsAny<Ticket>()))
+                .Setup(x => x.GetTickets<Ticket>(It.IsAny<Ticket>()))
                 .Returns(Task.FromResult(messageReturn as List<Ticket>)!);
 
             // Act

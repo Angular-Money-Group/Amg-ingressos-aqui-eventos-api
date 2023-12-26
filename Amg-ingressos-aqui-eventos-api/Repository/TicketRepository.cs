@@ -11,7 +11,7 @@ using Amg_ingressos_aqui_eventos_api.Consts;
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
     [ExcludeFromCodeCoverage]
-    public class TicketRepository<T> : ITicketRepository
+    public class TicketRepository : ITicketRepository
     {
         private readonly IMongoCollection<Ticket> _ticketCollection;
 
@@ -20,7 +20,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _ticketCollection = dbConnection.GetConnection("tickets");
         }
 
-        public async Task<List<T1>> GetByUser<T1>(string idUser)
+        public async Task<List<T>> GetByUser<T>(string idUser)
         {
             BsonDocument documentFilter = new BsonDocument { { "IdUser", ObjectId.Parse(idUser) } };
             var ticket = await _ticketCollection.Aggregate()
@@ -28,44 +28,41 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("lots", "IdLot", "_id", "Lots")
                     .Lookup("variants", "Lots.IdVariant", "_id", "Variants")
                     .Lookup("events", "Variants.IdEvent", "_id", "Events")
-                    .As<T1>()
+                    .As<T>()
                     .ToListAsync();
 
             return ticket;
         }
 
-        public async Task<object> SaveAsync<T1>(object ticket)
+        public async Task<Ticket> Save(Ticket ticket)
         {
-            var data = ticket as Ticket ??
-                throw new SaveException(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Ticket(s)"));
-
+            var data = ticket;
             await _ticketCollection.InsertOneAsync(data);
-            return data.Id;
+            return ticket;
         }
 
-        public async Task<object> DeleteMany<T1>(List<string> listId)
+        public async Task<bool> DeleteMany(List<string> listId)
         {
             var filtro = Builders<Ticket>.Filter.In("_id", listId);
             var result = await _ticketCollection.DeleteManyAsync(filtro);
 
-            if (result.DeletedCount >= 1)
-                return "Ingressos Deletado";
-            else
+            if (result.DeletedCount <= 0)
                 throw new DeleteException(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteMany), "Ticket(s)"));
+            return true;
+
         }
 
-        public async Task<object> DeleteByLot<T1>(string idLot)
+        public async Task<bool> DeleteByLot(string idLot)
         {
             var filtro = Builders<Ticket>.Filter.Eq("IdLot", idLot);
             var result = await _ticketCollection.DeleteManyAsync(filtro);
 
-            if (result.DeletedCount >= 1)
-                return "Ingressos Deletado";
-            else
+            if (result.DeletedCount <= 0)
                 throw new DeleteException(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteByLot), "Ticket(s)"));
+            return true;
         }
 
-        public async Task<List<Ticket>> GetTickets<T1>(Ticket ticket)
+        public async Task<List<T>> GetTickets<T>(Ticket ticket)
         {
             var builder = Builders<Ticket>.Filter;
             var filter = builder.Empty;
@@ -80,13 +77,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             if (!string.IsNullOrEmpty(ticket.IdUser))
                 filter &= builder.Eq(x => x.IdUser, null);
 
-            var result = await _ticketCollection.FindAsync(filter).Result.ToListAsync()
+            var result = await _ticketCollection.Find(filter)
+            .As<T>()
+            .ToListAsync()
             ?? throw new GetException("Ticket não encontrado");
 
             return result;
         }
 
-        public async Task<List<string>> GetTicketsByLot<T1>(string idLot)
+        public async Task<List<string>> GetTicketsByLot(string idLot)
         {
             var filter = Builders<Ticket>.Filter.Eq("IdLot", idLot);
             var tickets = await _ticketCollection.Find(filter).ToListAsync();
@@ -96,7 +95,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return result;
         }
 
-        public async Task<Ticket> GetById<T1>(string id)
+        public async Task<Ticket> GetById(string id)
         {
             var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
             var tickets = await _ticketCollection.Find(filter).FirstOrDefaultAsync();
@@ -106,37 +105,19 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return result;
         }
 
-        public async Task<object> EditAsync<T1>(string id, Ticket ticket)
-        {
-            var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
-            var update = Builders<Ticket>.Update
-                .Set("IdUser", ticket.IdUser)
-                .Set("Value", ticket.Value)
-                .Set("isSold", ticket.IsSold)
-                .Set("Position", ticket.Position)
-                .Set("QrCode", ticket.QrCode)
-                .Set("Status", ticket.Status)
-                .Set("IdColab", ticket.IdColab);
-
-            // Busca os tickets que correspondem ao filtro
-            await _ticketCollection.UpdateOneAsync(filter, update);
-
-            return await _ticketCollection.Find(filter).ToListAsync();
-        }
-
-        public async Task<List<T1>> GetByIdWithDataUser<T1>(string id)
+        public async Task<List<T>> GetByIdWithDataUser<T>(string id)
         {
             BsonDocument documentFilter = new BsonDocument { { "_id", ObjectId.Parse(id) } };
 
             var ticket = await _ticketCollection.Aggregate()
                     .Match(documentFilter)
                     .Lookup("user", "idUser", "_id", "User")
-                    .As<T1>()
+                    .As<T>()
                     .ToListAsync();
             return ticket;
         }
 
-        public async Task<List<T1>> GetByIdWithDataEvent<T1>(string id)
+        public async Task<List<T>> GetByIdWithDataEvent<T>(string id)
         {
             BsonDocument documentFilter = new BsonDocument { { "_id", ObjectId.Parse(id) } };
             var tickets = await _ticketCollection.Aggregate()
@@ -144,18 +125,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("lots", "IdLot", "_id", "Lots")
                     .Lookup("variants", "Lots.IdVariant", "_id", "Variants")
                     .Lookup("events", "Variants.IdEvent", "_id", "Events")
-                    .As<T1>()
+                    .As<T>()
                     .ToListAsync();
             return tickets;
         }
 
-        public async Task<object> SaveMany(List<Ticket> lstTicket)
+        public async Task<bool> SaveMany(List<Ticket> lstTicket)
         {
             await _ticketCollection.InsertManyAsync(lstTicket);
-            return "Ok";
+            return true;
         }
 
-        public async Task<object> BurnTicketsAsync<T1>(string id, int status)
+        public async Task<bool> BurnTicketsAsync(string id, int status)
         {
             //Where do update
             var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
@@ -165,7 +146,48 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
             //Executa o comando
             await _ticketCollection.UpdateOneAsync(filter, update);
-            return new object();
+            return true;
+        }
+
+        public async Task<List<Ticket>> GetAll()
+        {
+            var pResult = await _ticketCollection.Find(_ => true)
+                .As<Ticket>()
+                .ToListAsync();
+
+            return pResult;
+        }
+
+        public Task<List<Ticket>> GetByFilter(Dictionary<string, string> filters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> Edit(string id, Ticket model)
+        {
+            var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<Ticket>.Update
+                .Set("IdUser", model.IdUser)
+                .Set("Value", model.Value)
+                .Set("isSold", model.IsSold)
+                .Set("Position", model.Position)
+                .Set("QrCode", model.QrCode)
+                .Set("Status", model.Status)
+                .Set("IdColab", model.IdColab);
+
+            // Busca os tickets que correspondem ao filtro
+            await _ticketCollection.UpdateOneAsync(filter, update);
+            return true;
+        }
+
+        public async Task<bool> Delete(string id)
+        {
+            var filter = Builders<Ticket>.Filter.Eq(l => l.Id, id.ToString());
+            var deleteResult = await _ticketCollection.DeleteOneAsync(filter);
+            if (deleteResult.DeletedCount == 1)
+                return true;
+            else
+                throw new DeleteException("algo deu errado ao deletar");
         }
     }
 }

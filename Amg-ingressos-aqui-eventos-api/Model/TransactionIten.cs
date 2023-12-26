@@ -1,12 +1,14 @@
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Model
 {
     public class TransactionIten
     {
         public TransactionIten(){
-            _id = string.Empty;
+            Id = string.Empty;
             IdTransaction = string.Empty;
             IdTicket = string.Empty;
             TicketPrice = string.Empty;
@@ -14,7 +16,9 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
+        [JsonPropertyName("id")]
+        [JsonProperty("_id")]
+        public string Id { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public string IdTransaction { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
