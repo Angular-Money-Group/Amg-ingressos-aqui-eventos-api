@@ -46,7 +46,7 @@ builder.Services.AddScoped<IVariantRepository, VariantRepository>();
 builder.Services.AddScoped<ILotRepository, LotRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository>();
-builder.Services.AddScoped<IEntranceRepository, EntranceRepository<object>>();
+builder.Services.AddScoped<IEntranceRepository, EntranceRepository>();
 //infra
 builder.Services.AddScoped<IDbConnection<Event>, DbConnection<Event>>();
 builder.Services.AddScoped<IDbConnection<Variant>, DbConnection<Variant>>();
