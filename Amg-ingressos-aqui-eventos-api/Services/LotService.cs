@@ -16,8 +16,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly ILogger<LotService> _logger;
 
         public LotService(
-            ILotRepository lotRepository, 
-            ITicketService ticketService, 
+            ILotRepository lotRepository,
+            ITicketService ticketService,
             ILogger<LotService> logger)
         {
             _lotRepository = lotRepository;
@@ -32,8 +32,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 ValidateModelSave(lot);
                 lot.Status = Enum.EnumStatusLot.Open;
-                var lotModel= new LotWithTicketDto().DtoToModel(lot);
-                await _lotRepository.Save<object>(lotModel);
+                var lotModel = new LotWithTicketDto().DtoToModel(lot);
+                await _lotRepository.Save(lotModel);
                 List<Ticket> listTicket = new List<Ticket>();
                 for (int i = 0; i < lot.TotalTickets; i++)
                 {
@@ -47,12 +47,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
 
                 _ = _ticketService.SaveManyAsync(listTicket);
-            }
-            catch (SaveException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Lote"), lot);
-                _ = DeleteAsync(lot.Id ?? string.Empty);
-                _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
@@ -70,7 +64,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 listLot.ForEach(i => { ValidateModelSave(i); });
                 var listLotModel = new LotWithTicketDto().ListDtoToListModel(listLot);
-                _messageReturn.Data = await _lotRepository.SaveMany<Lot>(listLotModel);
+                _messageReturn.Data = await _lotRepository.SaveMany(listLotModel);
                 listLot.ForEach(x =>
                 {
                     List<Ticket> listTicket = new List<Ticket>();
@@ -85,11 +79,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     }
                     _ticketService.SaveManyAsync(listTicket);
                 });
-            }
-            catch (SaveException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), "Lotes"), listLot);
-                _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
@@ -106,7 +95,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 id.ValidateIdMongo();
                 await _ticketService.DeleteTicketsByLot(id);
-                _messageReturn.Data = await _lotRepository.Delete<object>(id);
+                _messageReturn.Data = await _lotRepository.Delete(id);
             }
             catch (DeleteException ex)
             {
@@ -129,7 +118,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 idVariant.ValidateIdMongo();
-                _messageReturn.Data = await _lotRepository.DeleteByVariant<object>(idVariant);
+                _messageReturn.Data = await _lotRepository.DeleteByVariant(idVariant);
             }
             catch (DeleteException ex)
             {
@@ -150,7 +139,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                _messageReturn.Data = await _lotRepository.Edit<object>(id, lot);
+                _messageReturn.Data = await _lotRepository.Edit(id, lot);
                 await _ticketService.DeleteTicketsByLot(id);
 
                 for (int i = 0; i < lot.TotalTickets; i++)
@@ -161,11 +150,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         Value = lot.ValueTotal
                     });
                 }
-            }
-            catch (EditException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), lot);
-                _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
@@ -187,11 +171,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 _messageReturn.Data = await _lotRepository.DeleteMany<object>(listLot);
             }
-            catch (DeleteException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Lote"), listLot);
-                _messageReturn.Message = ex.Message;
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Lote"), listLot);
@@ -207,12 +186,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 idVariant.ValidateIdMongo();
                 _messageReturn.Data = await _lotRepository.GetLotByIdVariant<Lot>(idVariant);
-            }
-            catch (GetException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByIdVariant), "Lote"), idVariant);
-                _messageReturn.Message = ex.Message;
-                throw;
             }
             catch (Exception ex)
             {

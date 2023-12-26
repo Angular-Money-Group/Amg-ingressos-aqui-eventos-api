@@ -9,7 +9,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<List<T>> GetByFilterComplet<T>(Pagination paginationOptions, Event eventModel);
         Task<List<T>> GetFilterWithTickets<T>(string idEvent, string idOrganizer);
         Task<List<T>> GetFilterWithTransactions<T>(string idEvent, string idOrganizer);
-        Task<List<T1>> GetByFilter<T1>(Dictionary<string, object> filters, Pagination? paginationOptions);
+        Task<List<T>> GetByFilter<T>(Dictionary<string, object> filters, Pagination? paginationOptions);
         Task<bool> SetHighlightEvent(string id);
     }
 }

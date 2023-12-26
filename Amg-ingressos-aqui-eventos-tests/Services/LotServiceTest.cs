@@ -29,7 +29,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var lotComplet = FactoryLot.SimpleLot();
             var messageReturn = "OK";
-            _lotRepositoryMock.Setup(x => x.Save<object>(lotComplet)).Returns(Task.FromResult(messageReturn as object));
+            _lotRepositoryMock.Setup(x => x.Save(lotComplet)).Returns(Task.FromResult(new Lot()));
             _ticketServiceMock.Setup(x => x.SaveAsync(It.IsAny<Ticket>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
@@ -90,7 +90,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var lot = FactoryLot.SimpleLot();
-            _lotRepositoryMock.Setup(x => x.Save<object>(lot)).
+            _lotRepositoryMock.Setup(x => x.Save(lot)).
                 Throws(new Exception("Erro ao conectar a base de dados"));
             _ticketServiceMock.Setup(x => x.SaveAsync(It.IsAny<Ticket>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
