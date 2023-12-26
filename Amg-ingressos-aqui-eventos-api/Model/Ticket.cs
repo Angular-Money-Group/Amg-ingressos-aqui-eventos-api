@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Amg_ingressos_aqui_eventos_api.Enum;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -23,6 +24,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonId]
         [JsonProperty("_id")]
+        [JsonPropertyName("id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
