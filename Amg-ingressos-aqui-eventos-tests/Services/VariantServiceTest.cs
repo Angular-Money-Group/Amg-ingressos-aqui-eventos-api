@@ -32,7 +32,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var variantComplet = FactoryVariant.SimpleVariant();
             var messageReturn = "OK";
-            _variantRepositoryMock.Setup(x => x.Save<object>(variantComplet)).Returns(Task.FromResult(messageReturn as object));
+            _variantRepositoryMock.Setup(x => x.Save(variantComplet)).Returns(Task.FromResult(new Variant()));
             _lotServiceMock.Setup(x => x.SaveAsync(It.IsAny<LotWithTicketDto>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));
 
@@ -126,7 +126,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var variantComplet = FactoryVariant.SimpleVariant();
-            _variantRepositoryMock.Setup(x => x.Save<object>(variantComplet))
+            _variantRepositoryMock.Setup(x => x.Save(variantComplet))
                 .Throws(new Exception("erro ao conectar na base de dados"));
             _lotServiceMock.Setup(x => x.SaveAsync(It.IsAny<LotWithTicketDto>()))
                 .Returns(Task.FromResult(new MessageReturn() { Data = "3b241101-e2bb-4255-8caf-4136c566a962" }));

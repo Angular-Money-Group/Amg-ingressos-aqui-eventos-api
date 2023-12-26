@@ -42,7 +42,7 @@ builder.Services.AddScoped<IEntranceService, EntranceService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-builder.Services.AddScoped<IVariantRepository, VariantRepository<object>>();
+builder.Services.AddScoped<IVariantRepository, VariantRepository>();
 builder.Services.AddScoped<ILotRepository, LotRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository<object>>();

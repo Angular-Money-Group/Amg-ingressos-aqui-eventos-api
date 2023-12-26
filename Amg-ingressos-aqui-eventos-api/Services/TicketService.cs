@@ -161,17 +161,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var lotToGenerateTicket = await _lotRepository.GetLotByIdVariant<Lot>(
                     courtesyTicket.IdVariant
                 );
-                var variantToGenerateTicket = await _variantRepository.GetById<Variant>(
+                var variantToGenerateTicket = await _variantRepository.GetById(
                     courtesyTicket.IdVariant
                 );
                 var eventToGenerateTicket = await _eventRepository.GetById<Event>(
-                    variantToGenerateTicket[0].IdEvent
+                    variantToGenerateTicket.IdEvent
                 );
 
                 var isEmailSend = await SendEmailAndUpdateStatus(
                     courtesyTicket,
                     lotToGenerateTicket,
-                    variantToGenerateTicket[0],
+                    variantToGenerateTicket,
                     eventToGenerateTicket,
                     rowId,
                     ticketsRow
@@ -220,9 +220,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             variantId
                         );
                         var variantToGenerateTicket =
-                            await _variantRepository.GetById<Variant>(variantId);
+                            await _variantRepository.GetById(variantId);
                         var eventToGenerateTicket =
-                            await _eventRepository.GetById<Event>(variantToGenerateTicket[0].IdEvent);
+                            await _eventRepository.GetById(variantToGenerateTicket.IdEvent);
 
                         if (t.TicketId != null)
                         {
@@ -231,7 +231,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             var ticketEventDataDto = CreateTicketEventDataDto(
                                 t.TicketId,
                                 lotToGenerateTicket,
-                                variantToGenerateTicket[0],
+                                variantToGenerateTicket,
                                 eventToGenerateTicket,
                                 ticket.QrCode
                             );
@@ -262,7 +262,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             var ticketEventDataDto = CreateTicketEventDataDto(
                                 ticketId,
                                 lotToGenerateTicket,
-                                variantToGenerateTicket[0],
+                                variantToGenerateTicket,
                                 eventToGenerateTicket,
                                 qrCodeImage
                             );
