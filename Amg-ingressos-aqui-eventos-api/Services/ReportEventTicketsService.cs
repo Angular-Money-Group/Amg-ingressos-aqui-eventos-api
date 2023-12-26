@@ -172,9 +172,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private ReportEventOrganizerDetailDto ProcessEvent(EventCompletWithTransactionDto eventData, string? idVariant)
         {
             //filtra variante a pser processada
-            var listVariantProcess = string.IsNullOrEmpty(idVariant) ? 
+            var listVariantProcess = string.IsNullOrEmpty(idVariant) ?
                 eventData.Variants :
-                eventData.Variants.Where(i=> i.Id == idVariant).ToList();
+                eventData.Variants.Where(i => i.Id == idVariant).ToList();
             eventData.Variants = listVariantProcess;
 
             var variants = ProcessVariant(eventData);
@@ -187,7 +187,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     Sold = new SoldDto()
                     {
-                        Percent =
+                        Percent = (variants.Sum(i => i.Tickets.Sold.Amount) == 0 && variants.Sum(i => i.AmountTickets) == 0) ? 100 :
                             (
                                 Convert.ToDouble(variants.Sum(i => i.Tickets.Sold.Amount))
                                 / Convert.ToDouble(variants.Sum(i => i.AmountTickets))
@@ -199,7 +199,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     },
                     Remaining = new RemainingDto()
                     {
-                        Percent =
+                        Percent = (variants.Sum(i => i.Tickets.Remaining.Amount) == 0 && variants.Sum(i => i.AmountTickets) == 0) ? 100 :
                             (
                                 Convert.ToDouble(variants.Sum(i => i.Tickets.Remaining.Amount)) / Convert.ToDouble(variants.Sum(i => i.AmountTickets))
                             ) * 100,
@@ -222,7 +222,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Entregues = new DeliveredReportDto()
                 {
-                    Percent =
+                    Percent = (variants.Sum(i => i.Cortesys.Entregues.Amount) == 0 && variants.Sum(i => i.Cortesys.Restantes.Amount) == 0) ? 100 :
                             (
                                 Convert.ToDouble(
                                     variants.Sum(i => i.Cortesys.Entregues.Amount)
@@ -232,7 +232,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 },
                 Restantes = new RemainingDto()
                 {
-                    Percent =
+                    Percent = (variants.Sum(i => i.Cortesys.Entregues.Amount) == 0 && variants.Sum(i => i.Cortesys.Restantes.Amount) == 0) ? 100 :
                             (
                                 Convert.ToDouble(
                                     variants.Sum(i => i.Cortesys.Entregues.Amount)
@@ -267,7 +267,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     {
                         Sold = new SoldDto()
                         {
-                            Percent =
+                            Percent = (lots.Sum(i => i.Tickets.Sold.Amount) == 0 && lots.Sum(i => i.AmountTicket) == 0) ? 100 :
                                 (
                                     Convert.ToDouble(lots.Sum(i => i.Tickets.Sold.Amount))
                                     / Convert.ToDouble(lots.Sum(i => i.AmountTicket))
@@ -279,7 +279,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         },
                         Remaining = new RemainingDto()
                         {
-                            Percent =
+                            Percent = (lots.Sum(i => i.Tickets.Remaining.Amount) == 0 && lots.Sum(i => i.AmountTicket) == 0) ? 100 :
                                 (
                                     Convert.ToDouble(
                                         lots.Sum(i => i.Tickets.Remaining.Amount)
@@ -310,7 +310,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     cortesyRemaining.Sum(x => x.Quantity) != 0
                         ? new DeliveredReportDto()
                         {
-                            Percent =
+                            Percent = (cortesyHistory.Sum(x => x.Quantity) == 0 && cortesyRemaining.Sum(x => x.Quantity) == 0) ? 100 :
                                 (
                                     Convert.ToDouble(
                                         cortesyHistory.Sum(x => x.Quantity)
@@ -330,7 +330,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     cortesyRemaining.Sum(x => x.Quantity) != 0
                         ? new RemainingDto()
                         {
-                            Percent =
+                            Percent = (cortesyHistory.Sum(x => x.Quantity) == 0 && cortesyRemaining.Sum(x => x.Quantity) == 0) ? 100 :
                                 (
                                     Convert.ToDouble(
                                         (
@@ -366,7 +366,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         {
                             Sold = new SoldDto()
                             {
-                                Percent =
+                                Percent = (i.Tickets.Count == 0) ? 100 :
                                     (
                                         Convert.ToDouble(i.Tickets.Count(x => x.IsSold))
                                         / Convert.ToDouble(i.Tickets.Count)
@@ -382,7 +382,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             },
                             Remaining = new RemainingDto()
                             {
-                                Percent =
+                                Percent = (i.Tickets.Count == 0) ? 100 :
                                     (
                                         Convert.ToDouble(i.Tickets.Count(x => !x.IsSold))
                                         / Convert.ToDouble(i.Tickets.Count)

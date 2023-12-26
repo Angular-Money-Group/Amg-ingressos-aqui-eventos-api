@@ -188,7 +188,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 var data = await _eventRepository
-                    .GetByFilterComplet<EventComplet>(new Pagination() { Page = 0, PageSize = 10 }, null);
+                    .GetByFilterComplet<EventComplet>(new Pagination() { Page = 0, PageSize = 10 }, new Event());
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
                 return _messageReturn;
             }
