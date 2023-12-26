@@ -45,7 +45,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
         public async Task<EventQrReads> GetEventQrReads(string idEvent, string idUser, DateTime initialDate)
         {
-            EventQrReads eventQrs = new EventQrReads();
             //Monta lista de campos para find na collection
             var filter = Builders<EventQrReads>.Filter.And(
                 Builders<EventQrReads>.Filter.Where(eventQr => eventQr.IdColab.Contains(idUser)),
@@ -54,7 +53,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 Builders<EventQrReads>.Filter.Lt(eventQr => eventQr.InitialDate, initialDate.Date.AddDays(1).AddSeconds(-1))
                 );
 
-            eventQrs = await _eventQrCollection.Find(filter).FirstOrDefaultAsync();
+            var eventQrs = await _eventQrCollection.Find(filter).FirstOrDefaultAsync();
 
             return eventQrs;
         }

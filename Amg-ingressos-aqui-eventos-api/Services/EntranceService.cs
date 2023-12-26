@@ -42,7 +42,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //Consulta os dados do evento, do qrcode (ticket) que acabou de ser lido
                 var data = await _ticketRepository.GetByIdWithDataEvent<TicketComplet>(entranceDTO.IdTicket);
                 var evento = new TicketCompletDto().ModelToDto(data[0]);
-                //var evento = _ticketRepository.GetByIdWithDataEvent<GetTicketDataEvent>(entranceDTO.IdTicket).Result;
 
                 //Se for null, é um qrcode (ticket) inexistente
                 if (evento == null)
@@ -55,7 +54,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //Consulta os dados do usuários do qrcode (ticket) que acabou de ser lido
                 var dataUser = await _ticketRepository.GetByIdWithDataUser<TicketComplet>(entranceDTO.IdTicket);
                 var userTicket = new TicketCompletDto().ModelToDto(dataUser[0]);
-                //var userTicket = (GetTicketDataUser)_ticketRepository.GetByIdWithDataUser<GetTicketDataUser>(entranceDTO.IdTicket).Result;
 
                 //Se não encontrar dados de usúario é um qrcode(ticket) inválido
                 if (userTicket == null)
@@ -80,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads(false, entranceDTO);
 
                     throw new RuleException("Ingresso já utilizado");
                 }
@@ -98,7 +96,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads(false, entranceDTO);
 
                     throw new RuleException("Ingresso não disponível");
                 }
@@ -119,7 +117,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads(false, entranceDTO);
 
                     throw new RuleException("Ingresso não vendido");
                 }
@@ -137,7 +135,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     });
 
                     //2- Salva a leitura com sucesso do qrCode
-                    eventQrReads = SaveEventQrReads<EventQrReads>(false, entranceDTO);
+                    eventQrReads = SaveEventQrReads(false, entranceDTO);
 
                     throw new RuleException("Ingresso expirado");
                 }
@@ -160,7 +158,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 });
 
                 //2- Salva a leitura com sucesso do qrCode
-                eventQrReads = SaveEventQrReads<EventQrReads>(true, entranceDTO);
+                eventQrReads = SaveEventQrReads(true, entranceDTO);
                 EventQrReadsDto eventQrReadsDto = new EventQrReadsDto()
                 {
                     Id = eventQrReads.Id,
@@ -209,7 +207,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
         }
 
-        private EventQrReads SaveEventQrReads<T>(Boolean successQrRead, EntranceDto entranceDTO)
+        private EventQrReads SaveEventQrReads(Boolean successQrRead, EntranceDto entranceDTO)
         {
             try
             {

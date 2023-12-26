@@ -105,24 +105,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return result;
         }
 
-        public async Task<object> EditAsync<T1>(string id, Ticket ticket)
-        {
-            var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
-            var update = Builders<Ticket>.Update
-                .Set("IdUser", ticket.IdUser)
-                .Set("Value", ticket.Value)
-                .Set("isSold", ticket.IsSold)
-                .Set("Position", ticket.Position)
-                .Set("QrCode", ticket.QrCode)
-                .Set("Status", ticket.Status)
-                .Set("IdColab", ticket.IdColab);
-
-            // Busca os tickets que correspondem ao filtro
-            await _ticketCollection.UpdateOneAsync(filter, update);
-
-            return await _ticketCollection.Find(filter).ToListAsync();
-        }
-
         public async Task<List<T>> GetByIdWithDataUser<T>(string id)
         {
             BsonDocument documentFilter = new BsonDocument { { "_id", ObjectId.Parse(id) } };
@@ -183,17 +165,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
         public async Task<bool> Edit(string id, Ticket model)
         {
-            var filtro = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
-            var update = Builders<Ticket>.Update.Combine();
+            var filter = Builders<Ticket>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<Ticket>.Update
+                .Set("IdUser", model.IdUser)
+                .Set("Value", model.Value)
+                .Set("isSold", model.IsSold)
+                .Set("Position", model.Position)
+                .Set("QrCode", model.QrCode)
+                .Set("Status", model.Status)
+                .Set("IdColab", model.IdColab);
 
-            foreach (var property in typeof(Ticket).GetProperties())
-            {
-                if (property.GetValue(model) != null && property.Name != "_Id")
-                    update = update.Set(property.Name, property.GetValue(model));
-
-            }
-
-            await _ticketCollection.UpdateOneAsync(filtro, update);
+            // Busca os tickets que correspondem ao filtro
+            await _ticketCollection.UpdateOneAsync(filter, update);
             return true;
         }
 
