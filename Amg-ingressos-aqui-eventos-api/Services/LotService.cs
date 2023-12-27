@@ -47,6 +47,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
 
                 _ = _ticketService.SaveManyAsync(listTicket);
+                _messageReturn.Data = lotModel;
+                return _messageReturn;
             }
             catch (Exception ex)
             {
@@ -54,8 +56,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _ = DeleteAsync(lot.Id ?? string.Empty);
                 throw;
             }
-
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> SaveManyAsync(List<LotWithTicketDto> listLot)
