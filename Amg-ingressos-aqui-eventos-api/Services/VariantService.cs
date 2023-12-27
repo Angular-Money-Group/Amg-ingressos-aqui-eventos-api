@@ -42,7 +42,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
                 variant.Status = Enum.EnumStatusVariant.Active;
                 Variant modelVariant = new VariantWithLotDto().DtoToModel(variant);
-                var idVariant = await _variantRepository.Save(modelVariant) ?? throw new RuleException("Id nao pode ser null");
+                var variantDatabase = await _variantRepository.Save(modelVariant) ?? throw new RuleException("Id nao pode ser null");
                 var IdentificateLot = 1;
                 variant.Lots
                     .ToList()
@@ -50,8 +50,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     {
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
-                        i.IdVariant = idVariant.ToString() ?? string.Empty;
-                        i.Id = _lotService.SaveAsync(i).Result.Data.ToString() ?? string.Empty;
+                        i.IdVariant = variantDatabase.Id ?? string.Empty;
+                        var lot = (Lot)_lotService.SaveAsync(i).Result.Data;
+                        i.Id = lot.Id;
                         IdentificateLot++;
                     });
 

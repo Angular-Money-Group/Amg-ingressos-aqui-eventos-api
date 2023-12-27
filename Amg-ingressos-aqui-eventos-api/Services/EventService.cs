@@ -85,7 +85,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         }
                     });
 
-                _messageReturn.Data = await _eventRepository.Edit(modelEvent.Id, modelEvent);
+                await _eventRepository.Edit(modelEvent.Id, modelEvent);
+                _messageReturn.Data = modelEvent;
                 return _messageReturn;
             }
             catch (Exception ex)
