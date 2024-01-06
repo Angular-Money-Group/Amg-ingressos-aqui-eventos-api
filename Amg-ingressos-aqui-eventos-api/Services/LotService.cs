@@ -5,6 +5,8 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Utils;
 using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
+using MongoDB.Bson.IO;
+using Newtonsoft.Json;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -218,6 +220,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 if (lots != null && lots.Count() > 0)
                 {
+                    List<string> lista = new List<string>();
                     //Percorrer os lotes e executar a gestao
                     foreach (Lot lot in lots)
                     {
@@ -226,17 +229,21 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                         if (qtdTicketsNaoUsados > 0)
                         {
+                            lista.Add($"Lote: {lot.Id} - Qtd não usados: {qtdTicketsNaoUsados}");
                             //Consultar se existe mais um lote para o evento - 
 
                             //Se existir mais lotes - Os ingressos não vendidos (quantidade), inserir eles no lote que vai iniciar
 
                             //Finalizar o lote (atualizar o status)
-                            _lotRepository.Edit(idLote, new Lot() { Status = Enum.EnumStatusLot.Finished });
+                            _lotRepository.Edit(lot.Id, new Lot() { Status = Enum.EnumStatusLot.Finished });
 
                             //Não existe mais lote - Finalizar a variação (atualizar o status)
                             _variantRepository.Edit(lot.IdVariant, new Variant() { Status = Enum.EnumStatusVariant.Finished });
                         }
+
+                        lista.Add($"Lote: {lot.Id} - Finalizado");
                     }
+                    _messageReturn.Data = Newtonsoft.Json.JsonConvert.SerializeObject(lista);
                 }
             }
             catch (Exception ex)

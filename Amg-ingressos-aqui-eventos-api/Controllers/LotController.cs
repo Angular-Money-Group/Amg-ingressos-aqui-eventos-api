@@ -61,12 +61,12 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("managerlots/{id}/{dateManagerLots}")]
         public async Task<IActionResult> ManagerLotsAsync([FromRoute] string id, [FromRoute] DateTime dateManagerLots)
         {
-            var result = await _lotService.SaveAsync(eventObject);
+            var result = await _lotService.ManagerLotsAsync(id,dateManagerLots);
 
             if (result.Message != null && result.Message.Any())
             {
                 _logger.LogInformation(result.Message);
-                return StatusCode(500, string.Format(MessageLogErrors.GetController, this.GetType().Name, nameof(SaveEventAsync), "Evento"));
+                return StatusCode(500, string.Format(MessageLogErrors.GetController, this.GetType().Name, nameof(ManagerLotsAsync), dateManagerLots));
             }
 
             return Ok(result.Data);
