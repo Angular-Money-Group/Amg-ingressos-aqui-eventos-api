@@ -189,5 +189,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             else
                 throw new DeleteException("algo deu errado ao deletar");
         }
+
+
+        public async Task<long> GetCountTicketsNoUser(string idLot)
+        {
+            //Filta os tickets do lote e que ainda não foram vendidos
+            var filter = Builders<Ticket>.Filter.And(
+                Builders<Ticket>.Filter.Eq(x => x.IdLot, idLot),
+                Builders<Ticket>.Filter.Eq(x => x.IdUser, null)
+                );
+
+            var result = await _ticketCollection.Find(filter).CountDocumentsAsync();
+            return result;
+        }
     }
 }

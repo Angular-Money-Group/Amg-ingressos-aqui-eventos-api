@@ -109,5 +109,19 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             else
                 throw new DeleteException("algo deu errado ao deletar");
         }
+
+        public async Task<List<Lot>> GetLotByEndDateSales(DateTime dateManagerLots)
+        {
+            var filter = Builders<Lot>.Filter.And(
+                Builders<Lot>.Filter.Gte(x => x.StartDateSales, dateManagerLots.Date),
+                Builders<Lot>.Filter.Lt(x => x.EndDateSales, dateManagerLots.AddDays(1).AddSeconds(1))
+                );
+
+            var pResult = await _lotCollection.Find(filter)
+                .As<Lot>()
+                .ToListAsync();
+
+            return pResult;
+        }
     }
 }

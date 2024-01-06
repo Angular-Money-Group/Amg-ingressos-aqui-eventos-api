@@ -14,14 +14,17 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly ITicketService _ticketService;
         private readonly MessageReturn _messageReturn;
         private readonly ILogger<LotService> _logger;
+        private readonly IVariantRepository _variantRepository;
 
         public LotService(
             ILotRepository lotRepository,
             ITicketService ticketService,
+            IVariantRepository variantRepository,
             ILogger<LotService> logger)
         {
             _lotRepository = lotRepository;
             _ticketService = ticketService;
+            _variantRepository = variantRepository;
             _logger = logger;
             _messageReturn = new MessageReturn();
         }
@@ -204,6 +207,44 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 throw new SaveException("Data Inicio de venda é Obrigatório.");
             else if (lot.EndDateSales == DateTime.MinValue || lot.EndDateSales == DateTime.MaxValue)
                 throw new SaveException("Data final de venda é Obrigatório.");
+        }
+
+        public async Task<MessageReturn> ManagerLotsAsync(string idLote, DateTime dateManagerLots)
+        {
+            try
+            {
+                //Consultar os lotes que encerram na data de gestão de lotes
+                var lots = await _lotRepository.GetLotByEndDateSales(dateManagerLots);
+
+                if (lots != null && lots.Count() > 0)
+                {
+                    //Percorrer os lotes e executar a gestao
+                    foreach (Lot lot in lots)
+                    {
+                        //Consultar o numero de ingressos(tickets) não vendidos do lote
+                        long qtdTicketsNaoUsados = await _ticketService.GetCountTicketsNoUser(lot.Id);
+
+                        if (qtdTicketsNaoUsados > 0)
+                        {
+                            //Consultar se existe mais um lote para o evento - 
+
+                            //Se existir mais lotes - Os ingressos não vendidos (quantidade), inserir eles no lote que vai iniciar
+
+                            //Finalizar o lote (atualizar o status)
+                            _lotRepository.Edit(idLote, new Lot() { Status = Enum.EnumStatusLot.Finished });
+
+                            //Não existe mais lote - Finalizar a variação (atualizar o status)
+                            _variantRepository.Edit(lot.IdVariant, new Variant() { Status = Enum.EnumStatusVariant.Finished });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByIdVariant), "dateManagerLots"), dateManagerLots);
+                throw;
+            }
+            return _messageReturn;
         }
     }
 }
