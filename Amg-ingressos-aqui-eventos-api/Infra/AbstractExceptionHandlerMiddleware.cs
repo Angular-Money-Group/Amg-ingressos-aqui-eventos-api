@@ -33,11 +33,6 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
         /// <returns>Tuple of HTTP status code and a message</returns>
         public abstract (HttpStatusCode code, string message) GetResponse(Exception exception);
 
-        public AbstractExceptionHandlerMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
         public async Task Invoke(HttpContext context)
         {
             try
