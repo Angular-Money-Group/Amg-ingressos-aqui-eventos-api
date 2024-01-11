@@ -17,7 +17,7 @@ namespace Prime.UnitTests.Services
             new Mock<ITicketRowRepository>();
         private readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private readonly Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
-        private readonly Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
+        private readonly Mock<INotificationService> _emailRepositoryMock = new Mock<INotificationService>();
         private readonly Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private readonly Mock<ILogger<TicketService>> _loggerMock = new Mock<ILogger<TicketService>>();
 

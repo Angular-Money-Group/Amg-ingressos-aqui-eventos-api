@@ -34,14 +34,13 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IVariantService, VariantService>();
 builder.Services.AddScoped<ILotService, LotService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IReportEventTickets, ReportEventTicketsService>();
 builder.Services.AddScoped<IReportEventTransactions, ReportEventTransactionsService>();
 builder.Services.AddScoped<IEntranceService, EntranceService>();
 //repository
 builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IVariantRepository, VariantRepository>();
 builder.Services.AddScoped<ILotRepository, LotRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
