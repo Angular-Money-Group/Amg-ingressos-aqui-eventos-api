@@ -47,7 +47,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
 
                 _ = _ticketService.SaveManyAsync(listTicket);
-                _messageReturn.Data = lotModel;
+                _messageReturn.Data = lotModel ?? new Lot();
                 return _messageReturn;
             }
             catch (Exception ex)
