@@ -49,7 +49,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
                     SellTicketsBeforeStartAnother = v.SellTicketsBeforeStartAnother,
                     SellTicketsInAnotherBatch = v.SellTicketsInAnotherBatch,
                     Status = v.Status,
-                    Lots = eventData.Lots.Where(i => i.IdVariant == v.Id).Select(l => new LotWithTicketDto()
+                    Lots = eventData.Lots.Where(i => i.IdVariant == v.Id && i.Status == Enum.EnumStatusLot.Open).Select(l => new LotWithTicketDto()
                     {
                         EndDateSales = l.EndDateSales,
                         Id = l.Id,

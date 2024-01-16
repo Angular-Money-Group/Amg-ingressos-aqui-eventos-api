@@ -39,6 +39,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var dic = new Dictionary<string, object>() { { "_id", id } };
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
+                
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data[0]);
                 return _messageReturn;
             }
