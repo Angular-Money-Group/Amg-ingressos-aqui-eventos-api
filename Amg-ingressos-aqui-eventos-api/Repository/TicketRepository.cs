@@ -111,7 +111,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
             var ticket = await _ticketCollection.Aggregate()
                     .Match(documentFilter)
-                    .Lookup("user", "idUser", "_id", "User")
+                    .Lookup("user", "IdUser", "_id", "Users")
                     .As<T>()
                     .ToListAsync();
             return ticket;
