@@ -51,6 +51,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
                         i.IdVariant = variantDatabase.Id ?? string.Empty;
+                        i.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
                         var lot = (Lot)_lotService.SaveAsync(i).Result.Data;
                         i.Id = lot.Id;
                         IdentificateLot++;
