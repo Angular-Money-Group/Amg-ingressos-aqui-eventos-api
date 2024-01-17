@@ -13,9 +13,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<Variant> _variantCollection;
 
-        public VariantRepository(IDbConnection<Variant> dbconnection)
+        public VariantRepository(IDbConnection dbconnection)
         {
-            _variantCollection = dbconnection.GetConnection("variants");
+            _variantCollection = dbconnection.GetConnection<Variant>("variants");
         }
 
         public async Task<Variant> Save(Variant variant)

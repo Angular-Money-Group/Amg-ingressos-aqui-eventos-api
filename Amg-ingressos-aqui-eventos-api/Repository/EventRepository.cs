@@ -2,10 +2,10 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
-using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using System.Reflection;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Infra;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -14,9 +14,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<Event> _eventCollection;
 
-        public EventRepository(IDbConnection<Event> dbconnection)
+        public EventRepository(IDbConnection dbconnection)
         {
-            _eventCollection = dbconnection.GetConnection("events");
+            _eventCollection = dbconnection.GetConnection<Event>("events");
         }
 
         public async Task<bool> Delete(string id)

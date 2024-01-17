@@ -47,15 +47,7 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository>();
 builder.Services.AddScoped<IEntranceRepository, EntranceRepository>();
 //infra
-builder.Services.AddScoped<IDbConnection<Event>, DbConnection<Event>>();
-builder.Services.AddScoped<IDbConnection<Variant>, DbConnection<Variant>>();
-builder.Services.AddScoped<IDbConnection<Lot>, DbConnection<Lot>>();
-builder.Services.AddScoped<IDbConnection<Ticket>, DbConnection<Ticket>>();
-builder.Services.AddScoped<IDbConnection<Email>, DbConnection<Email>>();
-builder.Services.AddScoped<IDbConnection<StatusTicketsRow>, DbConnection<StatusTicketsRow>>();
-builder.Services.AddScoped<IDbConnection<User>, DbConnection<User>>();
-builder.Services.AddScoped<IDbConnection<ReadHistory>, DbConnection<ReadHistory>>();
-builder.Services.AddScoped<IDbConnection<EventQrReads>, DbConnection<EventQrReads>>();
+builder.Services.AddScoped<IDbConnection, DbConnection>();
 
 builder.Services.AddScoped<ICieloClient, CieloClient>();
 

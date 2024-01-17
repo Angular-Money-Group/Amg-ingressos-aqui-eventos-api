@@ -15,14 +15,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         private readonly IMongoCollection<ReadHistory> _readHistoryCollection;
         private readonly IMongoCollection<EventQrReads> _eventQrCollection;
 
-        public EntranceRepository(
-            IDbConnection<User> dbUser,
-            IDbConnection<ReadHistory> dbReadyHistory,
-            IDbConnection<EventQrReads> dbEventQrReads)
+        public EntranceRepository(IDbConnection dbConnection)
         {
-            _userCollection = dbUser.GetConnection("user");
-            _readHistoryCollection = dbReadyHistory.GetConnection("readhistories");
-            _eventQrCollection = dbEventQrReads.GetConnection("eventqrreads");
+            _userCollection = dbConnection.GetConnection<User>("user");
+            _readHistoryCollection = dbConnection.GetConnection<ReadHistory>("readhistories");
+            _eventQrCollection = dbConnection.GetConnection<EventQrReads>("eventqrreads");
         }
 
         public async Task<User> GetUserColabData(string idUser)

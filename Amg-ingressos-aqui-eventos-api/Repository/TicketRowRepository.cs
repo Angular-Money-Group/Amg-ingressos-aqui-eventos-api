@@ -14,11 +14,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<StatusTicketsRow> _ticketStatusCollection;
 
-        public TicketRowRepository(
-            IDbConnection<StatusTicketsRow> dbConnectionCourtesy
-        )
+        public TicketRowRepository( IDbConnection dbConnectionCourtesy)
         {
-            _ticketStatusCollection = dbConnectionCourtesy.GetConnection("statusCourtesyTickets");
+            _ticketStatusCollection = dbConnectionCourtesy.GetConnection<StatusTicketsRow>("statusCourtesyTickets");
         }
 
         public async Task<string> SaveRowAsync(StatusTicketsRow ticketRow)
