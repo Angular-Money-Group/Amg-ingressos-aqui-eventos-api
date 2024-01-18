@@ -17,10 +17,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             _lotCollection = dbConnection.GetConnection<Lot>("lots");
         }
 
-        public async Task<bool> SaveMany(List<Lot> listLot)
+        public async Task<List<Lot>> SaveMany(List<Lot> listLot)
         {
             await _lotCollection.InsertManyAsync(listLot);
-            return true;
+            return listLot;
         }
 
         public async Task<bool> DeleteByVariant(string idVariant)

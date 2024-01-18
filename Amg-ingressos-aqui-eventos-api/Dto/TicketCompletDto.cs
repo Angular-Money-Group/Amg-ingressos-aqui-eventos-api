@@ -23,7 +23,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         {
             return new TicketCompletDto()
             {
-                Event = data.Events.Find(e => e.Id == data?.Variants?.Find(v => v.Id == data?.Lots?.Find(l => l.Id == data?.IdLot).IdVariant).IdEvent) ?? new Event(),
+                Event = data.Events.Find(e => e.Id == data?.Variants?.Find(v => v.Id == data?.Lots?.Find(l => l.Id == data?.IdLot)?.IdVariant)?.IdEvent) ?? new Event(),
                 Id = data.Id,
                 IdColab = data.IdColab,
                 IdLot = data.IdLot,
