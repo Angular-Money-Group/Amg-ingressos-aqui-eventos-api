@@ -26,7 +26,6 @@
     <Content Include="Template\**"> 
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
     </Content> 
-  </ItemGroup> 
-</ItemGroup>
+  </ItemGroup>
 
 </Project>
