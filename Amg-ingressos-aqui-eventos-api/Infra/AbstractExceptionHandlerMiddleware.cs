@@ -1,5 +1,4 @@
 using System.Net;
-using System.Reflection;
 
 namespace Amg_ingressos_aqui_eventos_api.Infra
 {
@@ -16,8 +15,6 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
             _logger = logger;
             _next = next;
         }
-        // Enrich is a custom extension method that enriches the Serilog functionality - you may ignore it
-        //private static readonly ILogger Logger = Log.ForContext(MethodBase.GetCurrentMethod()?.DeclaringType).Enrich();
 
         /// <summary>
         /// This key should be used to store the exception in the <see cref="IDictionary{TKey,TValue}"/> of the exception data,
@@ -53,5 +50,4 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
             }
         }
     }
-
 }

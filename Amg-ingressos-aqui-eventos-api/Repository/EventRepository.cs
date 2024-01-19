@@ -85,7 +85,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
                     .Lookup("user", "IdOrganizer", "_id", "User")
-                    .Sort(new BsonDocument("StartDate", 1))
+                    .Sort( new BsonDocument("StartDate", -1))
                     .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
                     .Limit(paginationOptions.PageSize)
                     .As<T>()
