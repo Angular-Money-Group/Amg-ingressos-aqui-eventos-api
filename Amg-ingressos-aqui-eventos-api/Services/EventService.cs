@@ -39,11 +39,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var dic = new Dictionary<string, object>() { { "_id", id } };
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                data.ForEach( d => {
+                data.Item1.ForEach( d => {
                     d.Lots = d.Lots.Where(l=> l.Status == EnumStatusLot.Open).ToList();
                 });
 
-                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data[0]);
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data.Item1[0]);
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -138,11 +138,28 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                data.ForEach( d => {
+                data.Item1.ForEach( d => {
                     d.Lots = d.Lots.Where(l=> l.Status == EnumStatusLot.Open).ToList();
                 });
 
-                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data.Item1);
+                return _messageReturn;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"));
+                throw;
+            }
+        }
+
+        public async Task<MessageReturn> GetEventsForGridAsync(FilterOptions filters, Pagination paginationOptions)
+        {
+            try
+            {
+                Dictionary<string, object> dic = GenerateFilters(filters);
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
+
+                _messageReturn.Data = new { data = new GridEventDto().ModelListToDtoList(data.Item1), TotalCount = data.count };
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -158,7 +175,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 var dic = GenerateFilters(new FilterOptions() { Highlights = true });
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -180,8 +197,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 dic.Add("StartDate", startOfRange.ToUniversalTime());
                 dic.Add("Status", (int)EnumStatusEvent.Active);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                data = data.Where(x => x.StartDate.Date <= endOfRange.Date).ToList();
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                data.Item1 = data.Item1.Where(x => x.StartDate.Date <= endOfRange.Date).ToList();
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -263,7 +280,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
             }
             catch (Exception ex)

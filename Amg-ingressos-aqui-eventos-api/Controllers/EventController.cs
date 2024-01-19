@@ -52,6 +52,34 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Busca os eventos
         /// </summary>
+        /// <param name="filters"> filtros </param>
+        /// <param name="paginationOptions"> paginacao </param>
+        /// <returns>200 Lista de todos eventos</returns>
+        /// <returns>204 Nenhum evento encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("grid")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetEventsForGridAsync(FilterOptions filters, Pagination paginationOptions)
+        {
+            if (!ModelState.IsValid)
+                throw new RuleException("Dados inválidos");
+
+            var result = await _eventService.GetEventsForGridAsync(filters, paginationOptions);
+            if (result.Message != null && result.Message.Any())
+            {
+                _logger.LogInformation(result.Message);
+                return StatusCode(500, result.Message);
+            }
+            if (result.Data.ToString() == string.Empty)
+                return NoContent();
+
+            return Ok(result.Data);
+        }
+
+        /// <summary>
+        /// Busca os eventos
+        /// </summary>
         /// <param name="highlights"> eventos em destaque</param>
         /// <param name="weekly"> eventos da semana</param>
         /// <param name="paginationOptions"> paginacao </param>
@@ -59,7 +87,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("Card")]
+        [Route("card")]
         [Produces("application/json")]
         public async Task<IActionResult> GetCardEventsAsync(FilterOptions filters, Pagination paginationOptions)
         {
@@ -89,7 +117,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("Card/Highlights")]
+        [Route("card/highlights")]
         [Produces("application/json")]
         public async Task<IActionResult> GetCardEventsHighligthAsync()
         {
@@ -118,7 +146,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
-        [Route("Card/Weekly")]
+        [Route("card/weekly")]
         [Produces("application/json")]
         public async Task<IActionResult> GetCardEventsWeeklyAsync()
         {

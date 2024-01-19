@@ -199,7 +199,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pResult;
         }
 
-        public async Task<List<T1>> GetByFilter<T1>(Dictionary<string, object> filters, Pagination? paginationOptions)
+        public async Task<(List<T1>,long count)> GetByFilter<T1>(Dictionary<string, object> filters, Pagination? paginationOptions)
         {
             paginationOptions = paginationOptions ?? new Pagination();
             var filter = GenerateFilter(filters);
@@ -214,8 +214,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Limit(paginationOptions.PageSize)
                     .As<T1>()
                     .ToListAsync();
+            
+            var count = await _eventCollection.CountDocumentsAsync(filter);
 
-            return eventData.Any() ? eventData : new List<T1>();
+            return (eventData.Any() ? eventData : new List<T1>(),count);
         }
 
         public async Task<List<T1>> GetByFilter<T1>(Dictionary<string, object> filters)

@@ -15,6 +15,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> GetCardEvents(FilterOptions filters, Pagination paginationOptions);
         Task<MessageReturn> DeleteAsync(string id);
         Task<MessageReturn> GetEventsAsync(FilterOptions filters, Pagination paginationOptions);
+        Task<MessageReturn> GetEventsForGridAsync(FilterOptions filters, Pagination paginationOptions);
         Task<MessageReturn> GetWithUserData();
     }
 }

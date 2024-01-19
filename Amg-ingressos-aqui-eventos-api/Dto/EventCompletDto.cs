@@ -23,7 +23,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
                 Highlighted = eventData.Highlighted,
                 Id = eventData.Id,
                 IdMeansReceipt = eventData.IdMeansReceipt,
-                IdOrganizer = eventData.IdMeansReceipt,
+                IdOrganizer = eventData.IdOrganizer,
                 Image = eventData.Image,
                 Local = eventData.Local,
                 Name = eventData.Name,
