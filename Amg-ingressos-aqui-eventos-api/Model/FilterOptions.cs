@@ -24,8 +24,6 @@ namespace Amg_ingressos_aqui_eventos_api.Model
 
         [JsonProperty("highlights")]
         public bool? Highlights { get; set; }
-
-        
         
     }
 }

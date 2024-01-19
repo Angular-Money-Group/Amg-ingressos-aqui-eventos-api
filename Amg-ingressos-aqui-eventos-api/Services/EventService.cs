@@ -39,9 +39,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var dic = new Dictionary<string, object>() { { "_id", id } };
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                data.Item1.ForEach( d => {
-                    d.Lots = d.Lots.Where(l=> l.Status == EnumStatusLot.Open).ToList();
-                });
 
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data.Item1[0]);
                 return _messageReturn;
@@ -138,9 +135,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                data.Item1.ForEach( d => {
-                    d.Lots = d.Lots.Where(l=> l.Status == EnumStatusLot.Open).ToList();
-                });
 
                 _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
