@@ -6,5 +6,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
     {
         Task<bool> SaveMany(List<Variant> listVariant);
         Task<bool> DeleteMany(List<string> listVariant);
+        Task<bool> ChangeStatusVariant(string id, int statusVariant);
     }
 }

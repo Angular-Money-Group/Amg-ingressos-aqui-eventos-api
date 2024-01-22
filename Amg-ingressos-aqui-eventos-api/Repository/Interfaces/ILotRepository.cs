@@ -9,5 +9,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<T> GetLotByIdVariant<T>(string idVariant);
         Task<bool> DeleteMany<T>(List<string> listLot);
         Task<List<Lot>> GetLotByEndDateSales(DateTime dateManagerLots);
+
+        Task<bool> ChangeStatusLot(string id, int statusLot);
     }
 }

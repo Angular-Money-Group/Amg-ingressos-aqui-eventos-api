@@ -275,7 +275,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             foreach (var item in filters)
                 listFilter.Add(Builders<Event>.Filter.Eq(item.Key.ToString(), item.Value));
 
-
             var builders = Builders<Event>.Filter.And(listFilter);
             var pResult = await _eventCollection.Find(builders)
                 .As<Event>()

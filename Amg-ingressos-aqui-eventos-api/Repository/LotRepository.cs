@@ -73,9 +73,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pResult;
         }
 
-        public Task<List<Lot>> GetByFilter(Dictionary<string, string> filters)
+        public async Task<List<Lot>> GetByFilter(Dictionary<string, string> filters)
         {
-            throw new NotImplementedException();
+            var listFilter = new List<FilterDefinition<Lot>>();
+            foreach (var item in filters)
+                listFilter.Add(Builders<Lot>.Filter.Eq(item.Key.ToString(), item.Value));
+
+            var builders = Builders<Lot>.Filter.And(listFilter);
+            var pResult = await _lotCollection.Find(builders)
+                .As<Lot>()
+                .ToListAsync();
+
+            return pResult;
         }
 
         public async Task<Lot> Save(Lot model)
@@ -122,6 +131,23 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 .ToListAsync();
 
             return pResult;
+        }
+
+        public async Task<bool> ChangeStatusLot(string id, int statusLot)
+        {
+            if (id == null || string.IsNullOrEmpty(id.ToString()))
+                throw new EditException("id é obrigatório");
+
+            var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
+
+            var updateDefination = Builders<Lot>.Update.Set("Status", statusLot);
+
+            var result = await _lotCollection.UpdateOneAsync(filtro, updateDefination);
+
+            if (result.MatchedCount >= 1)
+                return true;
+            else
+                throw new EditException("Algo deu errado ao atualizar status do Lot");
         }
     }
 }

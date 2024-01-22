@@ -66,7 +66,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             var builder = Builders<Ticket>.Filter;
             var filter = builder.Empty;
-            filter &= builder.Eq(x => x.IdUser, null);
+           // filter &= builder.Eq(x => x.IdUser, null);
 
             if (!string.IsNullOrWhiteSpace(ticket.Id))
                 filter &= builder.Eq(x => x.Id, ticket.Id);
@@ -173,7 +173,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 .Set("Position", model.Position)
                 .Set("QrCode", model.QrCode)
                 .Set("Status", model.Status)
-                .Set("IdColab", model.IdColab);
+                .Set("IdColab", model.IdColab)
+                .Set("IdLot", model.IdLot);
 
             // Busca os tickets que correspondem ao filtro
             await _ticketCollection.UpdateOneAsync(filter, update);
@@ -196,7 +197,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             //Filta os tickets do lote e que ainda não foram vendidos
             var filter = Builders<Ticket>.Filter.And(
                 Builders<Ticket>.Filter.Eq(x => x.IdLot, idLot),
-                Builders<Ticket>.Filter.Eq(x => x.IdUser, null)
+                Builders<Ticket>.Filter.Eq(x => x.IsSold, false)
                 );
 
             var result = await _ticketCollection.Find(filter).CountDocumentsAsync();

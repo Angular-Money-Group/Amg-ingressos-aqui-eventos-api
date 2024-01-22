@@ -229,17 +229,70 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                         if (qtdTicketsNaoUsados > 0)
                         {
-                            lista.Add($"Lote: {lot.Id} - Qtd não usados: {qtdTicketsNaoUsados}");
-                            //Consultar se existe mais um lote para o evento - 
+                            //Testa se os ingressos restantes do lote, devem ser migrados o proximo lote
+                            //consultar pelo IdVariant, os dados de variação do lote
+                            //1 - verifica se o lote precisa ser migrado
+                            //2 - Consultar se existe mais um lote para o evento
+                            var variant = await _variantRepository.GetById(lot.IdVariant);
+                            if (variant != null && variant.SellTicketsInAnotherBatch)
+                            {
+                                //Numero de identificacao do proximo lote
+                                int identificate = lot.Identificate + 1;
 
-                            //Se existir mais lotes - Os ingressos não vendidos (quantidade), inserir eles no lote que vai iniciar
+                                //Consulta o proximo lote desta variação
+                                var novoLote = await _lotRepository.GetByFilter(new Dictionary<string, string> { 
+                                    { "IdVariant",lot.IdVariant } ,
+                                    { "Identificate", identificate.ToString()  } 
+                                });
 
-                            //Finalizar o lote (atualizar o status)
-                            _lotRepository.Edit(lot.Id, new Lot() { Status = Enum.EnumStatusLot.Finished });
+                                //Verifica se tem mais lote - Precisa ter dados ou tem erro de integradade de dados
+                                if (novoLote != null && novoLote.Count() > 0)
+                                {
+                                    //Consulta os tickets não vendidos do lote
+                                    var tickets = await _ticketService.GetRemainingByLot(lot.Id);
+                                    if (tickets != null && tickets.Data != null)
+                                    {
+                                        List<Ticket> listaTicket = new List<Ticket>();
+                                        listaTicket = (List<Ticket>)tickets.Data;
 
-                            //Não existe mais lote - Finalizar a variação (atualizar o status)
-                            _variantRepository.Edit(lot.IdVariant, new Variant() { Status = Enum.EnumStatusVariant.Finished });
+                                        foreach (Ticket item in listaTicket)
+                                        {
+                                            //Monta objeto para atualizar o lote e o valor do ticket, com os dados do novo lote
+                                            var retTicket = await _ticketService.EditAsync(item.Id, new Ticket()
+                                            {
+                                                IdColab = item.IdColab,
+                                                IdLot = novoLote.FirstOrDefault().Id, // id do novo lote, que os ingressos vao ser atualizados
+                                                IdUser = item.IdUser,
+                                                IsSold = item.IsSold,
+                                                Position = item.Position,
+                                                QrCode = item.QrCode,
+                                                ReqDocs = item.ReqDocs,
+                                                Status = item.Status,
+                                                TicketCortesia = item.TicketCortesia,
+                                                Value = novoLote.FirstOrDefault().ValueTotal
+                                            });
+
+                                        }
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //Não existe mais lote - Finalizar a variação (atualizar o status)
+                                var resultVariant = await _variantRepository.ChangeStatusVariant(lot.IdVariant, (int)Enum.EnumStatusVariant.Finished);
+                            }
                         }
+                        else
+                        {
+                            //Não existe mais lote - Finalizar a variação (atualizar o status)
+                            var resultVariant = await _variantRepository.ChangeStatusVariant(lot.IdVariant, (int)Enum.EnumStatusVariant.Finished);
+
+                            //Verificar se todos os ingressos do lote for vendido
+                        }
+
+                        //Finalizar o lote (atualizar o status)
+                        _lotRepository.ChangeStatusLot(lot.Id, (int)Enum.EnumStatusLot.Finished).GetAwaiter().GetResult();
 
                         lista.Add($"Lote: {lot.Id} - Finalizado");
                     }

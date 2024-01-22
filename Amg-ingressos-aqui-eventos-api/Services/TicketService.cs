@@ -571,7 +571,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idLot.ValidateIdMongo();
                 var ticket = new Ticket() { IdLot = idLot };
                 var result = await _ticketRepository.GetTickets<Ticket>(ticket);
-                _messageReturn.Data = result.Where(i => i.IdUser == null).ToList();
+                _messageReturn.Data = result.Where(i => i.IsSold == false).ToList();
             }
             catch (Exception ex)
             {
