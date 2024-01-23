@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Amg_ingressos_aqui_eventos_api.Model;
+using MongoDB.Driver.Search;
 
 namespace Amg_ingressos_aqui_eventos_api.Dto
 {
@@ -38,6 +39,12 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         [JsonPropertyName("nameOrganizer")]
         public string NameOrganizer { get; set; }
 
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("highlighted")]
+        public bool Highlighted { get; set; }
+
         public GridEventDto()
         {
             Id = string.Empty;
@@ -51,6 +58,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
             Type = string.Empty;
             Local = string.Empty;
             NameOrganizer = string.Empty;
+            Status = string.Empty;
         }
         public List<GridEventDto> ModelListToDtoList(List<EventComplet> listEvent)
         {
@@ -71,6 +79,8 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
                 Local = eventData.Local,
                 Type = eventData.Type,
                 NameOrganizer = eventData.User?.FirstOrDefault()?.Name ?? string.Empty,
+                Highlighted = eventData.Highlighted,
+                Status = eventData.Status.ToString()
             };
         }
     }
