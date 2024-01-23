@@ -149,5 +149,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             else
                 throw new EditException("Algo deu errado ao atualizar status do Lot");
         }
+
+        public async Task<bool> EditCombine(string id, Lot eventObj)
+        {
+            var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<Lot>.Update.Combine();
+
+            foreach (var property in typeof(Event).GetProperties())
+            {
+                if (property.GetValue(eventObj) != null && property.Name != "_id")
+                {
+                    update = update.Set(property.Name, property.GetValue(eventObj));
+                }
+            }
+
+            await _lotCollection.UpdateOneAsync(filtro, update);
+            return true;
+        }
     }
 }

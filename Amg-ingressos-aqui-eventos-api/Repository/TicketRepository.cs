@@ -192,7 +192,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         }
 
 
-        public async Task<long> GetCountTicketsNoUser(string idLot)
+        public async Task<int> GetCountTicketsNoUser(string idLot)
         {
             //Filta os tickets do lote e que ainda não foram vendidos
             var filter = Builders<Ticket>.Filter.And(
@@ -201,7 +201,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 );
 
             var result = await _ticketCollection.Find(filter).CountDocumentsAsync();
-            return result;
+            return (int)result;
         }
     }
 }

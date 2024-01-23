@@ -225,7 +225,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     foreach (Lot lot in lots)
                     {
                         //Consultar o numero de ingressos(tickets) não vendidos do lote
-                        long qtdTicketsNaoUsados = await _ticketService.GetCountTicketsNoUser(lot.Id);
+                        int qtdTicketsNaoUsados = await _ticketService.GetCountTicketsNoUser(lot.Id);
 
                         if (qtdTicketsNaoUsados > 0)
                         {
@@ -271,30 +271,49 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                                 TicketCortesia = item.TicketCortesia,
                                                 Value = novoLote.FirstOrDefault().ValueTotal
                                             });
-
                                         }
 
+                                        //Finalizar o lote que terminou a validade (atualizar o status)
+                                        _lotRepository.EditCombine(lot.Id, new Lot()
+                                        {
+                                            Status = Enum.EnumStatusLot.Finished,
+                                            TotalTickets = lot.TotalTickets - qtdTicketsNaoUsados
+                                        }).GetAwaiter().GetResult();
+
+                                        //Inicializa o novo o lote (atualizar o status)
+                                        _lotRepository.EditCombine(novoLote.FirstOrDefault().Id, new Lot()
+                                        {
+                                            Status = Enum.EnumStatusLot.Finished,
+                                            TotalTickets = novoLote.FirstOrDefault().TotalTickets + qtdTicketsNaoUsados
+                                        }).GetAwaiter().GetResult();
+
+                                        lista.Add($"Lote: {lot.Id} - Finalizado");
                                     }
                                 }
                             }
                             else
                             {
                                 //Não existe mais lote - Finalizar a variação (atualizar o status)
-                                var resultVariant = await _variantRepository.ChangeStatusVariant(lot.IdVariant, (int)Enum.EnumStatusVariant.Finished);
+                                //var resultVariant = await _variantRepository.ChangeStatusVariant(lot.IdVariant, (int)Enum.EnumStatusVariant.Finished);
+
+                                //Finalizar o lote que terminou a validade ou não tem mais tickets (ingressos) para serem vendidos (atualizar o status)
+                                _lotRepository.ChangeStatusLot(lot.Id, (int)Enum.EnumStatusLot.Finished).GetAwaiter().GetResult();
+
+                                lista.Add($"Lote: {lot.Id} - Finalizado");
                             }
                         }
                         else
                         {
                             //Não existe mais lote - Finalizar a variação (atualizar o status)
-                            var resultVariant = await _variantRepository.ChangeStatusVariant(lot.IdVariant, (int)Enum.EnumStatusVariant.Finished);
+                            //var resultVariant = await _variantRepository.ChangeStatusVariant(lot.IdVariant, (int)Enum.EnumStatusVariant.Finished);
 
+                            //Finalizar o lote que terminou a validade ou não tem mais tickets (ingressos) para serem vendidos (atualizar o status)
+                            _lotRepository.ChangeStatusLot(lot.Id,(int)Enum.EnumStatusLot.Finished).GetAwaiter().GetResult();
+
+                            lista.Add($"Lote: {lot.Id} - Finalizado");
                             //Verificar se todos os ingressos do lote for vendido
                         }
 
-                        //Finalizar o lote (atualizar o status)
-                        _lotRepository.ChangeStatusLot(lot.Id, (int)Enum.EnumStatusLot.Finished).GetAwaiter().GetResult();
-
-                        lista.Add($"Lote: {lot.Id} - Finalizado");
                     }
                     _messageReturn.Data = Newtonsoft.Json.JsonConvert.SerializeObject(lista);
                 }
