@@ -35,6 +35,9 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
         [JsonPropertyName("local")]
         public string Local { get; set; }
 
+        [JsonPropertyName("nameOrganizer")]
+        public string NameOrganizer { get; set; }
+
         public GridEventDto()
         {
             Id = string.Empty;
@@ -47,6 +50,7 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
             Image = string.Empty;
             Type = string.Empty;
             Local = string.Empty;
+            NameOrganizer = string.Empty;
         }
         public List<GridEventDto> ModelListToDtoList(List<EventComplet> listEvent)
         {
@@ -65,7 +69,8 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
                 Description = eventData.Description,
                 Image = eventData.Image,
                 Local = eventData.Local,
-                Type = eventData.Type
+                Type = eventData.Type,
+                NameOrganizer = eventData.User?.FirstOrDefault()?.Name ?? string.Empty,
             };
         }
     }

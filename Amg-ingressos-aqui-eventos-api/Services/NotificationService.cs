@@ -30,8 +30,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 httpClient.Timeout = TimeSpan.FromMinutes(10);
                 var jsonBody = new StringContent(JsonSerializer.Serialize(email),
                 Encoding.UTF8, Application.Json);
-                var url = Settings.EmailServiceApi;
-                var uri = Settings.UriEmailTicket;
+                var url = Settings.NotificationServiceApi;
+                var uri = Settings.UriNotificationTicket;
                 _logger.LogInformation(string.Format("Call PostAsync - Send: {0}", this.GetType().Name));
                 await httpClient.PostAsync(url + uri, jsonBody);
 

@@ -300,7 +300,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
 
-            string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
+            string linkImagem = Settings.HostImg + nomeArquivoImage;
 
             using (var stream = new FileStream(filePathImage, FileMode.Create))
             {
@@ -332,14 +332,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 dic.Add("StartDate", filters.StartDate);
             if (filters.EndDate != null && filters.EndDate != DateTime.MinValue)
                 dic.Add("StartDate", filters.EndDate);
-
-            //filtro default
-            if (dic.Count == 0)
-            {
-                DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
-                dic.Add("StartDate", startOfWeek);
-                dic.Add("Status", (int)EnumStatusEvent.Active);
-            }
+            if (!string.IsNullOrEmpty(filters.Status))
+                dic.Add("Status", filters.Status ?? throw new RuleException("status não pode ser vazio."));
 
             return dic;
         }
