@@ -113,7 +113,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
             var name = "CBLOL";
             var dic = new Dictionary<string,object>(){{"Name",name}};
             var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetByFilter<Event>(dic,null)).Returns(Task.FromResult(messageReturn as List<Event>)!);
+            _eventRepositoryMock.Setup(x => x.GetByFilter<Event>(dic, null)).Returns(Task.FromResult((messageReturn as List<Event>, 10000000000))!);
 
             // Act
             var result = (OkObjectResult)await _eventController.GetByNameAsync(name);

@@ -39,7 +39,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 id.ValidateIdMongo();
                 var dic = new Dictionary<string, object>() { { "_id", id } };
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data[0]);
+
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data.Item1[0]);
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -53,37 +54,36 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                ValidateModelSave(eventObject);
-                IsBase64Image(eventObject.Image!);
-                eventObject.Image = StoreImageAndGenerateLinkToAccess(eventObject.Image!);
-                eventObject.Status = Enum.EnumStatusEvent.Active;
-                eventObject.Courtesy = new Courtesy()
-                {
-                    RemainingCourtesy = new List<RemainingCourtesy>(),
-                    CourtesyHistory = new List<CourtesyHistory>()
-                };
                 Event modelEvent = new EventCompletDto().DtoToModel(eventObject);
+                modelEvent.ValidateModelSave();
+                if (!eventObject.Variants.Any())
+                    throw new SaveException("Variante é Obrigatório.");
+
+                modelEvent.Image = StoreImageAndGenerateLinkToAccess(eventObject.Image!);
+                modelEvent.Status = EnumStatusEvent.Active;
                 await _eventRepository.Save(modelEvent);
 
-                eventObject.Variants
-                    .ToList()
-                    .ForEach(i =>
+                //processa variantes
+                eventObject.Variants.ForEach(i =>
                     {
                         i.IdEvent = modelEvent.Id ?? string.Empty;
-                        _ = _variantService.SaveAsync(i);
-
-                        if (i.QuantityCourtesy > 0)
-                        {
-                            var RemainingCourtesy = new RemainingCourtesy
-                            {
-                                VariantId = i.Id,
-                                VariantName = i.Name,
-                                Quantity = i.QuantityCourtesy
-                            };
-
-                            modelEvent.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
-                        }
                     });
+
+                _ = await _variantService.SaveManyAsync(eventObject.Variants);
+
+                eventObject.Variants.ForEach(v =>
+                {
+                    if (v.QuantityCourtesy > 0)
+                    {
+                        var RemainingCourtesy = new RemainingCourtesy
+                        {
+                            VariantId = v.Id,
+                            VariantName = v.Name,
+                            Quantity = v.QuantityCourtesy
+                        };
+                        modelEvent.Courtesy.RemainingCourtesy.Add(RemainingCourtesy);
+                    }
+                });
 
                 await _eventRepository.Edit(modelEvent.Id, modelEvent);
                 _messageReturn.Data = modelEvent;
@@ -135,7 +135,25 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data);
+
+                _messageReturn.Data = new EventCompletWithTransactionDto().ModelListToDtoList(data.Item1);
+                return _messageReturn;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"));
+                throw;
+            }
+        }
+
+        public async Task<MessageReturn> GetEventsForGridAsync(FilterOptions filters, Pagination paginationOptions)
+        {
+            try
+            {
+                Dictionary<string, object> dic = GenerateFilters(filters);
+                var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
+
+                _messageReturn.Data = new { data = new GridEventDto().ModelListToDtoList(data.Item1), TotalCount = data.count };
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -151,7 +169,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 var dic = GenerateFilters(new FilterOptions() { Highlights = true });
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -173,8 +191,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 dic.Add("StartDate", startOfRange.ToUniversalTime());
                 dic.Add("Status", (int)EnumStatusEvent.Active);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
-                data = data.Where(x => x.StartDate.Date <= endOfRange.Date).ToList();
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                data.Item1 = data.Item1.Where(x => x.StartDate.Date <= endOfRange.Date).ToList();
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -220,10 +238,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     Type = eventDto.Type
                 };
 
-                if (eventEdit.Image != null && IsBase64String(eventEdit.Image))
+                if (eventEdit.Image != null && eventEdit.Image.IsBase64String())
                 {
-                    IsBase64Image(eventEdit.Image!);
-                    eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image!);
+                    eventEdit.Image = StoreImageAndGenerateLinkToAccess(eventEdit.Image);
                 }
                 _messageReturn.Data = await _eventRepository.Edit(id, eventEdit);
                 return _messageReturn;
@@ -257,70 +274,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
                 return _messageReturn;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEvents), "Eventos"));
                 throw;
-            }
-        }
-
-        private void ValidateModelSave(EventCompletDto eventSave)
-        {
-            if (eventSave.Name == "")
-                throw new SaveException("Nome é Obrigatório.");
-            if (eventSave.Local == "")
-                throw new SaveException("Local é Obrigatório.");
-            if (eventSave.Type == "")
-                throw new SaveException("Tipo é Obrigatório.");
-            if (eventSave.Image == "")
-                throw new SaveException("Imagem é Obrigatório.");
-            if (eventSave.Description == "")
-                throw new SaveException("Descrição é Obrigatório.");
-            if (eventSave.Address == null)
-                throw new SaveException("Endereço é Obrigatório.");
-            if (eventSave.Address.Cep == "")
-                throw new SaveException("CEP é Obrigatório.");
-            if (eventSave.Address.Number == string.Empty)
-                throw new SaveException("Número Endereço é Obrigatório.");
-            if (eventSave.Address.Neighborhood == "")
-                throw new SaveException("Vizinhança é Obrigatório.");
-            if (eventSave.Address.City == "")
-                throw new SaveException("Cidade é Obrigatório.");
-            if (eventSave.Address.State == "")
-                throw new SaveException("Estado é Obrigatório.");
-            if (eventSave.StartDate == DateTime.MinValue)
-                throw new SaveException("Data Inicio é Obrigatório.");
-            if (eventSave.EndDate == DateTime.MinValue)
-                throw new SaveException("Data Fim é Obrigatório.");
-            if (!eventSave.Variants.Any())
-                throw new SaveException("Variante é Obrigatório.");
-        }
-
-        private static bool IsBase64String(string base64)
-        {
-            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
-            return Convert.TryFromBase64String(base64, buffer, out int bytesParsed);
-        }
-
-        private void IsBase64Image(string base64String)
-        {
-            if (string.IsNullOrEmpty(base64String))
-                throw new SaveException("Imagem é obrigatório");
-
-            var base64Data = Regex
-                .Match(base64String, @"data:image/(?<type>.+?),(?<data>.+)")
-                .Groups["data"].Value;
-
-            try
-            {
-                Convert.FromBase64String(base64Data);
-            }
-            catch (FormatException)
-            {
-                throw new SaveException("Essa imagem não está em base64");
             }
         }
 
@@ -340,7 +300,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
             var filePathImage = Path.Combine(directoryPathImage, nomeArquivoImage);
 
-            string linkImagem = "https://api.ingressosaqui.com/imagens/" + nomeArquivoImage;
+            string linkImagem = Settings.HostImg + nomeArquivoImage;
 
             using (var stream = new FileStream(filePathImage, FileMode.Create))
             {
@@ -372,14 +332,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 dic.Add("StartDate", filters.StartDate);
             if (filters.EndDate != null && filters.EndDate != DateTime.MinValue)
                 dic.Add("StartDate", filters.EndDate);
-
-            //filtro default
-            if (dic.Count == 0)
-            {
-                DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
-                dic.Add("StartDate", startOfWeek);
-                dic.Add("Status", (int)EnumStatusEvent.Active);
-            }
+            if (!string.IsNullOrEmpty(filters.Status))
+                dic.Add("Status", filters.Status ?? throw new RuleException("status não pode ser vazio."));
 
             return dic;
         }

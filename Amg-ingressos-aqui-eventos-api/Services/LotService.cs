@@ -52,7 +52,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 }
 
                 _ = _ticketService.SaveManyAsync(listTicket);
-                _messageReturn.Data = lotModel;
+                _messageReturn.Data = lotModel ?? new Lot();
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 listLot.ForEach(i => { ValidateModelSave(i); });
                 var listLotModel = new LotWithTicketDto().ListDtoToListModel(listLot);
-                _messageReturn.Data = await _lotRepository.SaveMany(listLotModel);
+                var listLotsDatabase = await _lotRepository.SaveMany(listLotModel);
                 listLot.ForEach(x =>
                 {
                     List<Ticket> listTicket = new List<Ticket>();
@@ -78,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         listTicket.Add(new Ticket()
                         {
                             ReqDocs = x.ReqDocs,
-                            IdLot = x.Id ?? string.Empty,
+                            IdLot = listLotsDatabase?.Find(l=> l.Identificate == x.Identificate)?.Id ?? throw new RuleException("Id Lote não poder ser vazio."),
                             Value = x.ValueTotal
                         });
                     }

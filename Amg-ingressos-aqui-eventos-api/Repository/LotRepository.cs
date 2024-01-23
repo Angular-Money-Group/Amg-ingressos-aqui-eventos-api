@@ -12,15 +12,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     public class LotRepository : ILotRepository
     {
         private readonly IMongoCollection<Lot> _lotCollection;
-        public LotRepository(IDbConnection<Lot> dbConnection)
+        public LotRepository(IDbConnection dbConnection)
         {
-            _lotCollection = dbConnection.GetConnection("lots");
+            _lotCollection = dbConnection.GetConnection<Lot>("lots");
         }
 
-        public async Task<bool> SaveMany(List<Lot> listLot)
+        public async Task<List<Lot>> SaveMany(List<Lot> listLot)
         {
             await _lotCollection.InsertManyAsync(listLot);
-            return true;
+            return listLot;
         }
 
         public async Task<bool> DeleteByVariant(string idVariant)

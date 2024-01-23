@@ -10,6 +10,5 @@ WORKDIR /app
 COPY --from=build /app/published-app /app
 
 COPY ./Amg-ingressos-aqui-eventos-api/images /app/images
-COPY ./Amg-ingressos-aqui-eventos-api/descriptions /app/descriptions
 
 ENTRYPOINT [ "dotnet", "/app/Amg-ingressos-aqui-eventos-api.dll" ]

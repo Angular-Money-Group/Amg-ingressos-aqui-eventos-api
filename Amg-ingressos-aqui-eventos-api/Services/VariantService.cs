@@ -51,6 +51,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
                         i.IdVariant = variantDatabase.Id ?? string.Empty;
+                        i.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
                         var lot = (Lot)_lotService.SaveAsync(i).Result.Data;
                         i.Id = lot.Id;
                         IdentificateLot++;
@@ -172,22 +173,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 });
 
                 var listVariantModel = new VariantWithLotDto().ListDtoToListModel(listVariant);
-                _messageReturn.Data = await _variantRepository.SaveMany(listVariantModel);
+                var listVariants = await _variantRepository.SaveMany(listVariantModel);
 
                 listVariant.ForEach(i =>
                 {
                     var IdentificateLot = 1;
+                    var idVariant =listVariants?.Find(v => v.Name == i.Name)?.Id ?? string.Empty;
                     i.Lots.ForEach(l =>
                     {
+                        l.IdVariant = idVariant;
                         l.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
                         l.Identificate = IdentificateLot;
                         l.ReqDocs = i.ReqDocs;
-                        l.IdVariant = i.Id;
-                        IdentificateLot++;
                         IdentificateLot++;
                     });
-                    _ = _lotService.SaveManyAsync(i.Lots);
+                    _lotService.SaveManyAsync(i.Lots);
                 });
+                 
                 return _messageReturn;
             }
             catch (Exception ex)

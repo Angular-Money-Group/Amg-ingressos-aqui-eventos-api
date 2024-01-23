@@ -17,7 +17,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly ITicketRowRepository _ticketRowRepository;
         private readonly IVariantRepository _variantRepository;
         private readonly ILotRepository _lotRepository;
-        private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
         private readonly IEventRepository _eventRepository;
         private MessageReturn _messageReturn;
         private readonly ILogger<TicketService> _logger;
@@ -27,7 +27,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             ITicketRowRepository ticketRowRepository,
             IVariantRepository variantRepository,
             ILotRepository lotRepository,
-            IEmailService emailService,
+            INotificationService notificationService,
             IEventRepository eventRepository,
             ILogger<TicketService> logger
         )
@@ -36,7 +36,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _ticketRowRepository = ticketRowRepository;
             _variantRepository = variantRepository;
             _lotRepository = lotRepository;
-            _emailService = emailService;
+            _notificationService = notificationService;
             _eventRepository = eventRepository;
             _logger = logger;
             _messageReturn = new MessageReturn();
@@ -447,7 +447,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             var eventLocal = eventToGenerateTicket.Local;
 
-            var @event = new Model.Event()
+            var @event = new Event()
             {
                 Id = eventToGenerateTicket.Id,
                 Name = eventToGenerateTicket.Name,
@@ -458,7 +458,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 StartDate = eventToGenerateTicket.StartDate,
                 EndDate = eventToGenerateTicket.EndDate,
                 Status = eventToGenerateTicket.Status,
-                Address = new Model.Address()
+                Address = new Address()
                 {
                     Cep = eventToGenerateTicket.Address!.Cep,
                     AddressDescription = eventToGenerateTicket.Address.AddressDescription,
@@ -673,50 +673,40 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             try
             {
-                var email = new Email
+                var notification = new EmailTicketDto()
                 {
-                    Body = _emailService.GenerateBody(),
-                    Subject = "Ingressos",
+                    AddressEvent = ticketEventDto.Event.Address.AddressDescription
+                    + " - "
+                    + ticketEventDto.Event.Address.Number
+                    + " - "
+                    + ticketEventDto.Event.Address.Neighborhood
+                    + " - "
+                    + ticketEventDto.Event.Address.City
+                    + " - "
+                    + ticketEventDto.Event.Address.State,
+                    EndDateEvent = ticketEventDto.Event.EndDate.ToString(),
+                    EventName = ticketEventDto.Event.Name,
+                    LocalEvent = ticketEventDto.Event.Local,
                     Sender = "suporte@ingressosaqui.com",
+                    StartDateEvent = ticketEventDto.Event.StartDate.ToString(),
+                    Subject = "Ingressos",
                     To = emailTicket,
-                    DataCadastro = DateTime.Now
+                    TypeTicket = "Cortesia",
+                    UrlQrCode = urlQrCode,
+                    UserName = "",
+                    VariantName = ticketEventDto.Variant.Name,
+
                 };
 
-                email.Body = email.Body.Replace("{nome_usuario}", " ");
-                email.Body = email.Body.Replace("{nome_evento}", ticketEventDto.Event.Name);
-                email.Body = email.Body.Replace(
-                    "{data_evento}",
-                    $"{ticketEventDto.Event.StartDate} as {ticketEventDto.Event.EndDate}"
+                await _notificationService.SaveAsync(notification);
+
+                ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Enviado;
+                await _ticketRowRepository.EditTicketsRowAsync(
+                    rowId,
+                    ticketsRow
                 );
-                email.Body = email.Body.Replace("{local_evento}", ticketEventDto.Event.Local);
-                email.Body = email.Body.Replace(
-                    "{endereco_evento}",
-                    $"{ticketEventDto?.Event?.Address?.AddressDescription} - {ticketEventDto?.Event?.Address?.Number} - {ticketEventDto?.Event?.Address?.Neighborhood} - {ticketEventDto?.Event?.Address?.City} - {ticketEventDto?.Event?.Address?.State}"
-                );
-                email.Body = email.Body.Replace("{area_evento}", ticketEventDto?.Variant.Name);
-                email.Body = email.Body.Replace("{tipo_ingresso}", "Cortesia");
-                email.Body = email.Body.Replace("{qr_code}", urlQrCode);
 
-                await _emailService.SaveAsync(email);
-
-                var isEmailSend = _emailService.Send(email?.Id ?? string.Empty, ticketsRow, index, rowId).Result;
-
-                if ((bool)isEmailSend.Data)
-                {
-                    ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Enviado;
-                    await _ticketRowRepository.EditTicketsRowAsync(
-                        rowId,
-                        ticketsRow
-                    );
-
-                    return true;
-                }
-                else
-                {
-                    _messageReturn.Message = "Erro ao enviar email";
-                    HandleEmailSendingFailure(index, rowId, ticketsRow);
-                    return false;
-                }
+                return true;
             }
             catch (Exception ex)
             {

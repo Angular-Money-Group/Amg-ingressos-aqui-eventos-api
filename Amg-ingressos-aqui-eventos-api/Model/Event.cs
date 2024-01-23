@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using Amg_ingressos_aqui_eventos_api.Exceptions;
+using Amg_ingressos_aqui_eventos_api.Utils;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -102,5 +105,55 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// </summary>
         [BsonDefaultValue(false)]
         public bool Highlighted { get; set; }
+
+        public void ValidateModelSave()
+        {
+            if (this.Name == "")
+                throw new SaveException("Nome é Obrigatório.");
+            if (this.Local == "")
+                throw new SaveException("Local é Obrigatório.");
+            if (this.Type == "")
+                throw new SaveException("Tipo é Obrigatório.");
+            if (this.Description == "")
+                throw new SaveException("Descrição é Obrigatório.");
+            if (this.Address == null)
+                throw new SaveException("Endereço é Obrigatório.");
+            if (this.Address.Cep == "")
+                throw new SaveException("CEP é Obrigatório.");
+            if (this.Address.Number == string.Empty)
+                throw new SaveException("Número Endereço é Obrigatório.");
+            if (this.Address.Neighborhood == "")
+                throw new SaveException("Vizinhança é Obrigatório.");
+            if (this.Address.City == "")
+                throw new SaveException("Cidade é Obrigatório.");
+            if (this.Address.State == "")
+                throw new SaveException("Estado é Obrigatório.");
+            if (this.StartDate == DateTime.MinValue)
+                throw new SaveException("Data Inicio é Obrigatório.");
+            if (this.EndDate == DateTime.MinValue)
+                throw new SaveException("Data Fim é Obrigatório.");
+            
+            validateImage(this.Image);
+        }
+
+        private void validateImage(string image)
+        {
+            if (string.IsNullOrEmpty(image))
+                throw new SaveException("Imagem é obrigatório");
+            
+            image.IsBase64String();
+
+            try
+            {
+                var base64Data = Regex
+                .Match(image, @"data:image/(?<type>.+?),(?<data>.+)")
+                .Groups["data"].Value;
+                Convert.FromBase64String(base64Data);
+            }
+            catch (FormatException)
+            {
+                throw new SaveException("Essa imagem não está em base64");
+            }
+        }
     }
 }

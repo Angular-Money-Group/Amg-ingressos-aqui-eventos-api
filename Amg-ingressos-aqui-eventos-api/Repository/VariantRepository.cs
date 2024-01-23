@@ -13,9 +13,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<Variant> _variantCollection;
 
-        public VariantRepository(IDbConnection<Variant> dbconnection)
+        public VariantRepository(IDbConnection dbconnection)
         {
-            _variantCollection = dbconnection.GetConnection("variants");
+            _variantCollection = dbconnection.GetConnection<Variant>("variants");
         }
 
         public async Task<Variant> Save(Variant variant)
@@ -26,14 +26,14 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return data;
         }
 
-        public async Task<bool> SaveMany(List<Variant> listVariant)
+        public async Task<List<Variant>> SaveMany(List<Variant> listVariant)
         {
-            if (listVariant.Any())
+            if (!listVariant.Any())
                 throw new SaveException("Variante não pode ser null.");
 
             await _variantCollection.InsertManyAsync(listVariant);
 
-            return true;
+            return listVariant;
         }
 
         public async Task<bool> Edit(string id, Variant variant)

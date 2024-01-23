@@ -43,5 +43,4 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
             return (code, JsonConvert.SerializeObject(new MessageReturn(){Message=exception.Message}));
         }
     }
-
 }

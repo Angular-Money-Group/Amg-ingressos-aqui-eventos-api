@@ -19,7 +19,7 @@ namespace Amg_ingressos_aqui_eventos_tests.Controllers
         private readonly Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
         private readonly Mock<ITicketRepository> _ticketRepositoryMock = new Mock<ITicketRepository>();
         private readonly Mock<ITicketRowRepository> _ticketRowRepositoryMock = new Mock<ITicketRowRepository>();
-        private readonly Mock<IEmailService> _emailRepositoryMock = new Mock<IEmailService>();
+        private readonly Mock<INotificationService> _emailRepositoryMock = new Mock<INotificationService>();
         private readonly Mock<ILotRepository> _lotRepositoryMock = new Mock<ILotRepository>();
         private readonly Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private readonly Mock<ILogger<TicketService>> _loggerServiceMock = new Mock<ILogger<TicketService>>();

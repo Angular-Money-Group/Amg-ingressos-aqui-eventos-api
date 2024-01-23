@@ -15,9 +15,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<Ticket> _ticketCollection;
 
-        public TicketRepository(IDbConnection<Ticket> dbConnection)
+        public TicketRepository(IDbConnection dbConnection)
         {
-            _ticketCollection = dbConnection.GetConnection("tickets");
+            _ticketCollection = dbConnection.GetConnection<Ticket>("tickets");
         }
 
         public async Task<List<T>> GetByUser<T>(string idUser)
@@ -111,7 +111,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
             var ticket = await _ticketCollection.Aggregate()
                     .Match(documentFilter)
-                    .Lookup("user", "idUser", "_id", "User")
+                    .Lookup("user", "IdUser", "_id", "Users")
                     .As<T>()
                     .ToListAsync();
             return ticket;

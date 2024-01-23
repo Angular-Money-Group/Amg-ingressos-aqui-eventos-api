@@ -2,10 +2,10 @@ using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
-using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using System.Reflection;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Infra;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
 {
@@ -14,9 +14,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
     {
         private readonly IMongoCollection<Event> _eventCollection;
 
-        public EventRepository(IDbConnection<Event> dbconnection)
+        public EventRepository(IDbConnection dbconnection)
         {
-            _eventCollection = dbconnection.GetConnection("events");
+            _eventCollection = dbconnection.GetConnection<Event>("events");
         }
 
         public async Task<bool> Delete(string id)
@@ -85,7 +85,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
                     .Lookup("user", "IdOrganizer", "_id", "User")
-                    .Sort(new BsonDocument("StartDate", 1))
+                    .Sort(new BsonDocument("StartDate", -1))
                     .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
                     .Limit(paginationOptions.PageSize)
                     .As<T>()
@@ -132,7 +132,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
 
             foreach (var property in typeof(Event).GetProperties())
             {
-                if (property.GetValue(eventObj) != null && property.Name != "_Id" && property.Name != "Variant")
+                if (property.GetValue(eventObj) != null && property.Name != "_Id"
+                && property.Name != "Variant" && property.Name != "IdOrganizer")
                 {
                     update = update.Set(property.Name, property.GetValue(eventObj));
                 }
@@ -198,12 +199,29 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pResult;
         }
 
-        public async Task<List<T1>> GetByFilter<T1>(Dictionary<string, object> filters, Pagination? paginationOptions)
+        public async Task<(List<T1>, long count)> GetByFilter<T1>(Dictionary<string, object> filters, Pagination? paginationOptions)
         {
             paginationOptions = paginationOptions ?? new Pagination();
             var filter = GenerateFilter(filters);
+            long count;
 
-            var eventData = await _eventCollection.Aggregate()
+            List<T1> eventData;
+            if (filters.Count <= 0)
+            {
+                eventData = await _eventCollection.Aggregate()
+                    .Lookup("variants", "_id", "IdEvent", "Variants")
+                    .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                    .Lookup("user", "IdOrganizer", "_id", "User")
+                    .Sort(new BsonDocument("StartDate", 1))
+                    .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
+                    .Limit(paginationOptions.PageSize)
+                    .As<T1>()
+                    .ToListAsync();
+                count = _eventCollection.CountDocuments(new BsonDocument());
+            }
+            else
+            {
+                eventData = await _eventCollection.Aggregate()
                     .Match(filter)
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
@@ -213,8 +231,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Limit(paginationOptions.PageSize)
                     .As<T1>()
                     .ToListAsync();
+                count = _eventCollection.CountDocuments(filter);
+            }
 
-            return eventData.Any() ? eventData : new List<T1>();
+            return (eventData.Any() ? eventData : new List<T1>(), count);
         }
 
         public async Task<List<T1>> GetByFilter<T1>(Dictionary<string, object> filters)
