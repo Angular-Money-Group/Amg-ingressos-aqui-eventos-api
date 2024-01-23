@@ -123,7 +123,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             var filter = Builders<Lot>.Filter.And(
                 Builders<Lot>.Filter.Gte(x => x.EndDateSales, dateManagerLots.Date),
-                Builders<Lot>.Filter.Lt(x => x.EndDateSales, dateManagerLots.AddDays(1).AddSeconds(-1))
+                Builders<Lot>.Filter.Lt(x => x.EndDateSales, dateManagerLots.AddDays(1).AddSeconds(-1)),
+                Builders<Lot>.Filter.Eq("Status",0)
                 );
 
             var pResult = await _lotCollection.Find(filter)

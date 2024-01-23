@@ -234,15 +234,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             //1 - verifica se o lote precisa ser migrado
                             //2 - Consultar se existe mais um lote para o evento
                             var variant = await _variantRepository.GetById(lot.IdVariant);
-                            if (variant != null && variant.SellTicketsInAnotherBatch)
+                            if (variant != null && variant.SellTicketsInAnotherBatch != null && variant.SellTicketsInAnotherBatch.Value)
                             {
                                 //Numero de identificacao do proximo lote
                                 int identificate = lot.Identificate + 1;
 
                                 //Consulta o proximo lote desta variação
-                                var novoLote = await _lotRepository.GetByFilter(new Dictionary<string, string> { 
+                                var novoLote = await _lotRepository.GetByFilter(new Dictionary<string, string> {
                                     { "IdVariant",lot.IdVariant } ,
-                                    { "Identificate", identificate.ToString()  } 
+                                    { "Identificate", identificate.ToString()  }
                                 });
 
                                 //Verifica se tem mais lote - Precisa ter dados ou tem erro de integradade de dados
@@ -298,8 +298,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                                 //Finalizar o lote que terminou a validade ou não tem mais tickets (ingressos) para serem vendidos (atualizar o status)
                                 _lotRepository.ChangeStatusLot(lot.Id, (int)Enum.EnumStatusLot.Finished).GetAwaiter().GetResult();
-
                                 lista.Add($"Lote: {lot.Id} - Finalizado");
+
+                                //Numero de identificacao do proximo lote
+                                int identificate = lot.Identificate + 1;
+
+                                //Consulta o proximo lote desta variação
+                                var novoLote = await _lotRepository.GetByFilter(new Dictionary<string, string> {
+                                    { "IdVariant",lot.IdVariant } ,
+                                    { "Identificate", identificate.ToString()  }
+                                });
+
+                                //Verifica se tem mais lote - Precisa ter dados ou tem erro de integradade de dados
+                                if (novoLote != null && novoLote.Count() > 0)
+                                {
+                                    //Inicia o novo lote da variação
+                                    _lotRepository.ChangeStatusLot(novoLote.FirstOrDefault().Id, (int)Enum.EnumStatusLot.Open).GetAwaiter().GetResult();
+                                }
                             }
                         }
                         else

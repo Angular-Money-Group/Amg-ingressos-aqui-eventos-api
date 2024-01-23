@@ -750,9 +750,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _ticketRowRepository.EditTicketsRowAsync(rowId, ticketsRow);
         }
 
-        public async Task<long> GetCountTicketsNoUser(string idLot)
+        public async Task<int> GetCountTicketsNoUser(string idLot)
         {
-            long qtd = 0;
+            int qtd = 0;
             try
             {
                 idLot.ValidateIdMongo();
