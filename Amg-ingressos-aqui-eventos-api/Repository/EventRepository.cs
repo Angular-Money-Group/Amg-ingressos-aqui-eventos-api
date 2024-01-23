@@ -203,9 +203,11 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             paginationOptions = paginationOptions ?? new Pagination();
             var filter = GenerateFilter(filters);
+            long count;
 
             List<T1> eventData;
             if (filters.Count <= 0)
+            {
                 eventData = await _eventCollection.Aggregate()
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
@@ -215,7 +217,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Limit(paginationOptions.PageSize)
                     .As<T1>()
                     .ToListAsync();
+                count = _eventCollection.CountDocuments(new BsonDocument());
+            }
             else
+            {
                 eventData = await _eventCollection.Aggregate()
                     .Match(filter)
                     .Lookup("variants", "_id", "IdEvent", "Variants")
@@ -226,8 +231,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Limit(paginationOptions.PageSize)
                     .As<T1>()
                     .ToListAsync();
-
-            long count = eventData.Count;
+                count = _eventCollection.CountDocuments(filter);
+            }
 
             return (eventData.Any() ? eventData : new List<T1>(), count);
         }
