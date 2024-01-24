@@ -1,11 +1,10 @@
 namespace Amg_ingressos_aqui_eventos_api.Enum
 {
-    public enum EnumStatusLot
+    public enum StatusVariant
     {
-        Open = 0,
+        Active = 0,
         Closed = 1,
         Canceled = 2,
-        Finished = 3,
-        Wait = 4
+        Finished = 3
     }
 }

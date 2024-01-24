@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     variant.LocaleImage = StoreImageAndGenerateLinkToAccess(variant.LocaleImage!);
                 }
-                variant.Status = Enum.EnumStatusVariant.Active;
+                variant.Status = Enum.StatusVariant.Active;
                 Variant modelVariant = new VariantWithLotDto().DtoToModel(variant);
                 var variantDatabase = await _variantRepository.Save(modelVariant) ?? throw new RuleException("Id nao pode ser null");
                 var IdentificateLot = 1;
@@ -51,7 +51,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         i.Identificate = IdentificateLot;
                         i.ReqDocs = variant.ReqDocs;
                         i.IdVariant = variantDatabase.Id ?? string.Empty;
-                        i.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
+                        i.Status = IdentificateLot == 1 ? Enum.StatusLot.Open : Enum.StatusLot.Wait;
                         var lot = (Lot)_lotService.SaveAsync(i).Result.Data;
                         i.Id = lot.Id;
                         IdentificateLot++;
@@ -61,7 +61,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Variante"));
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), ex));
                 throw;
             }
         }
@@ -97,7 +97,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Variante"));
+                _logger.LogError(string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), ex));
                 throw;
             }
         }
@@ -113,7 +113,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Variante"));
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), ex));
                 _ = DeleteAsync(id);
                 throw;
             }
@@ -136,7 +136,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Variantes"));
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), ex));
                 throw;
             }
         }
@@ -169,7 +169,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     {
                         v.LocaleImage = StoreImageAndGenerateLinkToAccess(v.LocaleImage!);
                     }
-                    v.Status = Enum.EnumStatusVariant.Active;
+                    v.Status = Enum.StatusVariant.Active;
                 });
 
                 var listVariantModel = new VariantWithLotDto().ListDtoToListModel(listVariant);
@@ -178,23 +178,23 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 listVariant.ForEach(i =>
                 {
                     var IdentificateLot = 1;
-                    var idVariant =listVariants?.Find(v => v.Name == i.Name)?.Id ?? string.Empty;
+                    var idVariant = listVariants?.Find(v => v.Name == i.Name)?.Id ?? string.Empty;
                     i.Lots.ForEach(l =>
                     {
                         l.IdVariant = idVariant;
-                        l.Status = IdentificateLot == 1 ? Enum.EnumStatusLot.Open : Enum.EnumStatusLot.Wait;
+                        l.Status = IdentificateLot == 1 ? Enum.StatusLot.Open : Enum.StatusLot.Wait;
                         l.Identificate = IdentificateLot;
                         l.ReqDocs = i.ReqDocs;
                         IdentificateLot++;
                     });
                     _lotService.SaveManyAsync(i.Lots);
                 });
-                 
+
                 return _messageReturn;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), "Variantes"));
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), ex));
                 throw;
             }
         }
@@ -227,7 +227,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format("{0}:{1} - Erro ao gerar link imagem variante.", this.GetType().Name, nameof(StoreImageAndGenerateLinkToAccess)), image);
+                _logger.LogError(string.Format("{0}:{1} - Erro ao gerar link imagem variante.", this.GetType().Name, nameof(StoreImageAndGenerateLinkToAccess)), ex);
                 throw;
             }
         }

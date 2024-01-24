@@ -1,6 +1,6 @@
 ﻿namespace Amg_ingressos_aqui_eventos_api.Enum
 {
-    public enum EnumTypeUser
+    public enum TypeUser
     {
         Admin = 0,
         Customer = 1,

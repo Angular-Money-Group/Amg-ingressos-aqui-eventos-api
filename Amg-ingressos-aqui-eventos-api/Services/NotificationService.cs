@@ -40,7 +40,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao salvar notificação.");
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync),"erro ao salvar notification"), ex);
                 throw;
             }
         }

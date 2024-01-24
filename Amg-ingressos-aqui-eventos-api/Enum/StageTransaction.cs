@@ -1,6 +1,6 @@
 namespace Amg_ingressos_aqui_eventos_api.Enum
 {
-    public enum EnumStageTransaction
+    public enum StageTransaction
     {
         Confirm = 0,
         PersonData = 1,

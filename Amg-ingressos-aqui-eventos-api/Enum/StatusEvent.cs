@@ -1,6 +1,6 @@
 namespace Amg_ingressos_aqui_eventos_api.Enum
 {
-    public enum EnumStatusEvent
+    public enum StatusEvent
     {
         Active = 0,
         Inative = 1,

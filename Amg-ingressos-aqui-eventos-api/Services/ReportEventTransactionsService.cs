@@ -44,21 +44,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), idOrganizer);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), idOrganizer);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), idOrganizer);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactions), "relatorio transações"), ex);
                 throw;
             }
         }
@@ -83,21 +71,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _messageReturn.Data = ReportTransactionsDto;
                 return _messageReturn;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), idOrganizer);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), idOrganizer);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), idOrganizer);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTransactionsDetail), "relatorio transações detalhes"), ex);
                 throw;
             }
         }
@@ -109,9 +85,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             if (!listTransaction.Any())
                 return new ReportTransactionsDto();
 
-            var listCredit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.EnumTypePayment.CreditCard);
-            var listDebit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.EnumTypePayment.DebitCard);
-            var listPix = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.EnumTypePayment.Pix);
+            var listCredit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.TypePayment.CreditCard);
+            var listDebit = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.TypePayment.DebitCard);
+            var listPix = listTransaction.Where(i => i.PaymentMethod.TypePayment == Enum.TypePayment.Pix);
 
             ReportTransactionsDto report = new ReportTransactionsDto()
             {
@@ -185,7 +161,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                   on transactionJoin.IdTransaction equals transactions.Id
                                   select transactions;
             //filtro de transacoes finalizadas
-            listTransaction = listTransaction.Where(x => x.PaymentMethod != null && x.Stage == Enum.EnumStageTransaction.Finished);
+            listTransaction = listTransaction.Where(x => x.PaymentMethod != null && x.Stage == Enum.StageTransaction.Finished);
             return listTransaction.ToList();
         }
     }

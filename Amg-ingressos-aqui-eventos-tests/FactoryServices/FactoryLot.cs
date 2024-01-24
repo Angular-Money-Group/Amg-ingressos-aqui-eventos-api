@@ -14,7 +14,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                 EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00, DateTimeKind.Local),
                 TotalTickets = 100,
                 ValueTotal = 10000,
-                Status = EnumStatusLot.Open
+                Status = StatusLot.Open
             };
         }
         internal static IEnumerable<LotWithTicketDto> ListSimpleLot()
@@ -26,7 +26,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                Status = EnumStatusLot.Open
+                Status = StatusLot.Open
                 },
                 new LotWithTicketDto(){
                     Identificate = 2,
@@ -34,7 +34,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                Status = EnumStatusLot.Open
+                Status = StatusLot.Open
                 },
                 new LotWithTicketDto(){
                     Identificate = 3,
@@ -42,7 +42,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                Status = EnumStatusLot.Open
+                Status = StatusLot.Open
                 }
             };
         }
@@ -55,7 +55,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Status = EnumStatusLot.Open
+                    Status = StatusLot.Open
         },
                 new LotWithTicketDto(){
                     Identificate = 2,
@@ -63,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Status = EnumStatusLot.Open
+                    Status = StatusLot.Open
                 },
                 new LotWithTicketDto(){
                     Identificate = 3,
@@ -71,7 +71,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Status = EnumStatusLot.Open
+                    Status = StatusLot.Open
                 },
                 new LotWithTicketDto(){
                     Identificate = 4,
@@ -79,7 +79,7 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Status = EnumStatusLot.Open
+                    Status = StatusLot.Open
                 }
             };
         }

@@ -1,4 +1,3 @@
-using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,22 +29,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("event/{idEvent}/variant/{idVariant}/tickets/details")]
         public IActionResult GetReportEventTicketsDetail([FromRoute] string idEvent, [FromRoute] string idVariant)
         {
-            try
-            {
-                var result = _reportService.GetReportEventTicketsDetail(idEvent, idVariant);
+            var result = _reportService.GetReportEventTicketsDetail(idEvent, idVariant);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetail)));
-                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetail)));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -59,22 +50,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("event/{idEvent}/tickets/details")]
         public IActionResult GetReportEventTicketsDetails([FromRoute] string idEvent)
         {
-            try
-            {
-                var result = _reportService.GetReportEventTicketsDetails(idEvent);
+            var result = _reportService.GetReportEventTicketsDetails(idEvent);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetails)));
-                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTicketsDetails)));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -88,22 +71,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("event/organizer/{idOrganizer}/tickets")]
         public IActionResult GetReportEventTickets([FromRoute] string idOrganizer)
         {
-            try
-            {
-                var result = _reportService.GetReportEventTickets(idOrganizer);
+            var result = _reportService.GetReportEventTickets(idOrganizer);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTickets)));
-                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTickets)));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -119,22 +94,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("event/{idEvent}/transactions/details")]
         public IActionResult GetReportEventTransactionsDetail([FromRoute] string idEvent, [FromQuery] string idOrganizer, [FromQuery] string idVariant)
         {
-            try
-            {
-                var result = _reportService.GetReportEventTransactionsDetail(idEvent, idVariant, idOrganizer);
+            var result = _reportService.GetReportEventTransactionsDetail(idEvent, idVariant, idOrganizer);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactionsDetail)));
-                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactionsDetail)));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
 
         /// <summary>
@@ -148,22 +115,14 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         [Route("event/organizer/{idOrganizer}/transactions")]
         public IActionResult GetReportEventTransactions([FromRoute] string idOrganizer)
         {
-            try
-            {
-                var result = _reportService.GetReportEventTransactions(idOrganizer);
+            var result = _reportService.GetReportEventTransactions(idOrganizer);
 
-                if (result.Message != null && result.Message.Any())
-                {
-                    _logger.LogInformation(result.Message);
-                    return NoContent();
-                }
-                return Ok(result.Data);
-            }
-            catch (Exception ex)
+            if (result.Message != null && result.Message.Any())
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactions)));
-                return StatusCode(500, string.Format(MessageLogErrors.ReportController, this.GetType().Name, nameof(GetReportEventTransactions)));
+                _logger.LogInformation(result.Message);
+                return NoContent();
             }
+            return Ok(result.Data);
         }
     }
 }

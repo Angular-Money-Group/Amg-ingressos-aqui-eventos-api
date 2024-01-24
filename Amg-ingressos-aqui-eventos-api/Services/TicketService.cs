@@ -56,7 +56,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Ticket"));
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Ticket"), ex);
                 throw;
             }
 
@@ -71,7 +71,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia"));
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCourtesyStatusById), "Cortesia"), ex);
                 throw;
             }
 
@@ -86,7 +86,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SaveManyAsync), "Cortesia"), listTicket);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SaveManyAsync), "Cortesia"), ex);
                 throw;
             }
 
@@ -101,7 +101,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "tickets"), tickets);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "tickets"), ex);
                 throw;
             }
 
@@ -117,7 +117,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteTicketsByLot), "ticket"), lotId);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteTicketsByLot), "ticket"), ex);
                 throw;
             }
 
@@ -144,7 +144,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SendCourtesyTickets), "cortesia"), courtesyTicket);
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SendCourtesyTickets), "cortesia"), ex);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
@@ -184,7 +184,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(ProcessEmailSending), "email cortesia"), courtesyTicket);
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(ProcessEmailSending), "email cortesia"), ex);
                 throw;
             }
         }
@@ -196,7 +196,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var ticketStatusResult = new TicketStatusResult()
                 {
                     Identificate = i,
-                    Status = EnumTicketStatusProcess.Processando
+                    Status = TicketStatusProcess.Processando
                 };
 
                 ticketsRow.TicketStatus.Add(ticketStatusResult);
@@ -212,7 +212,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 .Result;
 
             ticketsRow.TicketStatus
-                .FindAll(t => t.Status == EnumTicketStatusProcess.Erro)
+                .FindAll(t => t.Status == TicketStatusProcess.Erro)
                 .ForEach(
                     async (t) =>
                     {
@@ -340,7 +340,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SendEmailAndUpdateStatus), "enviar email e atualizar status"));
+                        _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SendEmailAndUpdateStatus), "enviar email e atualizar status"), ex);
                         HandleEmailSendingError(i, ex, rowId, ticketsRow);
                     }
                 }
@@ -402,7 +402,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 IdLot = lotToGenerateTicket.Id,
                 IdUser = idUser,
-                Status = EnumStatusTicket.CORTESIA,
+                Status = StatusTicket.CORTESIA,
                 Value = lotToGenerateTicket.ValueTotal,
                 IsSold = true,
                 ReqDocs = false,
@@ -522,7 +522,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), idUser);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUser), "ticket"), ex);
                 throw;
             }
 
@@ -540,7 +540,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), "ticket"));
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByUserAndEvent), ex));
                 throw;
             }
 
@@ -557,7 +557,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsByLot), "ticket"));
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsByLot), ex));
                 throw;
             }
 
@@ -575,7 +575,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), "ticket"));
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), ex));
                 throw;
             }
 
@@ -593,7 +593,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), id);
+                _logger.LogError(string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), ex);
                 throw;
             }
 
@@ -610,7 +610,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), id);
+                _logger.LogError(string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataUser), "ticket"), ex);
                 throw;
             }
 
@@ -627,7 +627,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), id);
+                _logger.LogError(string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdWithDataEvent), "ticket"), ex);
                 throw;
             }
 
@@ -643,7 +643,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ticket);
+                _logger.LogError(string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "ticket"), ex);
                 throw;
             }
 
@@ -700,7 +700,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                 await _notificationService.SaveAsync(notification);
 
-                ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Enviado;
+                ticketsRow.TicketStatus[index].Status = TicketStatusProcess.Enviado;
                 await _ticketRowRepository.EditTicketsRowAsync(
                     rowId,
                     ticketsRow
@@ -721,7 +721,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             StatusTicketsRow ticketsRow
         )
         {
-            ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Erro;
+            ticketsRow.TicketStatus[index].Status = TicketStatusProcess.Erro;
             ticketsRow.TicketStatus[index].Message = "Failed to send email";
 
             _ticketRowRepository.EditTicketsRowAsync(rowId, ticketsRow);
@@ -734,7 +734,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             StatusTicketsRow ticketsRow
         )
         {
-            ticketsRow.TicketStatus[index].Status = EnumTicketStatusProcess.Erro;
+            ticketsRow.TicketStatus[index].Status = TicketStatusProcess.Erro;
             ticketsRow.TicketStatus[index].Message = ex.Message;
 
             _ticketRowRepository.EditTicketsRowAsync(rowId, ticketsRow);

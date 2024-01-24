@@ -94,19 +94,19 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (ReportException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), idOrganizer);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), ex);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (IdMongoException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), idOrganizer);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), ex);
                 _messageReturn.Message = ex.Message;
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), idOrganizer);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTickets), "Eventos por ticket"), ex);
                 throw;
             }
 
@@ -134,12 +134,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (ReportException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetail), "Eventos por ticket"));
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetail), "Eventos por ticket"), ex);
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetail), "Eventos por ticket"));
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetail), "Eventos por ticket"), ex);
                 throw;
             }
         }
@@ -159,12 +159,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (ReportException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetails), "Eventos por ticket"), idEvent);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetails), "Eventos por ticket"), ex);
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetails), "Eventos por ticket"), idEvent);
+                _logger.LogError( string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(ProcessReportEventTicketsDetails), "Eventos por ticket"), ex);
                 throw;
             }
         }

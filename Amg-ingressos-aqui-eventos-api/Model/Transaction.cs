@@ -34,7 +34,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         public double TotalValue { get; set; }
         public string Discount { get; set; }
         public int Status { get; set; }
-        public Enum.EnumStageTransaction Stage { get; set; }
+        public Enum.StageTransaction Stage { get; set; }
         public object ReturnUrl { get; set; }
         public object PaymentIdService { get; set; }
         public object Details { get; set; }
