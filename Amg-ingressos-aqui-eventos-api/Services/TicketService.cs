@@ -587,17 +587,15 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 id.ValidateIdMongo();
-                var ticket = new Ticket() { Id = id };
-                var ticketResult = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
-                _messageReturn.Data = ticketResult?.FirstOrDefault() ?? new List<Ticket>();
+                _messageReturn.Data = await _ticketRepository.GetById(id);
+
+                return _messageReturn;
             }
             catch (Exception ex)
             {
                 _logger.LogError(string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetById), "ticket"), ex);
                 throw;
             }
-
-            return _messageReturn;
         }
 
         public async Task<MessageReturn> GetByIdWithDataUser(string id)
