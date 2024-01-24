@@ -1,5 +1,4 @@
 using Amg_ingressos_aqui_eventos_api.Consts;
-using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 
@@ -10,7 +9,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly IReportEventTickets _reporteventTickets;
         private readonly IReportEventTransactions _reporteventTransactions;
         private readonly ILogger<ReportService> _logger;
-        private readonly MessageReturn _messageReturn;
 
         public ReportService(
             IReportEventTickets reporteventTickets,
@@ -21,7 +19,6 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _reporteventTickets = reporteventTickets;
             _reporteventTransactions = reporteventTransactions;
             _logger = logger;
-            _messageReturn = new MessageReturn();
         }
         public MessageReturn GetReportEventTicketsDetail(string idEvent, string idVariant)
         {
@@ -29,21 +26,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTickets.ProcessReportEventTicketsDetail(idEvent, idVariant).Result;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"));
+                _logger.LogError(string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetail), "relatorio tickets detalhes"), ex);
                 throw;
             }
         }
@@ -54,21 +39,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTickets.ProcessReportEventTicketsDetails(idEvent).Result;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), idEvent);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), idEvent);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), idEvent);
+                _logger.LogError(string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTicketsDetails), "relatorio tickets por evento detalhes"), ex);
                 throw;
             }
         }
@@ -79,21 +52,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTickets.ProcessReportEventTickets(idOrganizer).Result;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), idOrganizer);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), idOrganizer);
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), idOrganizer);
+                _logger.LogError(string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTickets), "relatorio tickets por evento"), ex);
                 throw;
             }
         }
@@ -103,21 +64,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTransactions.ProcessReportEventTransactionsDetail(idEvent, idVariant, idOrganizer).Result;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"));
+                _logger.LogError(string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactionsDetail), "relatorio transacao detalhes"), ex);
                 throw;
             }
         }
@@ -127,21 +76,9 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 return _reporteventTransactions.ProcessReportEventTransactions(idOrganizer).Result;
             }
-            catch (ReportException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
-            catch (IdMongoException ex)
-            {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"));
-                _messageReturn.Message = ex.Message;
-                throw;
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"));
+                _logger.LogError(string.Format(MessageLogErrors.Report, this.GetType().Name, nameof(GetReportEventTransactions), "relatorio transacoes evento por organizador"), ex);
                 throw;
             }
         }

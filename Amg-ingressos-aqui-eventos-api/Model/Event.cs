@@ -75,7 +75,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         /// <summary>
         /// status Lot
         /// </summary>
-        public Enum.EnumStatusEvent Status { get; set; }
+        public Enum.StatusEvent Status { get; set; }
 
         /// <summary>
         /// Endereço

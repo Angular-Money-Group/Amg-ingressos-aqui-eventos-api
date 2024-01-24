@@ -45,7 +45,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdAsync), "Evento"), id);
+                _logger.LogError(string.Format(MessageLogErrors.GetById, this.GetType().Name, nameof(GetByIdAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -60,7 +60,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     throw new SaveException("Variante é Obrigatório.");
 
                 modelEvent.Image = StoreImageAndGenerateLinkToAccess(eventObject.Image!);
-                modelEvent.Status = EnumStatusEvent.Active;
+                modelEvent.Status = StatusEvent.Active;
                 await _eventRepository.Save(modelEvent);
 
                 //processa variantes
@@ -91,7 +91,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Evento"), eventObject);
+                _logger.LogError( string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -105,7 +105,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), id);
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), ex);
                 throw;
             }
         }
@@ -124,7 +124,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Evento"), id);
+                _logger.LogError( string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -141,7 +141,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"),ex);
                 throw;
             }
         }
@@ -158,7 +158,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"),ex);
                 throw;
             }
         }
@@ -174,7 +174,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"),ex);
                 throw;
             }
         }
@@ -189,7 +189,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 DateTime endOfRange = startOfWeek.AddDays(7); // sábado
 
                 dic.Add("StartDate", startOfRange.ToUniversalTime());
-                dic.Add("Status", (int)EnumStatusEvent.Active);
+                dic.Add("Status", (int)StatusEvent.Active);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
                 data.Item1 = data.Item1.Where(x => x.StartDate.Date <= endOfRange.Date).ToList();
                 _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
@@ -197,7 +197,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"),ex);
                 throw;
             }
         }
@@ -213,7 +213,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"), ex);
                 throw;
             }
         }
@@ -247,7 +247,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditEventsAsync), "Evento"));
+                _logger.LogError( string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditEventsAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -263,7 +263,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"), ex);
                 throw;
             }
         }
@@ -274,12 +274,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1).OrderBy(c=> c.Year).ThenBy(c=> c.Month).ThenBy(c=> c.Day);
                 return _messageReturn;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEvents), "Eventos"));
+                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEvents), "Eventos"), ex);
                 throw;
             }
         }
@@ -319,7 +319,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
                     dic.Add("StartDate", startOfWeek);
-                    dic.Add("Status", (int)EnumStatusEvent.Active);
+                    dic.Add("Status", (int)StatusEvent.Active);
                 }
             }
             if (filters.Type != null && !string.IsNullOrEmpty(filters.Type))

@@ -12,7 +12,7 @@ namespace Amg_ingressos_aqui_eventos_api.Model
         }
 
         public string IdPaymentMethod { get; set; }
-        public Enum.EnumTypePayment TypePayment { get; set; }
+        public Enum.TypePayment TypePayment { get; set; }
         public string CardNumber { get; set; }
         public string Holder { get; set; }
         public string ExpirationDate { get; set; }

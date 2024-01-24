@@ -1,6 +1,6 @@
 ﻿namespace Amg_ingressos_aqui_eventos_api.Enum
 {
-    public enum EnumEventQrReads
+    public enum StatusEventQrReads
     {
         NAO_DISPONIVEL = 0,
         NAO_INICIADO = 1,
