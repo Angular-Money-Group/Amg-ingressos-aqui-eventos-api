@@ -63,7 +63,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //Checa o status do ticket e se não passar na validação finaliza a execução
                 // 2- Registra o qrcode lido pelo colaborador
                 #region Checa o status do ticket
-                if (evento.Status == Enum.EnumStatusTicket.USADO)
+                if (evento.Status == Enum.StatusTicket.USADO)
                 {
 
                     //Insere tabela de historico de leituras de qrcode (ticket)
@@ -73,7 +73,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.EnumStatusTicket.USADO,
+                        Status = (int)Enum.StatusTicket.USADO,
                         Date = DateTime.Now
                     });
 
@@ -82,7 +82,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                     throw new RuleException("Ingresso já utilizado");
                 }
-                else if (evento.Status == Enum.EnumStatusTicket.NAO_DISPONIVEL)
+                else if (evento.Status == Enum.StatusTicket.NAO_DISPONIVEL)
                 {
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
@@ -91,7 +91,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.EnumStatusTicket.NAO_DISPONIVEL,
+                        Status = (int)Enum.StatusTicket.NAO_DISPONIVEL,
                         Date = DateTime.Now
                     });
 
@@ -100,7 +100,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                     throw new RuleException("Ingresso não disponível");
                 }
-                else if (evento.Status == Enum.EnumStatusTicket.NAO_VENDIDO)
+                else if (evento.Status == Enum.StatusTicket.NAO_VENDIDO)
                 {
                     _messageReturn.Data = "400";
                     _messageReturn.Message = "Ingresso não vendido";
@@ -112,7 +112,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.EnumStatusTicket.NAO_VENDIDO,
+                        Status = (int)Enum.StatusTicket.NAO_VENDIDO,
                         Date = DateTime.Now
                     });
 
@@ -121,7 +121,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
 
                     throw new RuleException("Ingresso não vendido");
                 }
-                else if (evento.Status == Enum.EnumStatusTicket.EXPIRADO)
+                else if (evento.Status == Enum.StatusTicket.EXPIRADO)
                 {
                     //Insere tabela de historico de leituras de qrcode (ticket)
                     SaveReadyHistories(new ReadHistory()
@@ -130,7 +130,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdTicket = entranceDTO.IdTicket,
                         IdColab = entranceDTO.IdColab,
                         Reason = _messageReturn.Message,
-                        Status = (int)Enum.EnumStatusTicket.EXPIRADO,
+                        Status = (int)Enum.StatusTicket.EXPIRADO,
                         Date = DateTime.Now
                     });
 
@@ -153,7 +153,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                     IdColab = entranceDTO.IdColab,
                     IdEvent = entranceDTO.IdEvent,
                     Reason = "Ingresso lido com sucesso",
-                    Status = (int)Enum.EnumStatusTicket.DISPONIVEL,
+                    Status = (int)Enum.StatusTicket.DISPONIVEL,
                     Date = DateTime.Now
                 });
 
@@ -175,7 +175,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 };
 
                 //3- Da baixa (queima) no qrcode (ticket), colocando ele como utilizado
-                await _ticketRepository.BurnTicketsAsync(entranceDTO.IdTicket, (int)Enum.EnumStatusTicket.USADO);
+                await _ticketRepository.BurnTicketsAsync(entranceDTO.IdTicket, (int)Enum.StatusTicket.USADO);
                 #endregion
 
                 _messageReturn.Data = eventQrReadsDto;
@@ -202,7 +202,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveReadyHistories), "ReadyHisotory"), readHistory);
+                _logger.LogError( string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveReadyHistories), "ReadyHisotory"), ex);
                 throw;
             }
         }
@@ -226,7 +226,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         IdColab = entranceDTO.IdColab,
                         IdEvent = entranceDTO.IdEvent,
                         InitialDate = DateTime.Now,
-                        Status = (int)Enum.EnumEventQrReads.INICIADO,
+                        Status = (int)Enum.StatusEventQrReads.INICIADO,
                         TotalFail = successQrRead ? 0 : 1,
                         TotalReads = 1,
                         TotalSuccess = successQrRead ? 1 : 0
@@ -247,7 +247,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveEventQrReads), "Event QrRead"), entranceDTO);
+                _logger.LogError( string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveEventQrReads), "Event QrRead"), ex);
                 throw;
             }
         }

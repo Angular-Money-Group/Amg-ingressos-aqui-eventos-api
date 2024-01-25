@@ -6,6 +6,7 @@ using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Infra;
 using MongoDB.Bson;
 using Amg_ingressos_aqui_eventos_api.Consts;
+using System.Reflection.Metadata;
 
 
 namespace Amg_ingressos_aqui_eventos_api.Repository
@@ -66,16 +67,15 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             var builder = Builders<Ticket>.Filter;
             var filter = builder.Empty;
-           // filter &= builder.Eq(x => x.IdUser, null);
 
             if (!string.IsNullOrWhiteSpace(ticket.Id))
-                filter &= builder.Eq(x => x.Id, ticket.Id);
+                filter &= builder.Eq("_id", ObjectId.Parse(ticket.Id));
 
             if (!string.IsNullOrEmpty(ticket.IdLot))
                 filter &= builder.Eq(x => x.IdLot, ticket.IdLot);
 
             if (!string.IsNullOrEmpty(ticket.IdUser))
-                filter &= builder.Eq(x => x.IdUser, null);
+                filter &= builder.Eq(x => x.IdUser, ticket.IdUser);
 
             var result = await _ticketCollection.Find(filter)
             .As<T>()

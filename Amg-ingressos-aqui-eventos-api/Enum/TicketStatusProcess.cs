@@ -1,6 +1,6 @@
 namespace Amg_ingressos_aqui_eventos_api.Enum
 {
-    public enum EnumTicketStatusProcess
+    public enum TicketStatusProcess
     {
         Processando = 0,
         Enviado = 1,

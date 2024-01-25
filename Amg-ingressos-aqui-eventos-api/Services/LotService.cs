@@ -36,7 +36,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             try
             {
                 ValidateModelSave(lot);
-                lot.Status = Enum.EnumStatusLot.Open;
+                lot.Status = Enum.StatusLot.Open;
                 var lotModel = new LotWithTicketDto().DtoToModel(lot);
                 await _lotRepository.Save(lotModel);
                 List<Ticket> listTicket = new List<Ticket>();
@@ -57,7 +57,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Lote"), lot);
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Lote"), ex);
                 _ = DeleteAsync(lot.Id ?? string.Empty);
                 throw;
             }
@@ -78,7 +78,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         listTicket.Add(new Ticket()
                         {
                             ReqDocs = x.ReqDocs,
-                            IdLot = listLotsDatabase?.Find(l=> l.Identificate == x.Identificate)?.Id ?? throw new RuleException("Id Lote não poder ser vazio."),
+                            IdLot = listLotsDatabase?.Find(l => l.Identificate == x.Identificate)?.Id ?? throw new RuleException("Id Lote não poder ser vazio."),
                             Value = x.ValueTotal
                         });
                     }
@@ -87,7 +87,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), "Lotes"), listLot);
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveManyAsync), "Lotes"), ex);
                 throw;
             }
 
@@ -104,13 +104,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (DeleteException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Lote"), id);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Lote"), ex);
                 _ = DeleteAsync(id ?? string.Empty);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Lote"), id);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Lote"), ex);
                 _ = DeleteAsync(id ?? string.Empty);
                 throw;
             }
@@ -127,12 +127,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (DeleteException ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteByVariantAsync), "Lote"), idVariant);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteByVariantAsync), "Lote"), ex);
                 _messageReturn.Message = ex.Message;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteByVariantAsync), "Lote"), idVariant);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteByVariantAsync), "Lote"), ex);
                 throw;
             }
 
@@ -158,7 +158,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), lot);
+                _logger.LogError(string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditAsync), "Lote"), ex);
                 throw;
             }
 
@@ -178,7 +178,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Lote"), listLot);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteManyAsync), "Lote"), ex);
                 throw;
             }
 
@@ -194,7 +194,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByIdVariant), "Lote"), idVariant);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetByIdVariant), "Lote"), ex);
                 throw;
             }
 

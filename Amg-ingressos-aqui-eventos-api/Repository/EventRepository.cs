@@ -23,7 +23,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             var filter = Builders<Event>.Filter.Eq("_id", ObjectId.Parse(id));
 
-            var update = Builders<Event>.Update.Set("Status", Enum.EnumStatusEvent.Canceled);
+            var update = Builders<Event>.Update.Set("Status", Enum.StatusEvent.Canceled);
 
             var action = await _eventCollection.UpdateOneAsync(filter, update);
 

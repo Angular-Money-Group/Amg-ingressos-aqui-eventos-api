@@ -24,19 +24,19 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
                     Name = "Pista",
                     HasPositions = false,
                     Lots = FactoryLot.ListSimpleLot().ToList(),
-                    Status = EnumStatusVariant.Active
+                    Status = StatusVariant.Active
                 },
                 new VariantWithLotDto(){
                     Name = "Camarote",
                     HasPositions = false,
                     Lots = FactoryLot.ListSimpleLot().ToList(),
-                    Status = EnumStatusVariant.Active
+                    Status = StatusVariant.Active
                 },
                 new VariantWithLotDto(){
                     Name = "Area VIP",
                     HasPositions = false,
                     Lots = FactoryLot.ListSimpleLot().ToList(),
-                    Status = EnumStatusVariant.Active
+                    Status = StatusVariant.Active
                 },
             };
         }

@@ -7,9 +7,7 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
 {
     public class EventsExceptionHandlerMiddleaware : AbstractExceptionHandlerMiddleware
     {
-        public EventsExceptionHandlerMiddleaware(
-            ILogger<EventsExceptionHandlerMiddleaware>logger,
-            RequestDelegate next) : base(logger,next)
+        public EventsExceptionHandlerMiddleaware(RequestDelegate next) : base(next)
         {
 
         }
@@ -40,7 +38,7 @@ namespace Amg_ingressos_aqui_eventos_api.Infra
                     code = HttpStatusCode.InternalServerError;
                     break;
             }
-            return (code, JsonConvert.SerializeObject(new MessageReturn(){Message=exception.Message}));
+            return (code, JsonConvert.SerializeObject(new MessageReturn() { Message = exception.Message }));
         }
     }
 }

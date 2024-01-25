@@ -54,9 +54,9 @@ namespace Amg_ingressos_aqui_eventos_api.Dto
             {
                 Name = eventData.Name,
                 Id = eventData.Id,
-                Day = eventData.EndDate.Day.ToString(),
-                Month = eventData.EndDate.Month.ToString(),
-                Year = eventData.EndDate.Year.ToString(),
+                Day = eventData.StartDate.Day.ToString(),
+                Month = eventData.StartDate.Month.ToString(),
+                Year = eventData.StartDate.Year.ToString(),
                 City = eventData.Address.City,
                 State = eventData.Address.State,
                 Description = eventData.Description,
