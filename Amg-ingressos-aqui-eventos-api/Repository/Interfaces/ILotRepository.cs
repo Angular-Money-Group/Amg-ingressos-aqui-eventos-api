@@ -10,6 +10,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
         Task<bool> DeleteMany<T>(List<string> listLot);
         Task<List<T>> GetLotByEndDateSales<T>(DateTime dateManagerLots);
         Task<bool> ChangeStatusLot(string id, int statusLot);
-        Task<bool> EditCombine(string id, Lot eventObj);
+        Task<bool> EditCombine(string id, Dictionary<string, string> lotObj);
     }
 }

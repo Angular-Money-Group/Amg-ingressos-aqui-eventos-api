@@ -149,19 +149,27 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw new EditException("Algo deu errado ao atualizar status do Lot");
         }
 
-        public async Task<bool> EditCombine(string id, Lot eventObj)
+        public async Task<bool> EditCombine(string id, Dictionary<string, string> lotObj)
         {
             var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
-            var update = Builders<Lot>.Update.Combine();
-
-            foreach (var property in typeof(Event).GetProperties())
+            
+            //foreach (var property in typeof(Lot).GetProperties())
+            //{
+            //    if (property.GetValue(eventObj) != null && property.Name != "Id")
+            //    {
+            //        update = update.Set(property.Name, property.GetValue(eventObj));
+            //    }
+            //}
+            var updateDefination = new List<UpdateDefinition<Lot>>();
+            foreach (var item in lotObj)
             {
-                if (property.GetValue(eventObj) != null && property.Name != "_id")
-                {
-                    update = update.Set(property.Name, property.GetValue(eventObj));
-                }
+                //listFilter.Add(Builders<Lot>.Filter.Eq(item.Key.ToString(), item.Value));
+                //Builders<EventQrReads>.Update.Set(eventQr => eventQr.IdColab, eventLocal.IdColab),
+                //Builders<Lot>.Update.Set(eventQr => eventQr.IdColab, eventLocal.IdColab),
+                updateDefination.Add(Builders<Lot>.Update.Set(item.Key.ToString(), item.Value));
             }
 
+            var update = Builders<Lot>.Update.Combine(updateDefination);
             await _lotCollection.UpdateOneAsync(filtro, update);
             return true;
         }
