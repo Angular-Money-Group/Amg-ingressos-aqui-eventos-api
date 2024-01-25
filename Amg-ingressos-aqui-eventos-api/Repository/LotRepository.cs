@@ -119,7 +119,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 throw new DeleteException("algo deu errado ao deletar");
         }
 
-        public async Task<List<Lot>> GetLotByEndDateSales(DateTime dateManagerLots)
+        public async Task<List<T>> GetLotByEndDateSales<T>(DateTime dateManagerLots)
         {
             var filter = Builders<Lot>.Filter.And(
                 Builders<Lot>.Filter.Gte(x => x.EndDateSales, dateManagerLots.Date),
@@ -127,9 +127,7 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 Builders<Lot>.Filter.Eq("Status",0)
                 );
 
-            var pResult = await _lotCollection.Find(filter)
-                .As<Lot>()
-                .ToListAsync();
+            var pResult = await _lotCollection.Find(filter).As<T>().ToListAsync();
 
             return pResult;
         }

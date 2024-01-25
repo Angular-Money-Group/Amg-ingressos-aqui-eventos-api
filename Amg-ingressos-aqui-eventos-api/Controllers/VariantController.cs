@@ -1,4 +1,6 @@
+using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
+using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,13 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     public class VariantController : ControllerBase
     {
         private readonly IVariantService _variantService;
+        private readonly ILogger<VariantController> _logger;
 
-        public VariantController(IVariantService variantService)
+        public VariantController(IVariantService variantService,
+            ILogger<VariantController> logger)
         {
             _variantService = variantService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -54,6 +59,27 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         public async Task<IActionResult> DeleteAsync([FromRoute] string id)
         {
             var result = await _variantService.DeleteAsync(id);
+            return Ok(result.Data);
+        }
+
+        /// <summary>
+        /// Grava Evento
+        /// </summary>
+        /// <param name="eventObject">Corpo Evento a ser Gravado</param>
+        /// <returns>200 Evento criado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpPost]
+        [Route("managerVariantLots/{id}/{dateManagerLots}")]
+        public async Task<IActionResult> ManagerVariantLotsAsync([FromRoute] string id, [FromRoute] DateTime dateManagerLots)
+        {
+            var result = await _variantService.ManagerVariantLotsAsync(id, dateManagerLots);
+
+            if (result.Message != null && result.Message.Any())
+            {
+                _logger.LogInformation(result.Message);
+                return StatusCode(500, string.Format(MessageLogErrors.GetController, this.GetType().Name, nameof(ManagerVariantLotsAsync), dateManagerLots));
+            }
+
             return Ok(result.Data);
         }
     }

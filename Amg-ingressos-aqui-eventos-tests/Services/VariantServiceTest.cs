@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Prime.UnitTests.Services
-{
+{ 
     public class VariantServiceTest
     {
         private VariantService _variantService;
@@ -18,12 +18,14 @@ namespace Prime.UnitTests.Services
         private Mock<IVariantRepository> _variantRepositoryMock = new Mock<IVariantRepository>();
         private readonly Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
         private readonly Mock<ILogger<VariantService>> _loggerMock = new Mock<ILogger<VariantService>>();
+        private Mock<ILotRepository>  _lotRepositoryMock = new Mock<ILotRepository>();
+        private Mock<ITicketService>  _ticketServiceMock = new Mock<ITicketService>();
 
-        [SetUp]
+    [SetUp]
         public void SetUp()
         {
             _variantRepositoryMock = new Mock<IVariantRepository>();
-            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object,_loggerMock.Object);
+            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object,_loggerMock.Object,_lotRepositoryMock.Object,_ticketServiceMock.Object);
         }
 
         [Test]

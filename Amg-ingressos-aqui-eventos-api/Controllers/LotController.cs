@@ -11,10 +11,10 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     public class LotController : ControllerBase
     {
         private readonly ILotService _lotService;
-        private readonly ILogger<EventController> _logger;
+        private readonly ILogger<LotController> _logger;
         
         public LotController(ILotService lotService,
-            ILogger<EventController> logger)
+            ILogger<LotController> logger)
         {
             _lotService = lotService;
             _logger = logger;
@@ -48,27 +48,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
 
             var result = await _lotService.DeleteAsync(id);
-            return Ok(result.Data);
-        }
-
-        /// <summary>
-        /// Grava Evento
-        /// </summary>
-        /// <param name="eventObject">Corpo Evento a ser Gravado</param>
-        /// <returns>200 Evento criado</returns>
-        /// <returns>500 Erro inesperado</returns>
-        [HttpPost]
-        [Route("managerlots/{id}/{dateManagerLots}")]
-        public async Task<IActionResult> ManagerLotsAsync([FromRoute] string id, [FromRoute] DateTime dateManagerLots)
-        {
-            var result = await _lotService.ManagerLotsAsync(id,dateManagerLots);
-
-            if (result.Message != null && result.Message.Any())
-            {
-                _logger.LogInformation(result.Message);
-                return StatusCode(500, string.Format(MessageLogErrors.GetController, this.GetType().Name, nameof(ManagerLotsAsync), dateManagerLots));
-            }
-
             return Ok(result.Data);
         }
     }
