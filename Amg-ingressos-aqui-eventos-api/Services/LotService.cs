@@ -16,17 +16,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly ITicketService _ticketService;
         private readonly MessageReturn _messageReturn;
         private readonly ILogger<LotService> _logger;
-        private readonly IVariantRepository _variantRepository;
 
         public LotService(
             ILotRepository lotRepository,
             ITicketService ticketService,
-            IVariantRepository variantRepository,
             ILogger<LotService> logger)
         {
             _lotRepository = lotRepository;
             _ticketService = ticketService;
-            _variantRepository = variantRepository;
             _logger = logger;
             _messageReturn = new MessageReturn();
         }

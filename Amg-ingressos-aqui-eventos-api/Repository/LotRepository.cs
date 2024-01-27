@@ -153,19 +153,9 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
             
-            //foreach (var property in typeof(Lot).GetProperties())
-            //{
-            //    if (property.GetValue(eventObj) != null && property.Name != "Id")
-            //    {
-            //        update = update.Set(property.Name, property.GetValue(eventObj));
-            //    }
-            //}
             var updateDefination = new List<UpdateDefinition<Lot>>();
             foreach (var item in lotObj)
             {
-                //listFilter.Add(Builders<Lot>.Filter.Eq(item.Key.ToString(), item.Value));
-                //Builders<EventQrReads>.Update.Set(eventQr => eventQr.IdColab, eventLocal.IdColab),
-                //Builders<Lot>.Update.Set(eventQr => eventQr.IdColab, eventLocal.IdColab),
                 updateDefination.Add(Builders<Lot>.Update.Set(item.Key.ToString(), item.Value));
             }
 
