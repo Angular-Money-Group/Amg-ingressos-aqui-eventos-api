@@ -180,9 +180,8 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         {
             var result = await _eventService.GetByIdAsync(id);
             if (result.Message != null && result.Message.Any())
-            {
-                return NotFound(result.Message);
-            }
+                return NoContent();
+            
             return Ok(result.Data);
         }
 
