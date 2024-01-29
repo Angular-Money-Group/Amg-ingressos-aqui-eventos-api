@@ -19,13 +19,12 @@ namespace Prime.UnitTests.Services
         private readonly Mock<ILotService> _lotServiceMock = new Mock<ILotService>();
         private readonly Mock<ILogger<VariantService>> _loggerMock = new Mock<ILogger<VariantService>>();
         private Mock<ILotRepository>  _lotRepositoryMock = new Mock<ILotRepository>();
-        private Mock<ITicketService>  _ticketServiceMock = new Mock<ITicketService>();
 
     [SetUp]
         public void SetUp()
         {
             _variantRepositoryMock = new Mock<IVariantRepository>();
-            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object,_loggerMock.Object,_lotRepositoryMock.Object,_ticketServiceMock.Object);
+            _variantService = new VariantService(_variantRepositoryMock.Object,  _webHostEnvironmentMock.Object, _lotServiceMock.Object,_loggerMock.Object,_lotRepositoryMock.Object);
         }
 
         [Test]
