@@ -40,7 +40,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 var dic = new Dictionary<string, object>() { { "_id", id } };
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, null);
 
-                _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data.Item1[0]);
+                if (data.Item1.Any())
+                    _messageReturn.Data = new EventCompletWithTransactionDto().ModelToDto(data.Item1[0]);
+                else
+                    _messageReturn.Message = "Evento Não encontrado.";
+
                 return _messageReturn;
             }
             catch (Exception ex)
@@ -91,7 +95,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Evento"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Save, this.GetType().Name, nameof(SaveAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -105,7 +109,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(SetHighlightEventAsync), "Eventos Destaque"), ex);
                 throw;
             }
         }
@@ -124,7 +128,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Evento"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Delete, this.GetType().Name, nameof(DeleteAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -141,7 +145,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"),ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"), ex);
                 throw;
             }
         }
@@ -158,7 +162,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"),ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetEventsAsync), "Eventos"), ex);
                 throw;
             }
         }
@@ -174,7 +178,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"),ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"), ex);
                 throw;
             }
         }
@@ -197,7 +201,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"),ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEventsWeekly), "Eventos"), ex);
                 throw;
             }
         }
@@ -213,7 +217,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetWithUserData), "Eventos"), ex);
                 throw;
             }
         }
@@ -247,7 +251,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditEventsAsync), "Evento"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Edit, this.GetType().Name, nameof(EditEventsAsync), "Evento"), ex);
                 throw;
             }
         }
@@ -263,7 +267,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetAllEventsWithTickets), "Evento"), ex);
                 throw;
             }
         }
@@ -274,12 +278,12 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
-                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1).OrderBy(c=> c.Year).ThenBy(c=> c.Month).ThenBy(c=> c.Day);
+                _messageReturn.Data = new CardDto().ModelListToDtoList(data.Item1).OrderBy(c => c.Year).ThenBy(c => c.Month).ThenBy(c => c.Day);
                 return _messageReturn;
             }
             catch (Exception ex)
             {
-                _logger.LogError( string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEvents), "Eventos"), ex);
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCardEvents), "Eventos"), ex);
                 throw;
             }
         }
