@@ -11,13 +11,10 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     public class LotController : ControllerBase
     {
         private readonly ILotService _lotService;
-        private readonly ILogger<LotController> _logger;
         
-        public LotController(ILotService lotService,
-            ILogger<LotController> logger)
+        public LotController(ILotService lotService)
         {
             _lotService = lotService;
-            _logger = logger;
         }
 
         /// <summary>

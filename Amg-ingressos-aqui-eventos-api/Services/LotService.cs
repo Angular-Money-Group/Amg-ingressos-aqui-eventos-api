@@ -230,8 +230,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 });
 
                     //Verifica se tem mais lote - Precisa ter dados ou tem erro de integradade de dados
-                    if (novoLote != null && novoLote.Count() > 0)
+                    if (novoLote != null && novoLote.Any())
                     {
+                        var itemNovoLote = novoLote[0];
+
                         //Consulta os tickets não vendidos do lote
                         var tickets = await _ticketService.GetRemainingByLot(lot.Id);
                         if (tickets != null && tickets.Data != null)
@@ -249,14 +251,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             var newLot = new Dictionary<string, string>()
                                         {
                                             {"Status", Convert.ToInt32(Enum.StatusLot.Open).ToString() },
-                                            {"TotalTickets",(novoLote.FirstOrDefault().TotalTickets + qtdTicketsNaoUsados).ToString() }
+                                            {"TotalTickets",(itemNovoLote.TotalTickets + qtdTicketsNaoUsados).ToString() }
                                         };
 
-                            _lotRepository.EditCombine(novoLote.FirstOrDefault().Id, newLot).GetAwaiter().GetResult();
+                            _lotRepository.EditCombine(itemNovoLote.Id, newLot).GetAwaiter().GetResult();
 
                             //Move os ingressos não utilizados para o novo lote
-                            List<Ticket> listaTicket = new List<Ticket>();
-                            listaTicket = (List<Ticket>)tickets.Data;
+                            var listaTicket = (List<Ticket>)tickets.Data;
 
                             foreach (Ticket item in listaTicket)
                             {
@@ -264,7 +265,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 var retTicket = await _ticketService.EditAsync(item.Id, new Ticket()
                                 {
                                     IdColab = item.IdColab,
-                                    IdLot = novoLote.FirstOrDefault().Id, // id do novo lote, que os ingressos vao ser atualizados
+                                    IdLot = itemNovoLote.Id, // id do novo lote, que os ingressos vao ser atualizados
                                     IdUser = item.IdUser,
                                     IsSold = item.IsSold,
                                     Position = item.Position,
@@ -272,8 +273,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                     ReqDocs = item.ReqDocs,
                                     Status = item.Status,
                                     TicketCortesia = item.TicketCortesia,
-                                    Value = novoLote.FirstOrDefault().ValueTotal
+                                    Value = itemNovoLote.ValueTotal
                                 });
+
+                                if (retTicket != null && !(Boolean)retTicket.Data)
+                                {
+                                    throw new RuleException($"Não foi possivel editar o ticket: {item.Id}, do lote: {itemNovoLote.Id}");
+                                }
                             }
 
                         }
@@ -305,7 +311,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         {
             MessageReturn retorno = new MessageReturn();
 
-            //Vender todo o lote antes de iniciar outro
+            //Vender complementamente o lote antes de iniciar outro
             try
             {
                 //Consultar o numero de ingressos(tickets) não vendidos do lote
@@ -324,8 +330,10 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 });
 
                     //Verifica se existe mais um lote
-                    if (novoLote != null && novoLote.Count() > 0)
+                    if (novoLote != null && novoLote.Any())
                     {
+                        var itemNovoLote = novoLote[0];
+
                         //Finalizar o lote que terminou a validade (atualizar o status)
                         var oldLot = new Dictionary<string, string>()
                                         {
@@ -340,7 +348,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                             {"Status", Convert.ToInt32(Enum.StatusLot.Open).ToString() }
                                         };
 
-                        _lotRepository.EditCombine(novoLote.FirstOrDefault().Id, newLot).GetAwaiter().GetResult();
+                        _lotRepository.EditCombine(itemNovoLote.Id, newLot).GetAwaiter().GetResult();
                     }
                 }
             }

@@ -243,7 +243,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 //Consultar os lotes que encerram na data de gestão de lotes
                 var lots = await _lotRepository.GetLotByEndDateSales<Lot>(dateManagerLots);
 
-                if (lots != null && lots.Count() > 0)
+                if (lots != null && lots.Any())
                 {
                     List<string> lista = new List<string>();
                     //Percorrer os lotes e executar a gestao
@@ -261,7 +261,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                                 lista.Add($"Lote: {lot.Id} - Erro ManagerVariantLotsAsync: {retLote}");
                             }
                         }
-                        //Vender todo o lote antes de iniciar outro
+                        //Vender completamente o lote antes de iniciar outro
                         else if (variant != null && variant.SellTicketsBeforeStartAnother != null && !variant.SellTicketsBeforeStartAnother.Value)
                         {
                             MessageReturn retLote = await _lotService.SellTicketsBeforeStartAnother(variant, lot);
