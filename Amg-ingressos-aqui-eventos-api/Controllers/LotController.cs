@@ -1,4 +1,7 @@
+using Amg_ingressos_aqui_eventos_api.Consts;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
+using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +11,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
     public class LotController : ControllerBase
     {
         private readonly ILotService _lotService;
-
+        
         public LotController(ILotService lotService)
         {
             _lotService = lotService;

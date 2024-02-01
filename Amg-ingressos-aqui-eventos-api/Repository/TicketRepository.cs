@@ -173,7 +173,8 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 .Set("Position", model.Position)
                 .Set("QrCode", model.QrCode)
                 .Set("Status", model.Status)
-                .Set("IdColab", model.IdColab);
+                .Set("IdColab", model.IdColab)
+                .Set("IdLot", model.IdLot);
 
             // Busca os tickets que correspondem ao filtro
             await _ticketCollection.UpdateOneAsync(filter, update);
@@ -188,6 +189,19 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 return true;
             else
                 throw new DeleteException("algo deu errado ao deletar");
+        }
+
+
+        public async Task<int> GetCountTicketsNoUser(string idLot)
+        {
+            //Filta os tickets do lote e que ainda não foram vendidos
+            var filter = Builders<Ticket>.Filter.And(
+                Builders<Ticket>.Filter.Eq(x => x.IdLot, idLot),
+                Builders<Ticket>.Filter.Eq(x => x.IsSold, false)
+                );
+
+            var result = await _ticketCollection.Find(filter).CountDocumentsAsync();
+            return (int)result;
         }
     }
 }

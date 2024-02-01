@@ -73,9 +73,18 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return pResult;
         }
 
-        public Task<List<Lot>> GetByFilter(Dictionary<string, string> filters)
+        public async Task<List<Lot>> GetByFilter(Dictionary<string, string> filters)
         {
-            throw new NotImplementedException();
+            var listFilter = new List<FilterDefinition<Lot>>();
+            foreach (var item in filters)
+                listFilter.Add(Builders<Lot>.Filter.Eq(item.Key.ToString(), item.Value));
+
+            var builders = Builders<Lot>.Filter.And(listFilter);
+            var pResult = await _lotCollection.Find(builders)
+                .As<Lot>()
+                .ToListAsync();
+
+            return pResult;
         }
 
         public async Task<Lot> Save(Lot model)
@@ -108,6 +117,51 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                 return true;
             else
                 throw new DeleteException("algo deu errado ao deletar");
+        }
+
+        public async Task<List<T>> GetLotByEndDateSales<T>(DateTime dateManagerLots)
+        {
+            var filter = Builders<Lot>.Filter.And(
+                Builders<Lot>.Filter.Gte(x => x.EndDateSales, dateManagerLots.Date),
+                Builders<Lot>.Filter.Lt(x => x.EndDateSales, dateManagerLots.AddDays(1).AddSeconds(-1)),
+                Builders<Lot>.Filter.Eq("Status",0)
+                );
+
+            var pResult = await _lotCollection.Find(filter).As<T>().ToListAsync();
+
+            return pResult;
+        }
+
+        public async Task<bool> ChangeStatusLot(string id, int statusLot)
+        {
+            if (id == null || string.IsNullOrEmpty(id.ToString()))
+                throw new EditException("id é obrigatório");
+
+            var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
+
+            var updateDefination = Builders<Lot>.Update.Set("Status", statusLot);
+
+            var result = await _lotCollection.UpdateOneAsync(filtro, updateDefination);
+
+            if (result.MatchedCount >= 1)
+                return true;
+            else
+                throw new EditException("Algo deu errado ao atualizar status do Lot");
+        }
+
+        public async Task<bool> EditCombine(string id, Dictionary<string, string> lotObj)
+        {
+            var filtro = Builders<Lot>.Filter.Eq("_id", ObjectId.Parse(id));
+            
+            var updateDefination = new List<UpdateDefinition<Lot>>();
+            foreach (var item in lotObj)
+            {
+                updateDefination.Add(Builders<Lot>.Update.Set(item.Key.ToString(), item.Value));
+            }
+
+            var update = Builders<Lot>.Update.Combine(updateDefination);
+            await _lotCollection.UpdateOneAsync(filtro, update);
+            return true;
         }
     }
 }

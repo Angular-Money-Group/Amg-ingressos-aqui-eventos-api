@@ -117,5 +117,23 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> ChangeStatusVariant(string id, int statusVariant)
+        {
+            if (id == null || string.IsNullOrEmpty(id.ToString()))
+                throw new EditException("id é obrigatório");
+
+            var filtro = Builders<Variant>.Filter.Eq("_id", ObjectId.Parse(id));
+
+            var updateDefination = Builders<Variant>.Update.Set("Status", statusVariant);
+
+            var result = await _variantCollection.UpdateOneAsync(filtro, updateDefination);
+
+            if (result.MatchedCount >= 1)
+                return true;
+            else
+                throw new EditException("Algo deu errado ao atualizar status da Variant");
+        }
+
     }
 }

@@ -12,5 +12,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services.Interfaces
         Task<MessageReturn> DeleteByVariantAsync(string idVariant);
         Task<MessageReturn> DeleteManyAsync(List<string> listLot);
         Task<MessageReturn> GetByIdVariant(string idVariant);
+        Task<MessageReturn> SellsTicketsInAnotherBatch(Variant variant, Lot lot);
+        Task<MessageReturn> SellTicketsBeforeStartAnother(Variant variant, Lot lot);
     }
 }

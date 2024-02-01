@@ -78,22 +78,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return true;
         }
 
-        public async Task<List<T>> GetByFilterComplet<T>(Pagination paginationOptions, Event? eventModel)
-        {
-            var eventData = await _eventCollection.Aggregate()
-                    .Match(GenerateFilterGetEvents(eventModel))
-                    .Lookup("variants", "_id", "IdEvent", "Variants")
-                    .Lookup("lots", "Variants._id", "IdVariant", "Lots")
-                    .Lookup("user", "IdOrganizer", "_id", "User")
-                    .Sort(new BsonDocument("StartDate", -1))
-                    .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
-                    .Limit(paginationOptions.PageSize)
-                    .As<T>()
-                    .ToListAsync();
-
-            return eventData;
-        }
-
         public FilterDefinition<Event> GenerateFilterGetEvents(Event? eventModel)
         {
             if (eventModel == null)
@@ -251,6 +235,22 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             return eventData.Any() ? eventData : new List<T1>();
         }
 
+        public async Task<List<T>> GetByFilterComplet<T>(Pagination paginationOptions, Event? eventModel)
+        {
+            var eventData = await _eventCollection.Aggregate()
+                    .Match(GenerateFilterGetEvents(eventModel))
+                    .Lookup("variants", "_id", "IdEvent", "Variants")
+                    .Lookup("lots", "Variants._id", "IdVariant", "Lots")
+                    .Lookup("user", "IdOrganizer", "_id", "User")
+                    .Sort(new BsonDocument("StartDate", -1))
+                    .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
+                    .Limit(paginationOptions.PageSize)
+                    .As<T>()
+                    .ToListAsync();
+
+            return eventData;
+        }
+
         private FilterDefinition<Event> GenerateFilter(Dictionary<string, object> filters)
         {
             var listFilter = new List<FilterDefinition<Event>>();
@@ -294,7 +294,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
             var listFilter = new List<FilterDefinition<Event>>();
             foreach (var item in filters)
                 listFilter.Add(Builders<Event>.Filter.Eq(item.Key.ToString(), item.Value));
-
 
             var builders = Builders<Event>.Filter.And(listFilter);
             var pResult = await _eventCollection.Find(builders)

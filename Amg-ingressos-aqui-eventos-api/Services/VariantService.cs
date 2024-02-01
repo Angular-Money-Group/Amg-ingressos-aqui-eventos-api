@@ -7,6 +7,7 @@ using Amg_ingressos_aqui_eventos_api.Dto;
 using System.Text.RegularExpressions;
 using Amg_ingressos_aqui_eventos_api.Consts;
 using System.Data;
+using Amg_ingressos_aqui_eventos_api.Repository;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
 {
@@ -17,12 +18,14 @@ namespace Amg_ingressos_aqui_eventos_api.Services
         private readonly ILotService _lotService;
         private readonly ILogger<VariantService> _logger;
         private readonly MessageReturn _messageReturn;
+        private readonly ILotRepository _lotRepository;
 
         public VariantService(
             IVariantRepository variantRepository,
             IWebHostEnvironment webHostEnvironment,
             ILotService lotService,
-            ILogger<VariantService> logger
+            ILogger<VariantService> logger,
+            ILotRepository lotRepository
         )
         {
             _variantRepository = variantRepository;
@@ -30,6 +33,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
             _messageReturn = new MessageReturn();
+            _lotRepository = lotRepository;
         }
         public async Task<MessageReturn> SaveAsync(VariantWithLotDto variant)
         {
@@ -230,6 +234,55 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 _logger.LogError(string.Format("{0}:{1} - Erro ao gerar link imagem variante.", this.GetType().Name, nameof(StoreImageAndGenerateLinkToAccess)), ex);
                 throw;
             }
+        }
+
+        public async Task<MessageReturn> ManagerVariantLotsAsync(string idLote, DateTime dateManagerLots)
+        {
+            try
+            {
+                //Consultar os lotes que encerram na data de gestão de lotes
+                var lots = await _lotRepository.GetLotByEndDateSales<Lot>(dateManagerLots);
+
+                if (lots != null && lots.Any())
+                {
+                    List<string> lista = new List<string>();
+                    //Percorrer os lotes e executar a gestao
+                    foreach (Lot lot in lots)
+                    {
+                        //Consulta as regras variação para o lote que venceu
+                        var variant = await _variantRepository.GetById(lot.IdVariant);
+
+                        //Verifica se a variação permiti que os ingressos restantes sejam vendidos no proximo lote
+                        if (variant != null && variant.SellTicketsInAnotherBatch != null && variant.SellTicketsInAnotherBatch.Value)
+                        {
+                            MessageReturn retLote = await _lotService.SellsTicketsInAnotherBatch(variant, lot);
+                            if (retLote != null && !string.IsNullOrEmpty(retLote.Message))
+                            {
+                                lista.Add($"Lote: {lot.Id} - Erro ManagerVariantLotsAsync: {retLote}");
+                            }
+                        }
+                        //Vender completamente o lote antes de iniciar outro
+                        else if (variant != null && variant.SellTicketsBeforeStartAnother != null && !variant.SellTicketsBeforeStartAnother.Value)
+                        {
+                            MessageReturn retLote = await _lotService.SellTicketsBeforeStartAnother(variant, lot);
+                            if (retLote != null && !string.IsNullOrEmpty(retLote.Message))
+                            {
+                                lista.Add($"Lote: {lot.Id} - Erro ManagerVariantLotsAsync: {retLote}");
+                            }
+                        }
+
+                    }
+
+                    //Caso tenha ocorrido erro no processamento do lote
+                    if ( lista.Count > 0) _messageReturn.Data = Newtonsoft.Json.JsonConvert.SerializeObject(lista);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(ManagerVariantLotsAsync), "dateManagerLots"), dateManagerLots);
+                throw;
+            }
+            return _messageReturn;
         }
     }
 }

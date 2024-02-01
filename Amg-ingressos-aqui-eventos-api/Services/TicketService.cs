@@ -571,7 +571,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idLot.ValidateIdMongo();
                 var ticket = new Ticket() { IdLot = idLot };
                 var result = await _ticketRepository.GetTickets<Ticket>(ticket);
-                _messageReturn.Data = result.Where(i => i.IdUser == null).ToList();
+                _messageReturn.Data = result.Where(i => !i.IsSold).ToList();
             }
             catch (Exception ex)
             {
@@ -736,6 +736,24 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             ticketsRow.TicketStatus[index].Message = ex.Message;
 
             _ticketRowRepository.EditTicketsRowAsync(rowId, ticketsRow);
+        }
+
+        public async Task<int> GetCountTicketsNoUser(string idLot)
+        {
+            int qtd = 0;
+            try
+            {
+                idLot.ValidateIdMongo();
+                
+                qtd = await _ticketRepository.GetCountTicketsNoUser(idLot);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetCountTicketsNoUser), idLot));
+                throw;
+            }
+
+            return qtd;
         }
     }
 }
