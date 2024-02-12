@@ -1,0 +1,4 @@
+build:
+  comands:
+    - dotnet restore Amg-ingressos-aqui-eventos.sln
+    - dotnet build Amg-ingressos-aqui-eventos.sln
