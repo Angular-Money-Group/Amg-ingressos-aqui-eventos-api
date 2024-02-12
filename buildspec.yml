@@ -2,6 +2,6 @@ version: 0.2
 
 phases:
   build:
-    comands:
+    commands:
       - dotnet restore Amg-ingressos-aqui-eventos.sln
       - dotnet build Amg-ingressos-aqui-eventos.sln
