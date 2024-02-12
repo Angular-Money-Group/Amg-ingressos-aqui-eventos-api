@@ -1,98 +1,87 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Enum;
-using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
 {
     public static class FactoryLot
     {
-        internal static Lot SimpleLot()
+        internal static LotWithTicketDto SimpleLot()
         {
-            return new Lot()
+            return new LotWithTicketDto()
             {
-                Description = "Lote1",
-                StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
-                EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
+                Identificate = 1,
+                StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00, DateTimeKind.Local),
+                EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00, DateTimeKind.Local),
                 TotalTickets = 100,
                 ValueTotal = 10000,
                 Status = StatusLot.Open
             };
         }
-        internal static IEnumerable<Lot> ListSimpleLot()
+        internal static IEnumerable<LotWithTicketDto> ListSimpleLot()
         {
-            return new List<Lot>(){
-                new Lot(){
-                    Description = "Lote1",
-                    StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
+            return new List<LotWithTicketDto>(){
+                new LotWithTicketDto(){
+                    Identificate = 1,
+                    StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
                 Status = StatusLot.Open
                 },
-                new Lot(){
-                    Description = "Lote2",
-                    StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00),
+                new LotWithTicketDto(){
+                    Identificate = 2,
+                    StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
                 Status = StatusLot.Open
                 },
-                new Lot(){
-                    Description = "Lote3",
-                    StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
+                new LotWithTicketDto(){
+                    Identificate = 3,
+                    StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
                 Status = StatusLot.Open
                 }
             };
         }
-        internal static IEnumerable<Lot> ListSimpleLotWithPosition()
+        internal static IEnumerable<LotWithTicketDto> ListSimpleLotWithPosition()
         {
-            return new List<Lot>(){
-                new Lot(){
-                    Description = "Lote1",
-                    StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00),
+            return new List<LotWithTicketDto>(){
+                new LotWithTicketDto(){
+                    Identificate = 1,
+                    StartDateSales = new DateTime(2023, 07, 01, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 07, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePosition(),
                     Status = StatusLot.Open
         },
-                new Lot(){
-                    Description = "Lote2",
-                    StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00),
+                new LotWithTicketDto(){
+                    Identificate = 2,
+                    StartDateSales = new DateTime(2023, 07, 16, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 07, 31, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePositionWithSoldPositions(),
                     Status = StatusLot.Open
                 },
-                new Lot(){
-                    Description = "Lote3",
-                    StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
+                new LotWithTicketDto(){
+                    Identificate = 3,
+                    StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePositionWithReservedPositions(),
                     Status = StatusLot.Open
                 },
-                new Lot(){
-                    Description = "Lote3",
-                    StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00),
-                    EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00),
+                new LotWithTicketDto(){
+                    Identificate = 4,
+                    StartDateSales = new DateTime(2023, 08, 01, 00, 00, 00, DateTimeKind.Local),
+                    EndDateSales = new DateTime(2023, 08, 15, 16, 00, 00, DateTimeKind.Local),
                     TotalTickets = 100,
                     ValueTotal = 10000,
-                    Positions = FactoryEvent.SimplePositionWithReservedPositionsAndSoldPositions(),
                     Status = StatusLot.Open
                 }
-
             };
-
         }
-
     }
 }

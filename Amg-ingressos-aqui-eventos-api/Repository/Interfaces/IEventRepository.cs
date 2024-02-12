@@ -2,11 +2,14 @@ using Amg_ingressos_aqui_eventos_api.Model;
 
 namespace Amg_ingressos_aqui_eventos_api.Repository.Interfaces
 {
-    public interface IEventRepository 
+    public interface IEventRepository : ICrudRepository<Event>
     {
-        Task<object> Save<T>(object eventComplet);
-        Task<object> FindById<T>(object id);
-        Task<object> Delete<T>(object id);
-        Task<IEnumerable<object>> GetAllEvents<T>();
+
+        Task<T> GetById<T>(string id);
+        Task<List<T>> GetByFilterComplet<T>(Pagination paginationOptions, Event eventModel);
+        Task<List<T>> GetFilterWithTickets<T>(string idEvent, string idOrganizer);
+        Task<List<T>> GetFilterWithTransactions<T>(string idEvent, string idOrganizer);
+        Task<(List<T>,long count)> GetByFilter<T>(Dictionary<string, object> filters, Pagination? paginationOptions);
+        Task<bool> SetHighlightEvent(string id);
     }
 }

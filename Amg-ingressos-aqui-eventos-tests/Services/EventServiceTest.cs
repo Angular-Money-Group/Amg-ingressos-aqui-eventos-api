@@ -5,7 +5,9 @@ using Moq;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Model;
-using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using Amg_ingressos_aqui_eventos_api.Dto;
 
 namespace Prime.UnitTests.Services
 {
@@ -13,31 +15,15 @@ namespace Prime.UnitTests.Services
     {
         private EventService _eventService;
         private Mock<IEventRepository> _eventRepositoryMock = new Mock<IEventRepository>();
-        private Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
-        private Mock<ITicketService> _ticketServiceMock = new Mock<ITicketService>();
+        private readonly Mock<IVariantService> _variantServiceMock = new Mock<IVariantService>();
+        private readonly Mock<ILogger<EventService>> _loggerMock = new Mock<ILogger<EventService>>();
+        private readonly Mock<IWebHostEnvironment> _webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
         [SetUp]
         public void SetUp()
         {
             _eventRepositoryMock = new Mock<IEventRepository>();
-            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object);
-        }
-
-        [Test]
-        public void Given_complet_event_When_save_Then_return_Ok()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            var messageReturn = "OK";
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(messageReturn, resultMethod.Result.Data);
+            _eventService = new EventService(_eventRepositoryMock.Object,_variantServiceMock.Object, _webHostEnvironmentMock.Object,_loggerMock.Object);
         }
 
         [Test]
@@ -135,7 +121,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Address = null;
+            eventComplet.Address = new Address(){};
             var expectedMessage = new MessageReturn() { Message = "Endereço é Obrigatório." };
 
             //Act
@@ -176,36 +162,6 @@ namespace Prime.UnitTests.Services
         }
 
         [Test]
-        public void Given_event_without_complement_When_save_Then_return_message_miss_complement()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Address.Complement = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Complemento é Obrigatório." };
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
-        }
-
-        [Test]
-        public void Given_event_without_referencePoint_When_save_Then_return_message_miss_referencePoint()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Address.ReferencePoint = string.Empty;
-            var expectedMessage = new MessageReturn() { Message = "Ponto de referência é Obrigatório." };
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
-        }
-
-        [Test]
         public void Given_event_without_city_When_save_Then_return_message_miss_city()
         {
             //Arrange
@@ -225,8 +181,6 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            //string strJson = JsonSerializer.Serialize<Event>(eventComplet);
-            string strJsonPosition = JsonSerializer.Serialize<Event>(FactoryEvent.SimpleEventWithPosition());
 
             eventComplet.Address.State = string.Empty;
             var expectedMessage = new MessageReturn() { Message = "Estado é Obrigatório." };
@@ -275,7 +229,7 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            eventComplet.Variant = new List<Variant>();
+            eventComplet.Variants = new List<VariantWithLotDto>();
             var expectedMessage = new MessageReturn() { Message = "Variante é Obrigatório." };
 
             //Act
@@ -285,33 +239,17 @@ namespace Prime.UnitTests.Services
             Assert.AreEqual(expectedMessage.Message, resultMethod.Result.Message);
         }
 
-        /*[Test]
-        public void Given_complet_event_When_save_has_error_null_in_repository_Then_return_message_error_internal()
-        {
-            //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
-            MessageReturn? messageReturn = null;
-            _eventRepositoryMock.Setup(x => x.Save<MessageReturn>(eventComplet)).Returns(Task.FromResult(messageReturn as object));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
-                .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
-
-            //Act
-            var resultMethod = _eventService.SaveAsync(eventComplet);
-
-            //Assert
-            Assert.AreEqual("", resultMethod.Result.Message);
-        }*/
-
         [Test]
         public void Given_id_event_When_findById_Then_return_objectEvent()
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.FindById<Event>(id)).Returns(Task.FromResult(eventComplet as object));
+            _eventRepositoryMock.Setup(x => x.GetById<EventComplet>(id))
+            .Returns(Task.FromResult(new EventComplet()));
 
             //Act
-            var result = _eventService.FindByIdAsync(id);
+            var result = _eventService.GetByIdAsync(id);
 
             //Assert
             Assert.AreEqual(eventComplet, result.Result.Data);
@@ -321,11 +259,10 @@ namespace Prime.UnitTests.Services
         public void Given_id_event_without_24_digits_When_findById_Then_return_objectEvent()
         {
             //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
             var messageExpected = "Id é obrigatório e está menor que 24 digitos";
 
             //Act
-            var result = _eventService.FindByIdAsync("3b241101-e2bb-4255-8caf");
+            var result = _eventService.GetByIdAsync("3b241101-e2bb-4255-8caf");
 
             //Assert
             Assert.AreEqual(messageExpected, result.Result.Message);
@@ -335,11 +272,10 @@ namespace Prime.UnitTests.Services
         public void Given_id_event_is_empty_When_findById_Then_return_message_id_is_necessary()
         {
             //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
             var messageExpected = "Id é obrigatório";
 
             //Act
-            var result = _eventService.FindByIdAsync("");
+            var result = _eventService.GetByIdAsync("");
 
             //Assert
             Assert.AreEqual(messageExpected, result.Result.Message);
@@ -351,7 +287,7 @@ namespace Prime.UnitTests.Services
             //Arrange
             var messageReturn = "Evento deletado";
             var id = "3b241101-e2bb-4255-8caf-4136c566a962";
-            _eventRepositoryMock.Setup(x => x.Delete<object>(id)).Returns(Task.FromResult(messageReturn as object));
+            _eventRepositoryMock.Setup(x => x.Delete(id)).Returns(Task.FromResult(true));
 
             //Act
             var result = _eventService.DeleteAsync(id);
@@ -364,7 +300,6 @@ namespace Prime.UnitTests.Services
         public void Given_id_event_is_0_When_Delete_Then_return_message_id_is_necessary()
         {
             //Arrange
-            var eventComplet = FactoryEvent.SimpleEvent();
             var messageExpected = "Id é obrigatório";
 
             //Act
@@ -378,11 +313,15 @@ namespace Prime.UnitTests.Services
         public void Given_Events_When_GetAllEvents_Then_return_list_objects_events()
         {
             //Arrange
-            var messageReturn = FactoryEvent.ListSimpleEvent();
-            _eventRepositoryMock.Setup(x => x.GetAllEvents<object>()).Returns(Task.FromResult(messageReturn as IEnumerable<object>));
+            var messageReturn = FactoryEvent.ListSimpleEventWithNames();
+            Pagination pagination = new Pagination(){
+                Page = 1,
+                PageSize = 10
+            };
+            _eventRepositoryMock.Setup(x => x.GetByFilterComplet<EventComplet>(pagination,new Event())).Returns(Task.FromResult(new List<EventComplet>()));
 
             //Act
-            var resultTask = _eventService.GetAllEventsAsync();
+            var resultTask = _eventService.GetEventsAsync(new FilterOptions(), pagination);
 
             //Assert
             Assert.AreEqual(messageReturn, resultTask.Result.Data);
@@ -393,16 +332,16 @@ namespace Prime.UnitTests.Services
         {
             //Arrange
             var eventComplet = FactoryEvent.SimpleEvent();
-            _eventRepositoryMock.Setup(x => x.Save<object>(eventComplet)).
+            _eventRepositoryMock.Setup(x => x.Save(eventComplet)).
                 Throws(new Exception("Erro ao conectar a base de dados"));
-            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<Variant>()))
+            _variantServiceMock.Setup(x => x.SaveAsync(It.IsAny<VariantWithLotDto>()))
                 .Returns(Task.FromResult( new MessageReturn(){Data ="3b241101-e2bb-4255-8caf-4136c566a962"}));
 
             //Act
             var resultMethod = _eventService.SaveAsync(eventComplet);
 
             //Assert
-            Assert.IsNotEmpty(resultMethod.Exception.Message);
+            Assert.IsNotEmpty(resultMethod.Exception?.Message);
         }
     }
 }

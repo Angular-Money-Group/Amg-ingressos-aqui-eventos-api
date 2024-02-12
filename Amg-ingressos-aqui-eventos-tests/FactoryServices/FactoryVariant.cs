@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Enum;
 using Amg_ingressos_aqui_eventos_api.Model;
 
@@ -9,59 +6,64 @@ namespace Amg_ingressos_aqui_eventos_tests.FactoryServices
 {
     public static class FactoryVariant
     {
-        internal static Variant SimpleVariant()
+        internal static VariantWithLotDto SimpleVariant()
         {
-            return new Variant()
+            return new VariantWithLotDto()
             {
                 Name = "Pista",
-                Positions = false,
-                Lot = FactoryLot.ListSimpleLot().ToList()
+                HasPositions = false,
+                Lots = FactoryLot.ListSimpleLot().ToList()
             };
         }
-        internal static IEnumerable<Variant> ListSimpleVariant()
+
+        internal static IEnumerable<VariantWithLotDto> ListSimpleVariant()
         {
-            return new List<Variant>()
+            return new List<VariantWithLotDto>()
             {
-                new Variant(){
+                new VariantWithLotDto(){
                     Name = "Pista",
-                    Positions = false,
-                    Lot = FactoryLot.ListSimpleLot().ToList(),
+                    HasPositions = false,
+                    Lots = FactoryLot.ListSimpleLot().ToList(),
                     Status = StatusVariant.Active
                 },
-                new Variant(){
+                new VariantWithLotDto(){
                     Name = "Camarote",
-                    Positions = false,
-                    Lot = FactoryLot.ListSimpleLot().ToList(),
+                    HasPositions = false,
+                    Lots = FactoryLot.ListSimpleLot().ToList(),
                     Status = StatusVariant.Active
                 },
-                new Variant(){
+                new VariantWithLotDto(){
                     Name = "Area VIP",
-                    Positions = false,
-                    Lot = FactoryLot.ListSimpleLot().ToList(),
+                    HasPositions = false,
+                    Lots = FactoryLot.ListSimpleLot().ToList(),
                     Status = StatusVariant.Active
                 },
             };
         }
-        internal static IEnumerable<Variant> ListSimpleVariantWithPosition(){
-            return new List<Variant>()
+
+        internal static IEnumerable<VariantWithLotDto> ListSimpleVariantWithPosition()
+        {
+            return new List<VariantWithLotDto>()
             {
-                new Variant(){
+                new VariantWithLotDto(){
                     Name = "Assento Normal",
-                    Positions = true,
-                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList()
+                    HasPositions = true,
+                    Lots = FactoryLot.ListSimpleLotWithPosition().ToList(),
+                    Positions = FactoryPosition.SimplePosition()
                 },
-                new Variant(){
+                new VariantWithLotDto(){
                     Name = "Camarote",
-                    Positions = true,
-                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList()
+                    HasPositions = true,
+                    Lots = FactoryLot.ListSimpleLotWithPosition().ToList(),
+                    Positions = FactoryPosition.SimplePosition()
                 },
-                new Variant(){
+                new VariantWithLotDto(){
                     Name = "Area VIP",
-                    Positions = true,
-                    Lot = FactoryLot.ListSimpleLotWithPosition().ToList()
+                    HasPositions = true,
+                    Lots = FactoryLot.ListSimpleLotWithPosition().ToList(),
+                    Positions = FactoryPosition.SimplePosition()
                 },
             };
         }
-    
     }
 }
