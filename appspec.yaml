@@ -1,5 +1,6 @@
-version:0.0 os: linux
-hooks: 
-ApplicationStart:
-- location: start-process.s 
-timeout: 00
+version: 0.0
+os: linux
+hooks:
+  ApplicationStart:
+    - location: start-process.sh
+      timeout: 300
