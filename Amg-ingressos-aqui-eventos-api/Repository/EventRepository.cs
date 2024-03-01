@@ -271,10 +271,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                         listFilter.Add(GenerateRegexDocument(item.Key, item.Value.ToString() ?? string.Empty));
                         break;
                     case "StartDate":
-                        listFilter.Add(Builders<Event>.Filter.Gte(item.Key, item.Value));
+                        listFilter.Add(Builders<Event>.Filter.Lte(item.Key, item.Value));
                         break;
                     case "EndDate":
-                        listFilter.Add(Builders<Event>.Filter.Lte(item.Key, item.Value));
+                        listFilter.Add(Builders<Event>.Filter.Gte(item.Key, item.Value));
                         break;
                     default:
                         listFilter.Add(Builders<Event>.Filter.Eq(item.Key, item.Value));

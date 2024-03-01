@@ -262,7 +262,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             }
                         }
                         //Vender completamente o lote antes de iniciar outro
-                        else if (variant != null && variant.SellTicketsBeforeStartAnother != null && !variant.SellTicketsBeforeStartAnother.Value)
+                        else if (variant != null && variant.SellTicketsBeforeStartAnother != null && variant.SellTicketsBeforeStartAnother.Value)
                         {
                             MessageReturn retLote = await _lotService.SellTicketsBeforeStartAnother(variant, lot);
                             if (retLote != null && !string.IsNullOrEmpty(retLote.Message))

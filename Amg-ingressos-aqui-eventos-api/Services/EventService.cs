@@ -6,6 +6,7 @@ using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Utils;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Amg_ingressos_aqui_eventos_api.Services
@@ -330,7 +331,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 {
                     DateTime startOfWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek);
                     dic.Add("StartDate", startOfWeek);
-                    dic.Add("Status", (int)StatusEvent.Active);
+                    dic.Add("EndDate", startOfWeek);
+                    dic.Add("Status", (int)StatusEvent.Started);
                 }
             }
             if (filters.Type != null && !string.IsNullOrEmpty(filters.Type))
