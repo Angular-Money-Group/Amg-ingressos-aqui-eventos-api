@@ -553,7 +553,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 idLot.ValidateIdMongo();
                 var ticket = new Ticket() { IdLot = idLot };
-                _messageReturn.Data = await _ticketRepository.GetTickets<List<Ticket>>(ticket);
+                _messageReturn.Data = await _ticketRepository.GetTickets<Ticket>(ticket);
             }
             catch (Exception ex)
             {
@@ -571,11 +571,11 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                 idLot.ValidateIdMongo();
                 var ticket = new Ticket() { IdLot = idLot };
                 var result = await _ticketRepository.GetTickets<Ticket>(ticket);
-                _messageReturn.Data = result.Where(i => !i.IsSold).ToList();
+                _messageReturn.Data = result.Count(i => !i.IsSold);
             }
             catch (Exception ex)
             {
-                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetRemainingByLot), ex));
+                _logger.LogError(string.Format(MessageLogErrors.Get, this.GetType().Name, nameof(GetTicketsByLot), ex));
                 throw;
             }
 

@@ -235,7 +235,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         var itemNovoLote = novoLote[0];
 
                         //Consulta os tickets não vendidos do lote
-                        var tickets = await _ticketService.GetRemainingByLot(lot.Id);
+                        var tickets = await _ticketService.GetTicketsByLot(lot.Id);
                         if (tickets != null && tickets.Data != null)
                         {
                             //Finalizar o lote que terminou a validade (atualizar o status)

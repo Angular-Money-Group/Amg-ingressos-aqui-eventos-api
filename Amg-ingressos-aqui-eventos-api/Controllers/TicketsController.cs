@@ -64,11 +64,33 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// Busca todos os ingresso restantes do lote
         /// </summary>
         /// <param name="idLote">Id do lote</param>
-        /// <returns>200 Retorna a quantidade de tickets disponiveis</returns>
+        /// <returns>200 Retorna tickets pelo lote</returns>
         /// <returns>204 Nenhum ticket encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
         [HttpGet]
         [Route("lote/{idLote}")]
+        public async Task<IActionResult> GetTicketsbyLot([FromRoute] string idLote)
+        {
+            var result = await _ticketService.GetTicketsByLot(idLote);
+
+            if (result.Message != null && result.Message.Any())
+            {
+                _logger.LogInformation(result.Message);
+                return NoContent();
+            }
+
+            return Ok(result.Data);
+        }
+
+        /// <summary>
+        /// Busca todos os ingresso restantes do lote
+        /// </summary>
+        /// <param name="idLote">Id do lote</param>
+        /// <returns>200 Retorna tickets pelo lote</returns>
+        /// <returns>204 Nenhum ticket encontrado</returns>
+        /// <returns>500 Erro inesperado</returns>
+        [HttpGet]
+        [Route("countTickets/lote/{idLote}")]
         public async Task<IActionResult> GetRemainingByLot([FromRoute] string idLote)
         {
             var result = await _ticketService.GetRemainingByLot(idLote);
