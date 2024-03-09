@@ -279,12 +279,13 @@ namespace Amg_ingressos_aqui_eventos_api.Services
             {
                 Dictionary<string, object> dic = GenerateFilters(filters);
                 var data = await _eventRepository.GetByFilter<EventComplet>(dic, paginationOptions);
+                if (data.count > 0)
+                {
+                    data.Item1 = (List<EventComplet>)data.Item1.OrderBy(x => x.StartDate).ToList();
+                }
                 _messageReturn.Data = new
                 {
-                    data = new CardDto().ModelListToDtoList(data.Item1)
-                                                .OrderBy(c => c.Year)
-                                                .ThenBy(c => c.Month)
-                                                .ThenBy(c => c.Day),
+                    data = new CardDto().ModelListToDtoList(data.Item1),
                     TotalCount = data.count
                 };
                 return _messageReturn;
