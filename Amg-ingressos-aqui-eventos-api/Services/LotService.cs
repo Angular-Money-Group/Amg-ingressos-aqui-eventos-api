@@ -44,7 +44,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         ReqDocs = lot.ReqDocs,
                         IdLot = lotModel?.Id ?? string.Empty,
                         Value = lot.ValueTotal,
-                        TicketCortesia = false
+                        TicketCortesia = false,
+                        Status = Enum.StatusTicket.DISPONIVEL
                     });
                 }
 
