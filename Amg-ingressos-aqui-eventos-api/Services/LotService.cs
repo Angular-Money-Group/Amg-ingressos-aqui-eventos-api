@@ -77,7 +77,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         {
                             ReqDocs = x.ReqDocs,
                             IdLot = listLotsDatabase?.Find(l => l.Identificate == x.Identificate)?.Id ?? throw new RuleException("Id Lote não poder ser vazio."),
-                            Value = x.ValueTotal
+                            Value = x.ValueTotal,
+                            Status = Enum.StatusTicket.DISPONIVEL
                         });
                     }
                     _ticketService.SaveManyAsync(listTicket);
