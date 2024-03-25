@@ -368,26 +368,26 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                             {
                                 Percent = (i.Tickets.Count == 0) ? 100 :
                                     (
-                                        Convert.ToDouble(i.Tickets.Count(x => x.IsSold))
+                                        Convert.ToDouble(i.Tickets.Count(x => x.Status == Enum.StatusTicket.VENDIDO))
                                         / Convert.ToDouble(i.Tickets.Count)
                                     ) * 100,
-                                Amount = i.Tickets.Count(x => x.IsSold),
+                                Amount = i.Tickets.Count(x => x.Status == Enum.StatusTicket.VENDIDO),
                                 Tax = 15,
                                 ReceiveValue =
-                                    i.Tickets.Where(x => x.IsSold).Sum(i => i.Value)
+                                    i.Tickets.Where(x => x.Status == Enum.StatusTicket.VENDIDO).Sum(i => i.Value)
                                     - (
-                                        (15 * i.Tickets.Where(x => x.IsSold).Sum(i => i.Value)) / 100
+                                        (15 * i.Tickets.Where(x => x.Status == Enum.StatusTicket.VENDIDO).Sum(i => i.Value)) / 100
                                     ),
-                                TotalValue = i.Tickets.Where(x => x.IsSold).Sum(i => i.Value)
+                                TotalValue = i.Tickets.Where(x => x.Status == Enum.StatusTicket.VENDIDO).Sum(i => i.Value)
                             },
                             Remaining = new RemainingDto()
                             {
                                 Percent = (i.Tickets.Count == 0) ? 100 :
                                     (
-                                        Convert.ToDouble(i.Tickets.Count(x => !x.IsSold))
+                                        Convert.ToDouble(i.Tickets.Count(x => x.Status == Enum.StatusTicket.DISPONIVEL))
                                         / Convert.ToDouble(i.Tickets.Count)
                                     ) * 100,
-                                Amount = i.Tickets.Count(x => !x.IsSold)
+                                Amount = i.Tickets.Count(x => x.Status == Enum.StatusTicket.DISPONIVEL)
                             }
                         },
                     }

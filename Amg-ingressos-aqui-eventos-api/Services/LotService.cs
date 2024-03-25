@@ -44,7 +44,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         ReqDocs = lot.ReqDocs,
                         IdLot = lotModel?.Id ?? string.Empty,
                         Value = lot.ValueTotal,
-                        TicketCortesia = false
+                        TicketCortesia = false,
+                        Status = Enum.StatusTicket.DISPONIVEL
                     });
                 }
 
@@ -76,7 +77,8 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         {
                             ReqDocs = x.ReqDocs,
                             IdLot = listLotsDatabase?.Find(l => l.Identificate == x.Identificate)?.Id ?? throw new RuleException("Id Lote não poder ser vazio."),
-                            Value = x.ValueTotal
+                            Value = x.ValueTotal,
+                            Status = Enum.StatusTicket.DISPONIVEL
                         });
                     }
                     _ticketService.SaveManyAsync(listTicket);
@@ -235,7 +237,7 @@ namespace Amg_ingressos_aqui_eventos_api.Services
                         var itemNovoLote = novoLote[0];
 
                         //Consulta os tickets não vendidos do lote
-                        var tickets = await _ticketService.GetRemainingByLot(lot.Id);
+                        var tickets = await _ticketService.GetTicketsByLot(lot.Id);
                         if (tickets != null && tickets.Data != null)
                         {
                             //Finalizar o lote que terminou a validade (atualizar o status)

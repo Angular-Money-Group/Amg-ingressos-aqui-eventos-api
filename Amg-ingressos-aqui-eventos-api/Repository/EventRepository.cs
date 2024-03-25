@@ -196,7 +196,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
                     .Lookup("user", "IdOrganizer", "_id", "User")
-                    .Sort(new BsonDocument("StartDate", 1))
                     .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
                     .Limit(paginationOptions.PageSize)
                     .As<T1>()
@@ -210,7 +209,6 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                     .Lookup("variants", "_id", "IdEvent", "Variants")
                     .Lookup("lots", "Variants._id", "IdVariant", "Lots")
                     .Lookup("user", "IdOrganizer", "_id", "User")
-                    .Sort(new BsonDocument("StartDate", 1))
                     .Skip((paginationOptions.Page - 1) * paginationOptions.PageSize)
                     .Limit(paginationOptions.PageSize)
                     .As<T1>()
@@ -271,10 +269,10 @@ namespace Amg_ingressos_aqui_eventos_api.Repository
                         listFilter.Add(GenerateRegexDocument(item.Key, item.Value.ToString() ?? string.Empty));
                         break;
                     case "StartDate":
-                        listFilter.Add(Builders<Event>.Filter.Gte(item.Key, item.Value));
+                        listFilter.Add(Builders<Event>.Filter.Lte(item.Key, item.Value));
                         break;
                     case "EndDate":
-                        listFilter.Add(Builders<Event>.Filter.Lte(item.Key, item.Value));
+                        listFilter.Add(Builders<Event>.Filter.Gte(item.Key, item.Value));
                         break;
                     default:
                         listFilter.Add(Builders<Event>.Filter.Eq(item.Key, item.Value));
