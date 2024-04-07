@@ -113,21 +113,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-/*builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(o =>
-    {
-        o.Authority = "http://localhost:5187";
-        //o.Audience = "myresourceapi";
-        o.RequireHttpsMetadata = false;
-    });
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("PublicSecure", policy => policy.RequireClaim("client_id", "secret_client_id"));
-});*/
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
