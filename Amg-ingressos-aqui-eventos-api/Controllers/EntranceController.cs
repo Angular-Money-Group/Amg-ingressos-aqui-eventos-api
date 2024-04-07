@@ -1,13 +1,14 @@
 ﻿using Amg_ingressos_aqui_eventos_api.Consts;
 using Amg_ingressos_aqui_eventos_api.Dto;
-using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v1/entrance")]
     [Produces("application/json")]
+    [Authorize(Policy = "PublicSecure")]
     public class EntranceController : ControllerBase
     {
         private readonly ILogger<EntranceController> _logger;

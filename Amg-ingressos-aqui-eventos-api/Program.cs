@@ -4,6 +4,7 @@ using Amg_ingressos_aqui_eventos_api.Repository;
 using Amg_ingressos_aqui_eventos_api.Repository.Interfaces;
 using Amg_ingressos_aqui_eventos_api.Services;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.OpenApi.Models;
@@ -35,7 +36,35 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://example.com/license")
         }
     });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+      {
+        {
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
 
+            },
+            new List<string>()
+          }
+      });
+    
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
@@ -72,7 +101,6 @@ builder.Services.AddScoped<ITicketRowRepository, TicketRowRepository>();
 builder.Services.AddScoped<IEntranceRepository, EntranceRepository>();
 //infra
 builder.Services.AddScoped<IDbConnection, DbConnection>();
-
 builder.Services.AddScoped<ICieloClient, CieloClient>();
 
 builder.Services.AddCors(options =>
@@ -83,6 +111,33 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
+});
+
+/*builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(o =>
+    {
+        o.Authority = "http://localhost:5187";
+        //o.Audience = "myresourceapi";
+        o.RequireHttpsMetadata = false;
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("PublicSecure", policy => policy.RequireClaim("client_id", "secret_client_id"));
+});*/
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = "http://localhost:5187/";
+        options.RequireHttpsMetadata = false;
+        options.Audience = "seuingressoaqui";
+    });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("PublicSecure", policy => policy.RequireClaim("client_id", "seuingressoaqui_client"));
 });
 
 var app = builder.Build();
@@ -105,6 +160,8 @@ app.UseCors(x => x
                 .SetIsOriginAllowed(origin => true)
                 .AllowCredentials());
 
+// Configure middlewares
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<EventsExceptionHandlerMiddleaware>();

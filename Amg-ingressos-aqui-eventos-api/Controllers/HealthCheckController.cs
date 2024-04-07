@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Policy = "PublicSecure")]
 public class HealthCheckController : ControllerBase
 {
     private readonly ILogger<HealthCheckController> _logger;

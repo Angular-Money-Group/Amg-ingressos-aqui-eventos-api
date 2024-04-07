@@ -1,12 +1,14 @@
 using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v1/tickets")]
     [Produces("application/json")]
+    [Authorize(Policy = "PublicSecure")]
     public class TicketController : ControllerBase
     {
         private readonly ILogger<TicketController> _logger;
