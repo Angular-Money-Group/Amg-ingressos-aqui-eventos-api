@@ -1,10 +1,12 @@
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v2/reports")]
     [Produces("application/json")]
+    [Authorize(Policy = "PublicSecure")]
     public class ReportController : ControllerBase
     {
         private readonly ILogger<ReportController> _logger;

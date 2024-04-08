@@ -3,12 +3,14 @@ using Amg_ingressos_aqui_eventos_api.Dto;
 using Amg_ingressos_aqui_eventos_api.Exceptions;
 using Amg_ingressos_aqui_eventos_api.Model;
 using Amg_ingressos_aqui_eventos_api.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Amg_ingressos_aqui_eventos_api.Controllers
 {
     [Route("v1/events")]
     [Produces("application/json")]
+    [Authorize(Policy = "PublicSecure")]
     public class EventController : ControllerBase
     {
         private readonly ILogger<EventController> _logger;
@@ -80,8 +82,7 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Busca os eventos
         /// </summary>
-        /// <param name="highlights"> eventos em destaque</param>
-        /// <param name="weekly"> eventos da semana</param>
+        /// <param name="filters"> eventos em destaque</param>
         /// <param name="paginationOptions"> paginacao </param>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
@@ -110,9 +111,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Busca os eventos
         /// </summary>
-        /// <param name="highlights"> eventos em destaque</param>
-        /// <param name="weekly"> eventos da semana</param>
-        /// <param name="paginationOptions"> paginacao </param>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
@@ -141,7 +139,6 @@ namespace Amg_ingressos_aqui_eventos_api.Controllers
         /// <summary>
         /// Busca os eventos
         /// </summary>
-        /// <param name="paginationOptions"> paginacao </param>
         /// <returns>200 Lista de todos eventos</returns>
         /// <returns>204 Nenhum evento encontrado</returns>
         /// <returns>500 Erro inesperado</returns>
